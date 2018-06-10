@@ -1,0 +1,60 @@
+! ---------------------------------------------------------------------------- #
+! urxvt                                                                        #
+! ---------------------------------------------------------------------------- #
+
+URxvt.depth:          32
+
+URxvt*foreground:     #CCCCCC
+URxvt*background:     [90]#000000
+
+URxvt*saveLines:      12000
+URxvt*scrollBar:      false
+URxvt.cursorBlink:    false
+URxvt*font:           xft:Inconsolata:pixelsize=20,\
+                      xft:Fira Mono for Powerline:pixelsize=20,\
+                      xft:DejaVu Sans Mono for Powerline:pixelsize=20
+
+URxvt*boldFont:       xft:Inconsolata:bold:pixelsize=20,\
+                      xft:Fira Mono for Powerline:bold:pixelsize=20,\
+                      xft:DejaVu Sans Mono for Powerline:bold:pixelsize=20
+
+URxvt*lineSpace:      0
+URxvt*letterSpace:    0
+
+URxvt.internalBorder: 0 
+
+!URxvt*termName:       rxvt-unicode
+!URxvt.imLocale:       sr_RS.utf8
+
+!black
+URxvt*color0:         #3f3f3f
+URxvt*color8:         #709080
+
+!red
+URxvt*color1:         #705050
+URxvt*color9:         #dca3a3
+
+!green
+URxvt*color2:         #60b48a
+URxvt*color10:        #c3bf9f
+
+!yellow
+URxvt*color3:         #dfaf8f
+URxvt*color11:        #f0dfaf
+
+!blue
+URxvt*color4:         #506070
+URxvt*color12:        #94bff3
+
+!magenta
+URxvt*color5:         #dc8cc3
+URxvt*color13:        #ec93d3
+
+!cyan
+URxvt*color6:         #8cd0d3
+URxvt*color14:        #93e0e3
+
+!white
+URxvt*color7:         #dcdccc
+URxvt*color15:        #ffffff
+
