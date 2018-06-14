@@ -13,6 +13,3 @@ I also made a mod of one of the official Airline themes (minimalist.vim).
 
 # i3
 Nothing fancy here. Simple and functional (a few dedicated shortcuts for switching the keyboard layout and some minor visaula tweaks); suits my needs just fine.
-
-# scripts
-TODO
