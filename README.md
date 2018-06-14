@@ -12,5 +12,7 @@ If you wanna try these out, you're going to need the Vundle plugin and you're al
 I also made a mod of one of the official Airline themes (minimalist.vim).
 
 # i3
-Nothing fancy here. Simple and functional; suits my needs just fine.
+Nothing fancy here. Simple and functional (a few dedicated shortcuts for switching the keyboard layout and some minor visaula tweaks); suits my needs just fine.
 
+# scripts
+TODO
