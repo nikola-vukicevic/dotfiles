@@ -6,9 +6,7 @@
 [[ $- != *i* ]] && return
 
 alias c="clear"
-alias c4="/home/korisnik/Podaci/Backup/c4.sh"
 alias e="vim"
-alias h="cd ~"
 alias ls="ls -la --color=auto"
 alias m="sudo mc"
 alias mx="alsamixer"
