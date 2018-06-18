@@ -170,4 +170,3 @@ highlight Normal ctermbg=NONE
 highlight nonText ctermbg=NONE
 hi Normal guibg=NONE ctermbg=NONE
 hi CursorLine ctermbg=none
-
