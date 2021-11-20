@@ -80,6 +80,7 @@ char *termname = "st-256color";
  *
  *	stty tabs
  */
+
 unsigned int tabspaces = 8;
 
 /* bg opacity */
@@ -87,24 +88,27 @@ unsigned int alpha = 0xe0;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
+	/* 8 normal colors */
 
-	"#000000",  /*  0: black    */
-	"#705050",  /*  1: red      */
-	"#60b48a",  /*  2: green    */
-	"#dfaf8f",  /*  3: yellow   */
-	"#506070",  /*  4: blue     */
-	"#dc8cc3",  /*  5: magenta  */
-	"#8cd0d3",  /*  6: cyan     */
-	"#dcdccc",  /*  7: white    */
-
-	"#709080",  /*  8: brblack  */
-	"#dca3a3",  /*  9: brred    */
-	"#c3bf9f",  /* 10: brgreen  */
-	"#f0dfaf",  /* 11: bryellow */
-	"#94bff3",  /* 12: brblue   */
-	"#ec93d3",  /* 13: brmagenta*/
-	"#93e0e3",  /* 14: brcyan   */
-	"#ffffff",  /* 15: brwhite  */
+	"#333333",  /*  0: black    */
+	"#e65757",  /*  1: red      */
+	"#97eb4f",  /*  2: green    */
+	"#fbf241",  /*  3: yellow   */
+	"#4f97eb",  /*  4: blue     */
+	"#eb4f97",  /*  5: magenta  */
+	"#58d5da",  /*  6: cyan     */
+	"#d0d0d0",  /*  7: white    */
+	
+	/* 8 bright colors */
+	
+	"#555555",  /*  8: brblack  */
+	"#f3afaf",  /*  9: brred    */
+	"#cef6ad",  /* 10: brgreen  */
+	"#fdf9a5",  /* 11: bryellow */
+	"#adcef6",  /* 12: brblue   */
+	"#f6adce",  /* 13: brmagenta*/
+	"#b4ecee",  /* 14: brcyan   */
+	"#333333",  /* 15: brwhite  */
 
 	[255] = 0,
 
@@ -114,7 +118,6 @@ static const char *colorname[] = {
 	"#555555",
 	"black",
 };
-
 
 /*
  * Default colors (colorname index)
