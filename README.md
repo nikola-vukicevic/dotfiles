@@ -1,15 +1,33 @@
 # dotfiles
-After a long hiatus, I returned to Linux (Arch being my distro of choice). I switched to a "dry", minimalist setup with i3 and terminal apps. I've ditched mouse almost entirely and re-aquired some skills. I'm learning how to really use ViM (technically, I've known how to use Vim for some time, but I'm not terribly proficient with it). I'm slowly growing into it all and I absolutely 'LOVE' the experience! I've spent some time fiddling with different things and tweaking this and that. These are my dotfiles.
+In 2016, after a long hiatus, I returned to Linux and Arch was a nice discovery for me (knew about it before, of course, but, never used it for real). I ditched the desktop enviroments and went the minimalist/terminal/VM way (started with i3, tried many VMs, settled with dwm and also switched from Arch to Artix).
 
-# Xresources
-These settings are for the urxvt terminal (which I now perefer to both Termite and ST). I'm using the vanilla version of Inconsolata font, while the other two fonts provide additional glyphs.
+So far so good! :)
 
-# ViM
-I'm not much of a ViM expert (yet :D), so my settings aren't super advanced, to say the least. For starters, I came up with a nice setup that's a combination of my own research and, of course, little bits and and pieeces I've borrowed from other people.
+## dwm
 
-If you wanna try these out, you're going to need the Vundle plugin and you're also going to have to fiddle with YCM.
+My build of the Suckless dwm window manager. Simple and effective with only a few patches
 
-I also made a mod of one of the official Airline themes (minimalist.vim).
+- bottom stack (a nice additional layout)
+- shift tools (for easier acces to adjacent tags)
+- swallow (GUI app started from terminal 'swallows' the terminal, i.e. - the terminal temporarily disappears until the app is closed)
+- full gaps (by default, it's practiaclly 'turned-off', as you can see in the config file, but I guess I like it sometimes, so I keep it
 
-# i3
+## st
+
+My build of the Suckless Simple Terminal. Also simple and effective with not too many patches:
+
+- del key (del key is not functional by default)
+- focus (separate alpha for the main/aux windows)
+- font 2 (so you can list backup fonts)
+- scrollback & scrollback mouse (scrolling is not a default option in ST)
+
+## ViM (legacy)
+Although I'm still very much using Vim, haven't really fiddled with the .vimrc in a long time, so I'm calling these my "legacy" settings.
+
+If you wanna try them out, you're going to need the Vundle plugin and you're also going to have to fiddle with YCM (and apprent;y, I also made a mod of one of the official Airline themes minimalist.vim).
+
+## i3 (legacy)
 Nothing fancy here. Simple and functional (a few dedicated shortcuts for switching the keyboard layout and some minor visual tweaks); suits my needs just fine.
+
+## Xresources
+These settings are for the urxvt terminal (which I now perefer to both Termite and ST). I'm using the vanilla version of Inconsolata font, while the other two fonts provide additional glyphs.
