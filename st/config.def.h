@@ -5,15 +5,14 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Inconsolata for Powerline:pixelsize=18:antialias=true:autohint=true";
+static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
 /* Spare fonts */
 static char *font2[] = {
-	"Inconsolata Nerd Font Mono:pixelsize=18:antialias=true:autohint=true",
 /*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
 /*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
 };
 
-static int borderpx = 0;
+static int borderpx = 2;
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -101,36 +100,33 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 /* bg opacity */
-float alpha = 0.94, alphaUnfocused = 0.88;
+float alpha = 0.8, alphaUnfocused = 0.6;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
+	"black",
+	"red3",
+	"green3",
+	"yellow3",
+	"blue2",
+	"magenta3",
+	"cyan3",
+	"gray90",
 
-	"#333333",  /*  0: black    */
-	"#e65757",  /*  1: red      */
-	"#aeec83",  /*  2: green    */
-	"#f6ed46",  /*  3: yellow   */
-	"#588cda",  /*  4: blue     */
-	"#eb4f97",  /*  5: magenta  */
-	"#78cbce",  /*  6: cyan     */
-	"#d0d0d0",  /*  7: white    */
-	
 	/* 8 bright colors */
-	
-	"#555555",  /*  8: brblack  */
-	"#f39b9b",  /*  9: brred    */
-	"#cef6ad",  /* 10: brgreen  */
-	"#fdf9a5",  /* 11: bryellow */
-	"#adcef6",  /* 12: brblue   */
-	"#f6adce",  /* 13: brmagenta*/
-	"#b4ecee",  /* 14: brcyan   */
-	"#f0f0f0",  /* 15: brwhite  */
+	"gray50",
+	"red",
+	"green",
+	"yellow",
+	"#5c5cff",
+	"magenta",
+	"cyan",
+	"white",
 
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-
 	"#cccccc",
 	"#555555",
 	"black",
@@ -145,7 +141,7 @@ unsigned int defaultfg = 7;
 unsigned int defaultbg = 0;
 static unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
-unsigned int bg = 16, bgUnfocused = 16;
+unsigned int bg = 17, bgUnfocused = 16;
 
 /*
  * Default shape of cursor
