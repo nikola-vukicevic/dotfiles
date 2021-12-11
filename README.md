@@ -5,7 +5,7 @@ So far so good! :)
 
 ## dwm
 
-My build of the Suckless dwm window manager. Simple and effective with only a few patches
+My build of the Suckless dwm window manager. Simple and effective with only a few patches:
 
 - bottom stack (a nice additional layout)
 - shift tools (for easier acces to adjacent tags)
@@ -27,7 +27,7 @@ Although I'm still very much using Vim, haven't really fiddled with the .vimrc i
 If you wanna try them out, you're going to need the Vundle plugin and you're also going to have to fiddle with YCM (and apprent;y, I also made a mod of one of the official Airline themes minimalist.vim).
 
 ## i3 (legacy)
-Nothing fancy here. Simple and functional (a few dedicated shortcuts for switching the keyboard layout and some minor visual tweaks); suits my needs just fine.
+Nothing fancy here. Simple and functional (a few dedicated shortcuts for switching the keyboard layout and some minor visual tweaks)
 
 ## Xresources
-These settings are for the urxvt terminal (which I now perefer to both Termite and ST). I'm using the vanilla version of Inconsolata font, while the other two fonts provide additional glyphs.
+These settings are for the urxvt terminal (which is what I used before switching to ST)
