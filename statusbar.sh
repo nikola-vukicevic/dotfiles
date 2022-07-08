@@ -14,7 +14,7 @@ do
 	
 	keyb=$(setxkbmap -query | awk '/layout/{ print $2 }')
 	xsetroot -name " CPU: $cpu $cpu_t | RAM: $ram | SSD: $ssd_1/$ssd_2 | bat: ($bat_msg_1) $bat_msg_2| ⌨  $keyb | $d "
-	echo " CPU: $cpu $cpu_t | RAM: $ram | SSD: $ssd_1/$ssd_2 | bat: ($bat_msg_1) $bat_msg_2| ⌨  $keyb | $d "
+	# echo " CPU: $cpu $cpu_t | RAM: $ram | SSD: $ssd_1/$ssd_2 | bat: ($bat_msg_1) $bat_msg_2| ⌨  $keyb | $d "
 	sleep 1
 done
 
