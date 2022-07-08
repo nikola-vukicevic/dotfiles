@@ -5,12 +5,16 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Inconsolata for Powerline:pixelsize=18:antialias=true:autohint=true";
+static char *font = "Inconsolata:size=19.0:antialias=true:autohint=true";
+
 /* Spare fonts */
+
 static char *font2[] = {
-	"Inconsolata Nerd Font Mono:pixelsize=18:antialias=true:autohint=true",
-/*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
-/*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
+	"Inconsolata for Powerline:size=19.0:antialias=true:autohint=true",
+	"Inconsolata Regular Nerd Font Mono:size=19.0:antialias=true:autohint=true",
+	/*
+	    "Inconsolata:size=19.0:antialias=true:autohint=true",
+	*/
 };
 
 static int borderpx = 0;
@@ -98,55 +102,53 @@ char *termname = "st-256color";
  *
  *	stty tabs
  */
-unsigned int tabspaces = 8;
+unsigned int tabspaces = 4;
 
 /* bg opacity */
-float alpha = 0.94, alphaUnfocused = 0.88;
+float alpha = 0.8, alphaUnfocused = 0.75;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
-
-	"#333333",  /*  0: black    */
-	"#e65757",  /*  1: red      */
-	"#aeec83",  /*  2: green    */
-	"#f6ed46",  /*  3: yellow   */
-	"#588cda",  /*  4: blue     */
-	"#eb4f97",  /*  5: magenta  */
-	"#78cbce",  /*  6: cyan     */
-	"#d0d0d0",  /*  7: white    */
+	"#333333",  /*  0:  black    */
+	"#e65757",  /*  1:  red      */
+	"#aeec83",  /*  2:  green    */
+	"#f6ed46",  /*  3:  yellow   */
+	"#588cda",  /*  4:  blue     */
+	"#eb4f97",  /*  5:  magenta  */
+	"#78cbce",  /*  6:  cyan     */
+	"#d0d0d0",  /*  7:  white    */
 	
 	/* 8 bright colors */
-	
-	"#555555",  /*  8: brblack  */
-	"#f39b9b",  /*  9: brred    */
-	"#cef6ad",  /* 10: brgreen  */
-	"#fdf9a5",  /* 11: bryellow */
-	"#adcef6",  /* 12: brblue   */
-	"#f6adce",  /* 13: brmagenta*/
-	"#b4ecee",  /* 14: brcyan   */
-	"#f0f0f0",  /* 15: brwhite  */
+	"#555555",  /*  8:  brblack  */
+	"#f39b9b",  /*  9:  brred    */
+	"#cef6ad",  /* 10:  brgreen  */
+	"#fdf9a5",  /* 11:  bryellow */
+	"#adcef6",  /* 12:  brblue   */
+	"#f6adce",  /* 13:  brmagenta*/
+	"#b4ecee",  /* 14:  brcyan   */
+	"#f0f0f0",  /* 15:  brwhite  */
 
-	[255] = 0,
+	 [255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-
-	"#cccccc",
-	"#555555",
-	"black",
+	"#cccccc",  /* 256:  */
+	"#555555",  /* 257:  */
+	"gray90",   /* 258: default foreground colour */
+	"black",    /* 259: default background colour */
+	"#000000",  /* 260: custom bg                 */
 };
-
 
 /*
  * Default colors (colorname index)
  * foreground, background, cursor, reverse cursor
  */
 unsigned int defaultfg = 7;
-unsigned int defaultbg = 0;
-static unsigned int defaultcs = 256;
+unsigned int defaultbg = 1;
+unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
-unsigned int bg = 16, bgUnfocused = 16;
-
+unsigned int bg = 260, bgUnfocused = 16;
+ 
 /*
  * Default shape of cursor
  * 2: Block ("█")
