@@ -7,18 +7,21 @@ static const unsigned int snap      = 32;  /* snap pixel */
 static const int swallowfloating    = 0;   /* 1 means swallow floating windows by default */
 static const int showbar            = 1;   /* 0 means no bar */
 static const int topbar             = 1;   /* 0 means bottom bar */
+static const int user_bh            = 27;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const int user_bh_padding    = 3;   /* if user_bh == 0, user bh padding is added to font height */
 
 static const char *fonts[]          = {
-	                                      "Inconsolata For Powerline:size=12",
-	                                      "Inconsolata Regular Nerd Font Mono=12",
+	                                      "Inconsolata:size=15",
+	                                      "Inconsolata Regular Nerd Font Mono:size=15",
                                       };
 
-static const char dmenufont[]       = "Inconsolata For Powerline:size=12";
+static const char dmenufont[]       = "Inconsolata For Powerline:size=15";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#1166c8";
+
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -43,9 +46,10 @@ static const Rule rules[] = {
 };
 
 /* layout(s) */
-static const float mfact     = 0.6;  /* factor of master area size [0.05..0.95] */
-static const int nmaster     = 1;    /* number of clients in master area */
-static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+static const float mfact        = 0.6; /* factor of master area size [0.05..0.95] */
+static const int nmaster        = 1;    /* number of clients in master area */
+static const int resizehints    = 0;    /* 1 means respect size hints in tiled resizals */
+static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -71,7 +75,6 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
-
 #include "shift-tools.c"
 
 static Key keys[] = {
