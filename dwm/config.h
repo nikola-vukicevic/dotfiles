@@ -11,11 +11,13 @@ static const int user_bh            = 27;  /* 0 means that dwm will calculate ba
 static const int user_bh_padding    = 3;   /* if user_bh == 0, user bh padding is added to font height */
 
 static const char *fonts[]          = {
-	                                      "Inconsolata:size=15",
-	                                      "Inconsolata Regular Nerd Font Mono:size=15",
+	                                      "Inconsolata:size=16.0",
+	                                      "Inconsolata Regular Nerd Font Complete Mono:size=16.0",
+	                                      "Noto Emoji:size=12.0",
+	                                      //"Symbola:size=14.0",
                                       };
 
-static const char dmenufont[]       = "Inconsolata For Powerline:size=15";
+static const char dmenufont[]       = "Inconsolata For Powerline:size=16.0";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -73,7 +75,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, /*"-fn", dmenufont, */ "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 #include "shift-tools.c"
 
@@ -83,15 +85,15 @@ static Key keys[] = {
 	
 	{ MODKEY,               XK_o,       shiftviewclients,  { .i = +1 } },
 	{ MODKEY|ShiftMask,     XK_o,	    shiftview,         { .i = +1 } },
-	{ MODKEY|ShiftMask,     XK_i,	    shiftview,         { .i = -1 } },
-	{ MODKEY,	            XK_i,       shiftviewclients,  { .i = -1 } },
-	{ MODKEY,               XK_p,       spawn,             {.v = dmenucmd } },
+//	{ MODKEY|ShiftMask,     XK_i,	    shiftview,         { .i = -1 } },
+//	{ MODKEY,	            XK_i,       shiftviewclients,  { .i = -1 } },
+	{ MODKEY,               XK_d,       spawn,             {.v = dmenucmd } },   /* izmena - bilo p */
 	{ MODKEY,               XK_Return,  spawn,             {.v = termcmd } },    /* izmena */
 	{ MODKEY,               XK_b,       togglebar,         {0} },
 	{ MODKEY,               XK_j,       focusstack,        {.i = +1 } },
 	{ MODKEY,               XK_k,       focusstack,        {.i = -1 } },
 	{ MODKEY,               XK_i,       incnmaster,        {.i = +1 } },
-	{ MODKEY,               XK_d,       incnmaster,        {.i = -1 } },
+	{ MODKEY,               XK_p,       incnmaster,        {.i = -1 } },         /* izmena - bilo d */
 	{ MODKEY,               XK_h,       setmfact,          {.f = -0.05} },
 	{ MODKEY|ShiftMask,		XK_h,       shiftboth,         { .i = -1 }	},
 	{ MODKEY|ControlMask,   XK_h,       shiftswaptags,     { .i = -1 }	},
