@@ -1,0 +1,4 @@
+8c8
+< static char *font = "Inconsolata:size=19.0:antialias=true:autohint=true";
+---
+> static char *font = "Inconsolatar:size=19.0:antialias=true:autohint=true";

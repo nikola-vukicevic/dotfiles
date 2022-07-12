@@ -5,17 +5,16 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Inconsolata:size=19.0:antialias=true:autohint=true";
+static char *font = "Inconsolatar:size=19.0:antialias=true:autohint=true";
 
 /* Spare fonts */
 
 static char *font2[] = {
 	"Inconsolata for Powerline:size=19.0:antialias=true:autohint=true",
 	"Inconsolata Regular Nerd Font Complete Mono:size=19.0:antialias=true:autohint=true",
-	"Noto Emoji:size=15.0:antialias=true:autohint=true",
-	//"Noto Color Emoji:size=15.0:antialias=true:autohint=true",
-	//"Symbola:size=15.0:antialias=true:autohint=true",
-	//"Inconsolata:size=19.0:antialias=true:autohint=true",
+	/*
+	    "Inconsolata:size=19.0:antialias=true:autohint=true",
+	*/
 };
 
 static int borderpx = 0;
@@ -106,7 +105,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 4;
 
 /* bg opacity */
-float alpha = 0.9, alphaUnfocused = 0.8;
+float alpha = 0.8, alphaUnfocused = 0.75;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -118,7 +117,7 @@ static const char *colorname[] = {
 	"#588cda",  /*  4:  blue     */
 	"#eb4f97",  /*  5:  magenta  */
 	"#78cbce",  /*  6:  cyan     */
-	"#cccccc",  /*  7:  white    */
+	"#d0d0d0",  /*  7:  white    */
 	
 	/* 8 bright colors */
 	"#555555",  /*  8:  brblack  */
@@ -128,7 +127,7 @@ static const char *colorname[] = {
 	"#adcef6",  /* 12:  brblue   */
 	"#f6adce",  /* 13:  brmagenta*/
 	"#b4ecee",  /* 14:  brcyan   */
-	"#eeeeee",  /* 15:  brwhite  */
+	"#f0f0f0",  /* 15:  brwhite  */
 
 	 [255] = 0,
 
