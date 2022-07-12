@@ -4,7 +4,7 @@
 static const unsigned int borderpx  = 0;   /* border pixel of windows */
 static const unsigned int gappx     = 0;   /* gaps between windows */
 static const unsigned int snap      = 32;  /* snap pixel */
-static const int swallowfloating    = 0;   /* 1 means swallow floating windows by default */
+static const int swallowfloating     = 0;   /* 1 means swallow floating windows by default */
 static const int showbar            = 1;   /* 0 means no bar */
 static const int topbar             = 1;   /* 0 means bottom bar */
 static const int user_bh            = 27;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
