@@ -1,7 +1,0 @@
-*** /dev/null
---- /dev/null
-***************
-*** 8
-- static char *font = "Inconsolata:size=19.0:antialias=true:autohint=true";
---- 8 -----
-+ static char *font = "Inconsolatar:size=19.0:antialias=true:autohint=true";
