@@ -29,5 +29,5 @@ If you wanna try them out, you're going to need the Vundle plugin and you're als
 ## i3 (legacy)
 Nothing fancy here. Simple and functional (a few dedicated shortcuts for switching the keyboard layout and some minor visual tweaks)
 
-## Xresources
+## Xresources (legacy)
 These settings are for the urxvt terminal (which is what I used before switching to ST)
