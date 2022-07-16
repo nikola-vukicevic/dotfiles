@@ -7,14 +7,15 @@ static int                min_width = 600;  /* minimum width when centered */
 static const unsigned int alpha     = 0xe0;
 
 /* Size of the window border */
-static const unsigned int border_width = 2;
+static const unsigned int border_width = 5;
 
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines = 12;
 
 /* -fn option overrides fonts[0]; default X11 font or font set */
 static const char *fonts[] = {
-	"monospace:size=18"
+	"Office Code Pro:style=Regular:size=16"
+	//"Inconsolata-g:style=g:size=19"
 };
 
 static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
