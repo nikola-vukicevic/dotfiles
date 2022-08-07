@@ -1,0 +1,26 @@
+#!/bin/bash
+
+jezik=$(setxkbmap -query | awk '/layout/{ print $2 }')
+varijacija=$(setxkbmap -query | awk '/variant/{ print $2 }')
+
+# echo $jezik
+# echo $varijacija
+
+if [ "$jezik" = "us" ]; then
+	# echo "JuEs"
+	setxkbmap -layout rs -variant latin # -option caps:escape; xmodmap -e 'clear lock'
+	dunstify -r 117 "tastatura: RS (latinica)"
+elif [ "$jezik" = "rs" ]; then
+	if [ "$varijacija" = "latin" ]; then
+		# echo "Latinica"
+		setxkbmap -layout rs # -option caps:escape; xmodmap -e 'clear lock'
+		dunstify -r 117 "tastatura: RS (ćirilica)"
+	else
+		# echo "Cirilica"
+		setxkbmap -layout us # -option caps:escape; xmodmap -e 'clear lock'
+		dunstify -r 117 "tastatura: US"
+	fi
+fi
+
+pkill -RTMIN+17 dwmblocks
+
