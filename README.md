@@ -12,6 +12,13 @@ My build of the Suckless dwm window manager. Simple and effective with only a fe
 - swallow (GUI app started from terminal 'swallows' the terminal, i.e. - the terminal temporarily disappears until the app is closed)
 - full gaps (by default, it's practiaclly 'turned-off', as you can see in the config file, but I guess I like it sometimes, so I keep it
 
+### Dependencies
+
+In order for scripts to work, the following software is required:
+
+- sysstat
+- dunst
+
 ## st
 
 My build of the Suckless Simple Terminal. Also simple and effective with not too many patches:
