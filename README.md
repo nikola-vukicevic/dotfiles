@@ -7,6 +7,7 @@ So far so good! :)
 
 My build of the Suckless dwm window manager. Simple and effective with only a few patches:
 
+- patched for dwmblocks adn color output
 - bottom stack (a nice additional layout)
 - shift tools (for easier acces to adjacent tags)
 - swallow (GUI app started from terminal 'swallows' the terminal, i.e. - the terminal temporarily disappears until the app is closed)
