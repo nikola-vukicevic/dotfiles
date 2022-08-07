@@ -12,16 +12,17 @@ static const int user_bh            = 27;  /* 0 means that dwm will calculate ba
 static const int user_bh_padding    = 3;   /* if user_bh == 0, user bh padding is added to font height */
 
 static const char *fonts[]          = {
-	                                      "Office Code Pro:size=14.0",
-	                                      //"Inconsolata:size=16.0",
+										  "Inconsolata:size=12.0",
+										  // "Office Code Pro:size=12.0",
+	                                      "Noto Emoji:size=11.0",
+	                                      //"Inconsolata-g:style=g:size=16.0",
 	                                      //"Inconsolata Regular Nerd Font Complete Mono:size=16.0",
-	                                      "Noto Emoji:size=12.0",
 	                                      //"Symbola:size=14.0",
                                       };
 
 static const char dmenufont[] = "Inconsolata For Powerline:size=16.0";
 static const char col_gray1[] = "#2e2e31";
-static const char col_gray2[] = "#ff0000";
+static const char col_gray2[] = "#2e2e31";
 static const char col_gray3[] = "#bbbbbb";
 static const char col_gray4[] = "#eeeeee";
 static const char col_cyan[]  = "#62626b";
@@ -42,12 +43,12 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class             instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
-	{ "Sublime_text",    NULL,     NULL,           1 << 2,    0,          0,           0,        -1 },
+	{ "Sublime_text",    NULL,     NULL,           1 << 6,    0,          0,           0,        -1 },
 	{ "Gimp",            NULL,     NULL,           0,         0,          0,           0,        -1 },
 	{ "st",              NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ NULL,              NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
-	{ "Brave-browser",   NULL,     NULL,           1 << 1,    0,          0,          -1,        -1 },
-	{ "Firefox",         NULL,     NULL,           1 << 3,    0,          0,          -1,        -1 },
+	{ "Brave-browser",   NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
+	{ "Firefox",         NULL,     NULL,           1 << 7,    0,          0,          -1,        -1 },
 };
 
 /* layout(s) */
@@ -75,6 +76,8 @@ static const Layout layouts[] = {
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+
+#define STATUSBAR "dwmblocks"
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -125,10 +128,17 @@ static Key keys[] = {
 	
 	/* ----- Moji bind-ovi -------------------------------------------------- */
     
-	{ MODKEY, XK_F9,  spawn, SHCMD("setxkbmap -layout us                -option caps:escape; xmodmap -e 'clear lock'")  },
-	{ MODKEY, XK_F10, spawn, SHCMD("setxkbmap -layout rs -variant latin -option caps:escape; xmodmap -e 'clear lock'")  },
-	{ MODKEY, XK_F11, spawn, SHCMD("setxkbmap -layout rs                -option caps:escape; xmodmap -e 'clear lock'")  },
-	{ MODKEY, XK_F12, spawn, SHCMD("scrot ~/slike/screenshots/%b%d::%H%M%S.png")                                  },
+	{ MODKEY, XK_F1,      spawn, SHCMD("amixer set Master toggle ; pkill -RTMIN+16 dwmblocks")            },
+	{ MODKEY, XK_F2,      spawn, SHCMD("amixer -q set Master 1%- ; pkill -RTMIN+16 dwmblocks")            },
+	{ MODKEY, XK_F3,      spawn, SHCMD("amixer -q set Master 1%+ ; pkill -RTMIN+16 dwmblocks")            },
+	{ MODKEY, XK_F9,      spawn, SHCMD("setxkbmap -layout us                ; pkill -RTMIN+17 dwmblocks") },
+	{ MODKEY, XK_F10,     spawn, SHCMD("setxkbmap -layout rs -variant latin ; pkill -RTMIN+17 dwmblocks") },
+	{ MODKEY, XK_F11,     spawn, SHCMD("setxkbmap -layout rs                ; pkill -RTMIN+17 dwmblocks") },
+	{ MODKEY, XK_F12,     spawn, SHCMD("scrot ~/slike/screenshots/%b%d::%H%M%S.png")                      },  
+	{ MODKEY, XK_grave,   spawn, SHCMD("promena_tastature")                                               },
+	{ MODKEY, XK_q,       spawn, SHCMD("dunstctl close-all")                                              },
+	{ MODKEY, XK_z,       spawn, SHCMD("slock")                                                           },
+	{ MODKEY, XK_e,       spawn, SHCMD("st lfrun")                                                        },
 	
 	/* ----- nastavak (default keybinds) ------------------------------------ */
 
@@ -152,7 +162,10 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	// { ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button1,        sigstatusbar,   {.i = 1} },
+	{ ClkStatusText,        0,              Button2,        sigstatusbar,   {.i = 2} },
+	{ ClkStatusText,        0,              Button3,        sigstatusbar,   {.i = 3} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
