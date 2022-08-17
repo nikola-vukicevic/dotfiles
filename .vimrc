@@ -6,7 +6,7 @@ set mouse=a
 "curl -fLo ~/.vim/autoload/plug.vim --create-dirs \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 set viminfo+=n~/.vim/viminfo
-set runtimepath+=~/.vim/bundle/Vundle.vim
+" set runtimepath+=~/.vim/bundle/Vundle.vim
 
 call plug#begin()
 
