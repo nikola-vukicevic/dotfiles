@@ -1,9 +1,11 @@
 set nocompatible
 filetype off
 let mapleader="\<Space>"
+set mouse=a
 
 "curl -fLo ~/.vim/autoload/plug.vim --create-dirs \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
+set viminfo+=n~/.vim/viminfo
 set runtimepath+=~/.vim/bundle/Vundle.vim
 
 call plug#begin()
@@ -40,8 +42,16 @@ call plug#begin()
 	" NERDTree & NERD Commenter
 	" ------------------------------------------------------- "
 
-	Plug 'scrooloose/nerdtree'
-	Plug 'scrooloose/nerdcommenter'	
+	Plug 'preservim/nerdtree' |
+	     \ Plug 'Xuyuanp/nerdtree-git-plugin' |
+	     \ Plug 'ryanoasis/vim-devicons'
+
+	Plug 'preservim/nerdcommenter'	
+
+	let g:NERDTreeGitStatusUseNerdFonts = 1
+	let g:NERDTreeGitStatusShowIgnored = 1
+	let g:NERDTreeGitStatusUntrackedFilesMode = 'all'
+	let g:NERDTreeGitStatusShowClean = 1
 
 	" Add spaces after comment delimiters by default
 	let g:NERDSpaceDelims = 1
@@ -64,6 +74,13 @@ call plug#begin()
 	" Enable trimming of trailing whitespace when uncommenting
 	let g:NERDTrimTrailingWhitespace = 1	
 
+	" ------------------------------------------------------- "
+	" FZF
+	" ------------------------------------------------------- "
+	
+	Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
+	Plug 'junegunn/fzf.vim'
+	
 	" ------------------------------------------------------- "
 	" Auto pairs
 	" ------------------------------------------------------- "
@@ -113,6 +130,12 @@ call plug#begin()
 	Plug 'mhinz/vim-startify'
 
 	" ------------------------------------------------------- "
+	" Mini-map
+	" ------------------------------------------------------- "
+
+	Plug 'wfxr/minimap.vim'
+
+	" ------------------------------------------------------- "
 	" Ostalo
 	" ------------------------------------------------------- "
 
@@ -120,7 +143,7 @@ call plug#begin()
 	Plug 'tpope/vim-surround'
 	Plug 'aperezdc/vim-template'
 	Plug 'ap/vim-css-color'
-	Plug 'ryanoasis/vim-devicons'
+	" Plug 'ryanoasis/vim-devicons'
 
 	" Plug 'chriskempson/base16-vim'
 	" Plug 'sonph/onehalf', { 'rtp': 'vim' }
@@ -144,7 +167,7 @@ let g:netrw_winsize      = 20
 
 set encoding=utf-8
 set ttimeout
-set ttimeoutlen=20
+set ttimeoutlen=10
 set number
 set noshowmode
 set autoindent
@@ -237,8 +260,8 @@ hi StatusLineNC ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
 hi StatusLine   guifg=#2e2e31
 hi StatusLineNC guifg=#2e2e31
 hi Search       guibg=#339966 guifg=#e0e0e0
-hi SpecialKey   guifg=#35475a
-hi NonText      guifg=#35403a cterm=bold
+hi SpecialKey   guifg=#323d37
+hi NonText      guifg=#323d37 cterm=bold
 hi Visual       guibg=#444755
 hi Comment      guifg=#656a70
 
@@ -246,9 +269,15 @@ hi Comment      guifg=#656a70
 
 nnoremap <F2> :NERDTreeToggle<cr>
 nnoremap <F3> :Startify<cr>
-map      <F5> :Tabularize /
+noremap  <F4> :Buffers<cr>
+imap     <F5> <esc>wbi<code class='kod_u_tekstu'><esc>ea</code>
+nmap     <F5> wbi<code class='kod_u_tekstu'><esc>ea</code><esc><right>
+map      <F6> :Tabularize /
+nnoremap <F7> :w !pypy /home/korisnik/git/python/idiosync_parser.py<cr>
 nnoremap <F8> :TagbarToggle<cr>
 
+" map <leader>= :Tabularize /=<cr>
+map <leader>= ! node /home/korisnik/git/node/css_tab.js<cr>
 " -------------------------------------------------------- "
 
 map <F9>      :set number!<cr>
@@ -260,9 +289,9 @@ map <F12>     :qa<cr>
 " ----- "
 
 noremap  <esc><esc> :noh<cr>
-noremap  <leader><backspace>  :%s//gc<left><left><left>
-vnoremap <leader><backspace>  :s//gc<left><left><left>
-noremap  <leader>`            :set list!<cr>
+noremap  <leader><backspace> :%s//gc<left><left><left>
+vnoremap <leader><backspace> :s//gc<left><left><left>
+noremap  <leader>`           :set list!<cr>
 
 " ----- "
  
@@ -285,6 +314,20 @@ noremap <leader>w <C-w>
 
 " ----- "
 
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
+nnoremap <expr><silent> <leader>t &showtabline ? ":set showtabline=0\<cr>" : ":set showtabline=2\<cr>"
+
+" ----- "
+
 noremap <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <expr> k (v:count == 0 ? 'gk' : 'k')
 
@@ -298,3 +341,23 @@ map <Esc>[1;2C <S-Right>
 map <Esc>[1;2D <S-Left>
 map <Esc>[1;2C <S-Right>
 
+" --------------------------------------------------------------------------- "
+" Moji 'snippeti'
+" --------------------------------------------------------------------------- "
+
+imap  `ca ``<cr><aside class='napomena_u_tekstu'><cr><tab><p><cr></p><cr><backspace></aside><cr>~~<up><up><up><end><cr><tab>
+imap  `cb ``<cr><figure><cr><tab><pre class='iskljucena_selekcija'><cr><tab><code class='language-text'><cr><cr></code><cr><backspace></pre><cr><figcaption><cr><tab>Slika #s#. - Opis slike.<cr><backspace></figcaption><cr><backspace></figure><cr>~~<up><up><up><up><up><up><up><tab><tab><tab>
+imap  `cx <code class='kod_u_tekstu'></code><left><left><left><left><left><left><left>
+imap  `cc /* -------------------------------------------------------------------------- */<cr>// naslov<cr>/* -------------------------------------------------------------------------- */<up>
+imap  `cp # ---------------------------------------------------------------------------- #<cr># naslov<cr># ---------------------------------------------------------------------------- #<up>
+imap  `fr for(int i = 0; i < n; i++)<cr>{<cr><cr>}<up><end><tab>
+imap  `ff function f1()<cr>{<cr><cr>}<up><end><tab>
+imap  `wh while(i < n)<cr>{<cr><cr>}<up><end><tab>
+imap  `sw switch(n)<cr>{<cr>case 1: break;<cr>case '1': break;<cr>case "1": break;<cr>default: break;<cr>}
+
+" --------------------------------------------------------------------------- "
+" 'Auto-save'
+" --------------------------------------------------------------------------- "
+
+" autocmd BufWritePost *.imd :w !python /home/korisnik/git/python/idiosync_parser.py
+autocmd BufWritePost *.imd :w !node /home/korisnik/git/node/idiosync_parser.js
