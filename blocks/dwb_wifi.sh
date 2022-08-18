@@ -23,7 +23,7 @@ fg_d="^c#e0e0e0^"
 if [ "$wifi" = "" ]; then
 	wifi_snaga="$b1_f$wifi_ikona [x]$fg_d"
 else
-	wifi=$((wifi*100/70));
+	wifi=$(($wifi*100/70));
 	if [ $wifi -lt 34 ]; then
 		wifi_snaga="$b1_f$wifi_ikona $wifi%$fg_d"
 	else
