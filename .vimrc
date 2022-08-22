@@ -4,7 +4,7 @@ let mapleader="\<Space>"
 set mouse=a
 
 "curl -fLo ~/.vim/autoload/plug.vim --create-dirs \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-let nema_plaginova = 0
+let nema_pluginova = 0
 if empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	let nema_plaginova = 1
@@ -162,7 +162,7 @@ call plug#begin()
 call plug#end()
 filetype plugin indent on    " required
 
-if nema_plaginova == 1
+if nema_pluginova == 1
 	silent! PlugInstall
 	q
 endif
