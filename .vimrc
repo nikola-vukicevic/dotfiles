@@ -4,6 +4,11 @@ let mapleader="\<Space>"
 set mouse=a
 
 "curl -fLo ~/.vim/autoload/plug.vim --create-dirs \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+let nema_plaginova = 0
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	let nema_plaginova = 1
+endif
 
 set viminfo+=n~/.vim/viminfo
 " set tags+=$HOME/.local/bin/ctags/
@@ -156,6 +161,11 @@ call plug#begin()
 
 call plug#end()
 filetype plugin indent on    " required
+
+if nema_plaginova == 1
+	silent! PlugInstall
+	q
+endif
 
 " ---------------------------------------------------------------------------- "
 " netwr
