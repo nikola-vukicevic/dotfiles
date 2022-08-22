@@ -29,11 +29,6 @@ My build of the Suckless Simple Terminal. Also simple and effective with not too
 - font 2 (so you can list backup fonts)
 - scrollback & scrollback mouse (scrolling is not a default option in ST)
 
-## ViM (legacy)
-Although I'm still very much using Vim, haven't really fiddled with the .vimrc in a long time, so I'm calling these my "legacy" settings.
-
-If you wanna try them out, you're going to need the Vundle plugin and you're also going to have to fiddle with YCM (and apprent;y, I also made a mod of one of the official Airline themes minimalist.vim).
-
 ## i3 (legacy)
 Nothing fancy here. Simple and functional (a few dedicated shortcuts for switching the keyboard layout and some minor visual tweaks)
 
