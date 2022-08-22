@@ -3,16 +3,27 @@ filetype off
 let mapleader="\<Space>"
 set mouse=a
 
-"curl -fLo ~/.vim/autoload/plug.vim --create-dirs \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+" ---------------------------------------------------------------------------- "
+" Automatsko instaliranje - I deo (pripremni)
+" ---------------------------------------------------------------------------- "
+
+" -izvršni deo skripte je ispod liste plugin-ova
+" -preko promenljive auto_plug može se uključiti/isključiti
+"  automatsko instaliranje pluginova
+" -adresa: curl -fLo ~/.vim/autoload/plug.vim --create-dirs \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+let auto_plug      = 1
 let nema_pluginova = 0
-if empty(glob('~/.vim/autoload/plug.vim'))
+if auto_plug && empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	let nema_pluginova = 1
 endif
 
+" ---------------------------------------------------------------------------- "
+
 set viminfo+=n~/.vim/viminfo
-" set tags+=$HOME/.local/bin/ctags/
 set tags=tags,../tags
+" set tags+=$HOME/.local/bin/ctags/
 " set runtimepath+=~/.vim/bundle/Vundle.vim
 
 call plug#begin()
@@ -162,7 +173,11 @@ call plug#begin()
 call plug#end()
 filetype plugin indent on    " required
 
-if nema_pluginova == 1
+" ---------------------------------------------------------------------------- "
+" Automatsko instaliranje - II deo (izvršni)
+" ---------------------------------------------------------------------------- "
+
+if nema_pluginova
 	silent! PlugInstall
 	q
 endif
