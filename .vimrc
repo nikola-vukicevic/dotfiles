@@ -1,31 +1,27 @@
+" ---------------------------------------------------------------------------- "
 set nocompatible
 filetype off
 let mapleader="\<Space>"
 set mouse=a
-
 " ---------------------------------------------------------------------------- "
 " Automatsko instaliranje - I deo (pripremni)
 " ---------------------------------------------------------------------------- "
-
 " -izvršni deo skripte je ispod liste plugin-ova
 " -preko promenljive auto_plug može se uključiti/isključiti
 "  automatsko instaliranje pluginova
 " -adresa: curl -fLo ~/.vim/autoload/plug.vim --create-dirs \https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
 let auto_plug      = 1
 let nema_pluginova = 0
 if auto_plug && empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	let nema_pluginova = 1
 endif
-
 " ---------------------------------------------------------------------------- "
-
 set viminfo+=n~/.vim/viminfo
 set tags=tags,../tags
 " set tags+=$HOME/.local/bin/ctags/
 " set runtimepath+=~/.vim/bundle/Vundle.vim
-
+" ---------------------------------------------------------------------------- "
 call plug#begin()
 
 	" ------------------------------------------------------- "
@@ -172,16 +168,13 @@ call plug#begin()
 
 call plug#end()
 filetype plugin indent on    " required
-
 " ---------------------------------------------------------------------------- "
 " Automatsko instaliranje - II deo (izvršni)
 " ---------------------------------------------------------------------------- "
-
 if nema_pluginova
 	silent! PlugInstall
 	q
 endif
-
 " ---------------------------------------------------------------------------- "
 " netwr
 " ---------------------------------------------------------------------------- "
@@ -192,10 +185,9 @@ let g:netrw_liststyle    = 3
 let g:netrw_browse_split = 4
 let g:netrw_altv         = 1
 let g:netrw_winsize      = 20
-
 " ---------------------------------------------------------------------------- "
-
 set encoding=utf-8
+set hidden
 set ttimeout
 set ttimeoutlen=10
 set number
@@ -253,7 +245,6 @@ let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let NERDTreeShowHidden=1
-  
 " -------------------------------------------------------- "
 " Automatsko (ili bolje rečeno poluatomatsko) učitavanje
 " sadržaja otvorenog dokumenta, kada neki drugi program
@@ -264,7 +255,6 @@ let NERDTreeShowHidden=1
 au CursorHold,CursorHoldI * checktime
 au FocusGained,BufEnter * checktime
 set updatetime=500
-
 " -------------------------------------------------------- "
 " opcija list (malo čudan naziv) menja - u prikazu
 " (ne bukvalno), whitespace znakove specijalnim znakovima
@@ -272,18 +262,14 @@ set updatetime=500
 " ◦ • ⋅ ‣  ↲ ⁞ ▸ → ~ ⟩ ⟨
 set listchars=space:.,multispace:◦⋅⋅⋅,eol:↲,tab:⁞-,trail:~,extends:⟩,precedes:⟨
 set fillchars+=vert:∣
-
 " ---- guicolor fix -------------------------------------- "
-
 if exists('+termguicolors')
 	let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 	let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 	set termguicolors
 endif
-
 " -------------------------------------------------------- "
-" Let's make Vim great / koja god tema je izabrana
-
+" Let's make Vim great (again) - koja god tema je izabrana
 hi Normal       ctermbg=NONE
 hi nonText      ctermbg=NONE
 hi Normal       guibg=NONE ctermbg=NONE
@@ -300,9 +286,7 @@ hi SpecialKey   guifg=#323d37
 hi NonText      guifg=#323d37 cterm=bold
 hi Visual       guibg=#444755
 hi Comment      guifg=#656a70
-
 " -------------------------------------------------------- "
-
 nnoremap <F2>         :NERDTreeToggle<cr>
 nnoremap <F3>         :Startify<cr>
 nnoremap <leader><F3> :Tags<cr>
@@ -316,13 +300,11 @@ nnoremap <F8> :TagbarToggle<cr>
 " map <leader>= :Tabularize /=<cr>
 map <leader>= ! node /home/korisnik/git/node/css_tab.js<cr>
 " -------------------------------------------------------- "
-
 map <F9>      :set number!<cr>
 map <F10>     :set relativenumber!<cr>
 map <leader>y :set wrap!<cr>
 map <F11>     :VimadeToggle<cr>
 map <F12>     :qa<cr>
-
 " ----- "
 " uklanjanje oznake sa poslednjeg pretraživanog stringa
 noremap  <esc><esc> :noh<cr>
@@ -332,20 +314,19 @@ noremap  <leader><backspace> :%s//gc<left><left><left>
 vnoremap <leader><backspace> :s//gc<left><left><left>
 " toggle za prikaz whitespace-ova preko specijalnih znakova
 noremap  <leader>`           :set list!<cr>
-
 " ----- "
 " premotavanje pola stranice na dole
 noremap <S-f> <C-d>
 " premotavanje pola stranice na gore
 noremap <S-b> <C-u>
 " premeštanje reda jedno mesto na dole
-noremap <S-j> :m .+1<cr>
+noremap <silent><S-j> :call PomeranjeLinijeNaDole()<cr>
 " premeštanje reda jedno mesto na gore
-noremap <S-k> :m .-2<cr>
-" dupliciranje reda na dole (kursor prelazi u donji red)
-noremap <S-h> yyp
-" dupliciranje reda na gore (kursor ostaje u istom redu)
-noremap <S-l> yyP
+noremap <silent><S-k> :call PomeranjeLinijeNaGore()<cr>
+" dupliranje reda na dole (kursor prelazi u donji red)
+noremap <S-h> :call DupliranjeLinijeNaDole()<cr>
+" dupliranje reda na gore (kursor ostaje u istom redu)
+noremap <S-l> :call DupliranjeLinijeNaGore()<cr>
 " horizontalni skok na početak reda
 noremap <leader>h 0
 " horizontalni skok na kraj reda
@@ -356,17 +337,26 @@ noremap <leader>m M
 noremap <leader>j L
 " vertikalni skok na vrh ekrana
 noremap <leader>k H
-
 " ----- "
-" Malo olakšanja za rad sa splitovanom
+" Simulacija ponašanja ostalih editora u Insert modu:
+" 'Shift-Del' - brisanje sledeće reči
+inoremap <C-e> <C-o>dw
+" 'Ctrl-Shift-Del' - brisanje do kraja reda
+inoremap <C-r> <C-o>D
+" 'Shift-Backspace' je već mapirano na
+" <C-w>
+" 'Ctrl-Shift-Backspace' - brisanje do početka reda
+inoremap <C-q> <C-o>d^
+" Dupliranje reda
+inoremap <C-d> <C-o>:call DupliranjeLinijeNaDole()<cr>
+" ----- "
+" Malo olakšanje za rad sa splitovanom
 " radnom površinom
 noremap <leader>v :vsp<cr>
 noremap <leader>w <C-w>
-
 " ----- "
 " Tabove zapravo ne koristim često, ali,
 " neka bude ovako
-"
 noremap <leader>1 1gt
 noremap <leader>2 2gt
 noremap <leader>3 3gt
@@ -378,19 +368,15 @@ noremap <leader>8 8gt
 noremap <leader>9 9gt
 noremap <leader>0 :tablast<cr>
 nnoremap <expr><silent> <leader>t &showtabline ? ":set showtabline=0\<cr>" : ":set showtabline=2\<cr>"
-
 " ----- "
 " -kada je uključena opcija 'wrap', po defaultu <j> i <k>
 " prebacuju kursor na sledeći/prethodni red koji u prikazu
 " može biti zapravo nekoliko mesta ispod/iznad
 " -preko mapiranja, podešeno je da <j> i <k> pomeraju
 "  kursor jedno mesto dole/gore u prikazu
-
 noremap <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <expr> k (v:count == 0 ? 'gk' : 'k')
-
 " bez donjih mapiranja, multicursor plugin ne radi
-
 map <Esc>[1;5A <C-Up>
 map <Esc>[1;5B <C-Down>
 map <Esc>[1;5D <C-Left>
@@ -400,38 +386,41 @@ map <Esc>[1;2D <S-Left>
 map <Esc>[1;2C <S-Right>
 map <Esc>[1;2D <S-Left>
 map <Esc>[1;2C <S-Right>
-
 " --------------------------------------------------------------------------- "
 " 'Auto-save'
 " --------------------------------------------------------------------------- "
-
 " autocmd BufWritePost *.imd :w !python /home/korisnik/git/python/idiosync_parser.py
 autocmd BufWritePost *.imd :w !node /home/korisnik/git/node/idiosync_parser.js
+" --------------------------------------------------------------------------- "
+" Pomoćne funkcije
+" --------------------------------------------------------------------------- "
+function DupliranjeLinijeNaDole()
+	let kolona = col('.')
+	normal yyp
+	call cursor(line('.'), kolona)
+endfunction
 
+function DupliranjeLinijeNaGore()
+	let kolona = col('.')
+	normal yyP
+	call cursor(line('.'), kolona)
+endfunction
 
+function PomeranjeLinijeNaDole()
+	let kolona = col('.')
+	let red    = line('.')
+	if red < line('$')
+		:m .+1<cr>
+		call cursor(line('.'), kolona)
+	endif
+endfunction
 
-
-
-
-
-
-
-
-
-if has('cscope')
-  set cscopetag cscopeverbose
-
-  if has('quickfix')
-    set cscopequickfix=s-,c-,d-,i-,t-,e-
-  endif
-
-  cnoreabbrev csa cs add
-  cnoreabbrev csf cs find
-  cnoreabbrev csk cs kill
-  cnoreabbrev csr cs reset
-  cnoreabbrev css cs show
-  cnoreabbrev csh cs help
-
-  command -nargs=0 Cscope cs add $VIMSRC/src/cscope.out $VIMSRC/src
-endif
-
+function PomeranjeLinijeNaGore()
+	let kolona = col('.')
+	let red    = line('.')
+	if red > 1
+		:m .-2<cr>
+		call cursor(line('.'), kolona)
+	endif
+endfunction
+" --------------------------------------------------------------------------- "
