@@ -1,1 +1,3 @@
+# Vim - podešavanja
 
+U jednom trenutku, vimrc je prerastao određene okvire, pa je podeljen na nekoliko celina. Mnogo lakše za održavanje (a pri tom marginalno sporije).
