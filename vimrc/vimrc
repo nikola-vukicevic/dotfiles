@@ -1,0 +1,133 @@
+" ---------------------------------------------------------------------------- "
+set nocompatible
+filetype off
+let mapleader="\<Space>"
+set mouse=a
+" ---------------------------------------------------------------------------- "
+source ~/.vim/01_map.vim
+source ~/.vim/02_funkcije.vim
+" ---------------------------------------------------------------------------- "
+set viminfo+=n~/.vim/viminfo
+set tags=tags,../tags
+" set tags+=$HOME/.local/bin/ctags/
+" set runtimepath+=~/.vim/bundle/Vundle.vim
+" ---------------------------------------------------------------------------- "
+source ~/.vim/03_plugin.vim
+" ---------------------------------------------------------------------------- "
+" netwr
+" ---------------------------------------------------------------------------- "
+" malo da ulepšamo Vim-ov default file manager
+
+let g:netrw_banner       = 0
+let g:netrw_liststyle    = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv         = 1
+let g:netrw_winsize      = 20
+" ---------------------------------------------------------------------------- "
+set encoding=utf-8
+set hidden
+set ttimeout
+set ttimeoutlen=10
+set number
+set noshowmode
+set autoindent
+set smartindent
+set cindent
+set cinoptions+=g0
+set tabstop=4
+set softtabstop=4
+set laststatus=2
+set shiftwidth=4
+set hlsearch
+set incsearch
+set completeopt=menu
+set cursorline
+set nowrap
+set linebreak
+set breakindent
+set list
+set backspace=indent,eol,start
+
+" set statusline=\ File:\ %F\ %m\ Buffer:\ %n%=%p%%\ Line:\ %l\ of\ %L\ %y\
+" set background=dark
+" set t_Co=256
+
+" colorscheme tender
+" colorscheme Tomorrow-Night
+colorscheme Tomorrow-Night-Eighties 
+" colorscheme gruvbox
+" colorscheme molokai
+" colorscheme solarized
+" colorscheme slate
+" colorscheme Monokai
+" colorscheme OceanicNext
+" colorscheme atom
+" colorscheme solarized8_dark
+" colorscheme smyck
+" colorscheme onehalfdark
+
+" let g:airline_theme="minimalist"
+" let g:airline_theme="tomorrow"
+" let g:airline_theme="bubblegum"
+
+let g:airline_theme="molokai"
+let g:airline_powerline_fonts=1
+let g:airline_detect_modified=1
+let g:airline_detect_paste=1	
+
+syntax on
+filetype on
+filetype plugin on
+set wildmenu
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let NERDTreeShowHidden=1
+" -------------------------------------------------------- "
+" Automatsko (ili bolje rečeno poluatomatsko) učitavanje
+" sadržaja otvorenog dokumenta, kada neki drugi program
+" sačuva dati dokument sa novim sadržajem
+
+" set autoread
+" au CursorHold * checktime
+au CursorHold,CursorHoldI * checktime
+au FocusGained,BufEnter * checktime
+set updatetime=500
+" -------------------------------------------------------- "
+" opcija list (malo čudan naziv) menja - u prikazu
+" (ne bukvalno), whitespace znakove specijalnim znakovima
+" (ispod je definisano koji se tačno znaci koriste)
+" ◦ • ⋅ ‣  ↲ ⁞ ▸ → ~ ⟩ ⟨
+set listchars=space:.,multispace:◦⋅⋅⋅,eol:↲,tab:⁞-,trail:~,extends:⟩,precedes:⟨
+set fillchars+=vert:∣
+" ---- guicolor fix -------------------------------------- "
+if exists('+termguicolors')
+	let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+	let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+	set termguicolors
+endif
+" -------------------------------------------------------- "
+" Let's make Vim great (again) - koja god tema je izabrana
+hi Normal       ctermbg=NONE
+hi nonText      ctermbg=NONE
+hi Normal       guibg=NONE ctermbg=NONE
+" hi CursorLine ctermbg=none
+hi CursorLine   guibg=#333541
+hi CursorLineNr cterm=bold guifg=#90a0b0
+hi VertSplit    guibg=NONE
+hi StatusLine   ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
+hi StatusLineNC ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
+hi StatusLine   guifg=#2e2e31
+hi StatusLineNC guifg=#2e2e31
+hi Search       guibg=#339966 guifg=#e0e0e0
+hi SpecialKey   guifg=#323d37
+hi NonText      guifg=#323d37 cterm=bold
+hi Visual       guibg=#444755
+hi Comment      guifg=#656a70
+" ---------------------------------------------------------------------------- "
+" 'Auto-save'
+" ---------------------------------------------------------------------------- "
+" autocmd BufWritePost *.imd :w !python /home/korisnik/git/python/idiosync_parser.py
+autocmd BufWritePost *.imd :w !node /home/korisnik/git/node/idiosync_parser.js
+" ---------------------------------------------------------------------------- "
+
