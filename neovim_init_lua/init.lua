@@ -1,9 +1,14 @@
 -- -----------------------------------------------------------------------------
 vim.opt.mouse       = "a"
 -- " autocmd BufEnter * setlocal formatoptions=crqn2l1j
-vim.g.barebones_CFG = false
 -- " let g:prvi_dir = getcwd() -- Ovo je kanda bio pokušaj da "odobrovoljim" LSP
--- " ---------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+if vim.fn.argv(0) == "barebones" then
+	vim.g.barebones_CFG = true
+else
+	vim.g.barebones_CFG = false
+end
+-- -----------------------------------------------------------------------------
 require('01_map')
 require('02_funkcije')
 -- -----------------------------------------------------------------------------
@@ -52,8 +57,7 @@ vim.opt.ignorecase  = true
 vim.opt.smartcase   = true
 -- -----
 if vim.g.barebones_CFG == true then
-	vim.o.statusline = " %f | %l,%c | %p%%"
-	-- vim.opt.statusline = "%F %m %n%=%p%% %l %L %y"
+	vim.opt.statusline = "%F %m [%n]%=%l:%c [%L] %y"
 end
 -- -----
 if vim.g.barebones_CFG ~= true then
@@ -64,17 +68,17 @@ if vim.g.barebones_CFG ~= true then
 	-- vim.cmd("colorscheme palenightfall")
 end
 -- -----
-vim.opt.syntax   = "on"
-vim.opt.filetype = "on"
-vim.opt.filetype.plugin = "on" -- ?????????????????????????????
-vim.opt.wildmenu = true
+vim.opt.syntax          = "on"
+vim.opt.filetype        = "on"
+vim.opt.filetype.plugin = "on"
+vim.opt.wildmenu        = true
 -- ---------------------------------------------------------
 -- opcija list (malo čudan naziv) menja - u prikazu
 -- (ne bukvalno), whitespace znakove specijalnim znakovima
 -- (ispod je definisano koji se tačno znaci koriste)
 -- ◦ • ⋅ ‣  ↲ ⁞ ▸ → ~ ⟩ ⟨
 vim.opt.listchars = "space:.,multispace:◦⋅⋅⋅,eol:↲,tab:⁞-,trail:~,extends:⟩,precedes:⟨"
-vim.opt.fillchars:append("vert:∣")             -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+vim.opt.fillchars:append("vert:╵")             -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -- " ---- guicolor fix -------------------------------------
 -- " set background=dark
 -- " set t_Co=256
@@ -85,23 +89,29 @@ vim.opt.fillchars:append("vert:∣")             -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -- endif
 -- ---------------------------------------------------------
 -- Let's make Vim great (again) - koja god tema je izabrana
-vim.cmd ("hi Normal        ctermbg=NONE")
-vim.cmd ("hi nonText       ctermbg=NONE")
-vim.cmd ("hi Normal        guibg=NONE ctermbg=NONE")
--- vim.cmd("hi CursorLine ctermbg=none")
+vim.cmd("hi Normal         ctermbg=NONE")
+vim.cmd("hi nonText        ctermbg=NONE")
+vim.cmd("hi Normal         guibg=NONE ctermbg=NONE")
+vim.cmd("hi CursorLine     ctermbg=none")
 vim.cmd("hi CursorLine     guibg=#333541")
 vim.cmd("hi CursorLineNr   cterm=bold guifg=#90a0b0")
-vim.cmd("hi VertSplit      guibg=NONE")
+vim.cmd("hi VertSplit      guibg=NONE guifg=#20272a")
 vim.cmd("hi StatusLine     ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE")
 vim.cmd("hi StatusLineNC   ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE")
-vim.cmd("hi StatusLine     guifg=#2e2e31")
-vim.cmd("hi StatusLineNC   guifg=#2e2e31")
+-- vim.cmd("hi StatusLine     guifg=#2e2e31")
+-- vim.cmd("hi StatusLineNC   guifg=#2e2e31")
 vim.cmd("hi Search         guibg=#339966 guifg=#e0e0e0")
 vim.cmd("hi SpecialKey     guifg=#323d37")
 vim.cmd("hi NonText        guifg=#323d37 cterm=bold")
 vim.cmd("hi Visual         guibg=#444755")
 vim.cmd("hi Comment        guifg=#656a70")
+-- lf border:
 vim.cmd("hi FloatermBorder guibg=#00000000 guifg=#cc8833")
+-- Lazy border:
+vim.cmd("hi LazyNormal  guifg=#cccccc")
+vim.cmd("hi FloatBorder guifg=#cc8833")
+-- LSP Saga border:
+-- vim.cmd("hi SagaBorder guifg=#cc8833")
 -- --------------------------------------------------------- 
 -- Automatsko (ili bolje rečeno poluatomatsko) učitavanje
 -- sadržaja otvorenog dokumenta, kada neki drugi program
