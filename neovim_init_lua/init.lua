@@ -1,5 +1,7 @@
 -- -----------------------------------------------------------------------------
-vim.opt.mouse       = "a"
+vim.opt.mouse         = "a"
+vim.g.floaterm_opener = "edit"
+vim.g.spell_check     = false
 -- " autocmd BufEnter * setlocal formatoptions=crqn2l1j
 -- " let g:prvi_dir = getcwd() -- Ovo je kanda bio pokušaj da "odobrovoljim" LSP
 -- -----------------------------------------------------------------------------
@@ -18,7 +20,7 @@ end
 -- -----------------------------------------------------------------------------
 -- netwr
 -- -----------------------------------------------------------------------------
--- malo da ulepšamo i Vim-ov default file manager
+-- Nije zgoreg malo ulepšati i Vim-ov default file manager. :)
 vim.g.netrw_banner       = 0
 vim.g.netrw_liststyle    = 3
 vim.g.netrw_browse_split = 4
@@ -27,12 +29,12 @@ vim.g.netrw_winsize      = 20
 -- -----------------------------------------------------------------------------
 vim.opt.encoding    = "utf-8"
 vim.opt.hidden      = true
--- " setlocal formatoptions-=cro
 vim.opt.clipboard   = "unnamedplus"
+vim.opt.pumheight   = 20
 vim.opt.ttimeout    = true
--- " set ttimeoutlen=10
+vim.opt.ttimeoutlen = 10
 vim.opt.number      = true
--- vim.opt.noshowmode = true -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+vim.opt.showmode    = false
 vim.opt.autoindent  = true
 vim.opt.smartindent = true
 vim.opt.cindent     = true
@@ -55,9 +57,12 @@ vim.opt.splitbelow  = true
 vim.opt.splitright  = true
 vim.opt.ignorecase  = true
 vim.opt.smartcase   = true
+vim.opt.formatoptions:remove("c")
+vim.opt.formatoptions:remove("r")
+vim.opt.formatoptions:remove("o")
 -- -----
 if vim.g.barebones_CFG == true then
-	vim.opt.statusline = "%F %m [%n]%=%l:%c [%L] %y"
+	vim.opt.statusline = "%F %m [%n]%=%3l:%2v (%2c)[%L] %3b/0x%3B %y %m"
 end
 -- -----
 if vim.g.barebones_CFG ~= true then
@@ -85,8 +90,9 @@ vim.opt.fillchars:append("vert:╵")             -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -- if exists('+termguicolors')
 --     let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 --     let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-		vim.opt.termguicolors = true
 -- endif
+-- ---------------------------------------------------------
+vim.opt.termguicolors = true
 -- ---------------------------------------------------------
 -- Let's make Vim great (again) - koja god tema je izabrana
 vim.cmd("hi Normal         ctermbg=NONE")
@@ -130,6 +136,10 @@ vim.api.nvim_create_autocmd("FocusGained,BufEnter", {
 	command = "checktime"
 })
 --
+vim.api.nvim_create_autocmd("BufEnter" , {
+	pattern = "*",
+	command = "lua OpcijeZaFormatiranje()"
+})
 vim.opt.updatetime = 100
 -- -----------------------------------------------------------------------------
 -- Save *.imd pokreće parsiranje članka:
