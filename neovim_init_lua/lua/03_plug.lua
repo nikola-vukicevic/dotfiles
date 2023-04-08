@@ -119,7 +119,7 @@ require("lazy").setup({
 })
 -- -----------------------------------------------------------------------------
 -- LF:
-vim.g.lf_replace_netrw    = true
+vim.g.lf_replace_netrw    = false
 vim.g.lf_command_override = 'lfrun'
 vim.g.floaterm_title      = "[lf]"
 vim.g.lf_width            = 0.6
