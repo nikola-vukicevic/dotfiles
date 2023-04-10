@@ -61,6 +61,16 @@ vim.opt.formatoptions:remove("c")
 vim.opt.formatoptions:remove("r")
 vim.opt.formatoptions:remove("o")
 -- -----
+if vim.g.barebones_CFG ~= true then
+	vim.opt.shortmess =  {
+		S = true,
+	    -- c = true, -- Do not show completion messages in command line
+	    -- F = true, -- Do not show file info when editing a file, in the command line
+	    -- W = true, -- Do not show "written" in command line when writing
+	    -- I = true, -- Do not show intro message when starting Vim
+	}
+end
+-- -----
 if vim.g.barebones_CFG == true then
 	vim.opt.statusline = "%F %m [%n]%=%3l:%2v (%2c)[%L] %3b/0x%3B %y %m"
 end
@@ -84,6 +94,8 @@ vim.opt.wildmenu        = true
 -- ◦ • ⋅ ‣  ↲ ⁞ ▸ → ~ ⟩ ⟨
 vim.opt.listchars = "space:.,multispace:◦⋅⋅⋅,eol:↲,tab:⁞-,trail:~,extends:⟩,precedes:⟨"
 vim.opt.fillchars:append("vert:╵")             -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+vim.opt.fillchars:append("stl: ")
+vim.opt.fillchars:append("stlnc: ")
 -- " ---- guicolor fix -------------------------------------
 -- " set background=dark
 -- " set t_Co=256
@@ -102,15 +114,28 @@ vim.cmd("hi CursorLine     ctermbg=none")
 vim.cmd("hi CursorLine     guibg=#333541")
 vim.cmd("hi CursorLineNr   cterm=bold guifg=#90a0b0")
 vim.cmd("hi VertSplit      guibg=NONE guifg=#20272a")
-vim.cmd("hi StatusLine     ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE")
-vim.cmd("hi StatusLineNC   ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE")
--- vim.cmd("hi StatusLine     guifg=#2e2e31")
--- vim.cmd("hi StatusLineNC   guifg=#2e2e31")
-vim.cmd("hi Search         guibg=#339966 guifg=#e0e0e0")
-vim.cmd("hi SpecialKey     guifg=#323d37")
-vim.cmd("hi NonText        guifg=#323d37 cterm=bold")
-vim.cmd("hi Visual         guibg=#444755")
-vim.cmd("hi Comment        guifg=#656a70")
+-- --------------------------------
+-- Fix za znakove ^^^^^ koji se
+-- pojave na statusnoj liniji
+-- neaktivnog prozora:
+if vim.g.barebones_CFG ~= true then
+	vim.cmd("hi StatusLine     guibg=#2e2e31 guifg=#2e2e31")
+	vim.cmd("hi StatusLineNC   guibg=NONE guifg=NONE")
+end
+-- -----
+vim.cmd("hi CmpItemMenuDefault        guifg=#999999")
+vim.cmd("hi CmpItemKind               guifg=#77aaff")
+vim.cmd("hi CmpItemAbbrMatch          guibg=NONE guifg=#eedd77")
+vim.cmd("hi CmpItemKindSnippetDefault guibg=NONE guifg=#cc8833")
+vim.cmd("hi CmpItemKindTextDefault    guibg=NONE guifg=#dddddd")
+vim.cmd("hi CmpItemKindFolderDefault  guibg=NONE guifg=#cc3388")
+vim.cmd("hi CmpItemKindFileDefault    guibg=NONE guifg=#cc3388")
+-- -----
+vim.cmd("hi Search           guibg=#339966 guifg=#e0e0e0")
+vim.cmd("hi SpecialKey       guifg=#323d37")
+vim.cmd("hi NonText          guifg=#323d37 cterm=bold")
+vim.cmd("hi Visual           guibg=#444755")
+vim.cmd("hi Comment          guifg=#656a70")
 -- lf border:
 vim.cmd("hi FloatermBorder guibg=#00000000 guifg=#cc8833")
 -- Lazy border:
@@ -150,7 +175,7 @@ vim.api.nvim_create_autocmd("BufWritePost" , {
 })
 -- -----------------------------------------------------------------------------
 if vim.g.barebones_CFG ~= true then
-	require ('podesavanja')
+	require ('plugins')
 end
 -- -----------------------------------------------------------------------------
 
