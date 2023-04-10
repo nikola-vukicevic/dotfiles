@@ -16,6 +16,16 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	-- ---------------------------------------------
 	-- "kyazdani42/nvim-web-devicons",
+	-- ---------------------------------------------
+	"folke/neodev.nvim",
+	"nvim-tree/nvim-web-devicons",
+	"stevearc/aerial.nvim",
+	-- ---------------------------------------------
+	{
+		'nvim-telescope/telescope.nvim', tag = '0.1.1',
+		-- or                              , branch = '0.1.1',
+		dependencies = { { 'nvim-lua/plenary.nvim' } }
+    },
 	"kyazdani42/nvim-tree.lua",
 	"dstein64/vim-startuptime",
 	-- ---------------------------------------------
@@ -25,10 +35,13 @@ require("lazy").setup({
 	"hrsh7th/cmp-nvim-lsp",
 	"hrsh7th/cmp-buffer",
 	"hrsh7th/cmp-path",
+	-- "hrsh7th/cmp-nvim-lua",
 	"hrsh7th/cmp-cmdline",
+	"hrsh7th/cmp-calc",
+	"hrsh7th/cmp-nvim-lsp-signature-help",
 	"hrsh7th/nvim-cmp",
 	"onsails/lspkind.nvim",
-	"ray-x/lsp_signature.nvim",
+	-- "ray-x/lsp_signature.nvim",
 	-- ---------------------------------------------
 	-- Snipeti:
 	-- ---------------------------------------------
@@ -38,22 +51,22 @@ require("lazy").setup({
 	-- ---------------------------------------------
 	-- LSP Saga:
 	-- ---------------------------------------------
-	{
-		"glepnir/lspsaga.nvim",
-		event = "LspAttach",
-		config = function()
-			require("lspsaga").setup({})
-		end,
-		dependencies = {
-			{
-				"nvim-tree/nvim-web-devicons"
-			},
-			--Please make sure you install markdown and markdown_inline parser
-			{
-				"nvim-treesitter/nvim-treesitter"
-			}
-		}
-	},
+	-- {
+	-- 	"glepnir/lspsaga.nvim",
+	-- 	event = "LspAttach",
+	-- 	config = function()
+	-- 		require("lspsaga").setup({})
+	-- 	end,
+	-- 	dependencies = {
+	-- 		{
+	-- 			"nvim-tree/nvim-web-devicons"
+	-- 		},
+	-- 		--Please make sure you install markdown and markdown_inline parser
+	-- 		{
+	-- 			"nvim-treesitter/nvim-treesitter"
+	-- 		}
+	-- 	}
+	-- },
 	-- ---------------------------------------------
 	-- Tree-sitter
 	-- ---------------------------------------------
@@ -82,8 +95,8 @@ require("lazy").setup({
 	-- ---------------------------------------------
 	-- FZF:
 	-- ---------------------------------------------
-	"junegunn/fzf",
-	"junegunn/fzf.vim",
+	-- "junegunn/fzf",
+	-- "junegunn/fzf.vim",
 	-- ---------------------------------------------
 	-- Comment.nvim:
 	-- ---------------------------------------------
@@ -97,12 +110,22 @@ require("lazy").setup({
 	-- Color themes:
 	-- ---------------------------------------------
 	"drewtempelmeyer/palenight.vim",
+	-- "flazz/vim-colorschemes",
+	-- "folke/tokyonight.nvim", { 'branch': 'main' },
+	-- "chriskempson/base16-vim",
+	-- "sonph/onehalfi", { 'rtp': 'vim' },
+	-- "drewtempelmeyer/palenight.vim",
+	-- "JoosepAlviste/palenightfall.nvim",
+	-- "rebelot/kanagawa.nvim",
+	-- "catppuccin/nvim", { 'as': 'catppuccin' },
+	-- "gilgigilgil/anderson.vim"
 	-- ---------------------------------------------
 	-- Ostalo:
 	-- ---------------------------------------------
 	"ap/vim-css-color",
 	"jiangmiao/auto-pairs",
 	"RRethy/vim-illuminate",
+	-- "godlygeek/tabular",
 	-- ---------------------------------------------
 	}, { -- Options:
 	-- ---------------------------------------------

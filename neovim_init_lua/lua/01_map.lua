@@ -6,11 +6,11 @@ vim.g.mapleader = " "
 -- noremap <leader>p va}:!clang-format -style=file:/home/korisnik/.config/clangd/clang_format<cr>
 -- " ---------------------------------------------------------------------------- "
 vim.keymap.set( "n" , "<F2>" ,         ":NvimTreeToggle<cr>" ,                     { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<leader>e" ,    ":Lf<cr>" ,                                 { desc = "" , remap = false } )
+-- vim.keymap.set( "n" , "<leader>e" ,    ":Lf<cr>" ,                                 { desc = "" , remap = false } )
 vim.keymap.set( "n" , "<leader>f" ,    ":Lf<cr>" ,                                 { desc = "" , remap = false } )
 vim.keymap.set( "n" , "<F3>" ,         ":Startify<cr>" ,                           { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<leader><F3>" , ":Tags<cr>" ,                               { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<F4>" ,         ":Buffers<cr>" ,                            { desc = "" , remap = false } )
+vim.keymap.set( "n" , "<leader><F3>" , ":Telescope aerial<cr>" ,                   { desc = "" , remap = false } )
+vim.keymap.set( "n" , "<F4>" ,         ":Telescope buffers<cr>" ,                  { desc = "" , remap = false } )
 vim.keymap.set( "n" , "<leader><F4>" , ":Files<cr>" ,                              { desc = "" , remap = false } )
 vim.keymap.set( "n" , "<F5>" ,         ":lua Uokviravanje()<cr>" ,                 { desc = "" , remap = false } )
 vim.keymap.set( "i" , "<F5>" ,         "<esc>l:lua Uokviravanje()<cr>" ,           { desc = "" , remap = false } )
@@ -22,8 +22,11 @@ vim.keymap.set( "v" , "<F6>" ,         ":lua ProbaMenija()<cr>" ,               
 --
 -- map      <F6> :Tabularize /
 -- nnoremap <F7> :w !python /home/korisnik/git/python/markdown/idiosync_parser.py<cr>
-vim.keymap.set( "" , "<F7>" , ":lua SpelovanjeToggle()<cr>" , { desc = "" , remap = false } )
--- nnoremap <F8> :TagbarToggle<cr>
+vim.keymap.set( "" , "<F7>" ,      ":lua SpelovanjeToggle()<cr>" , { desc = "" , remap = false } )
+vim.keymap.set( "" , "<leader>g" , ":AerialToggle<cr>"           , { desc = "" , remap = false } )
+--
+vim.keymap.set( "v" , "<" ,         "<gv" ,                         { desc = "" , remap = false } )
+vim.keymap.set( "v" , ">" ,         ">gv" ,                         { desc = "" , remap = false } )
 --
 -- " map <leader>= :Tabularize /=<cr>
 -- map <leader>= !python /home/korisnik/git/python/pretty_css.py<cr>
