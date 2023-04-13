@@ -17,12 +17,22 @@ cmp.event:on(
 )
 --------------------------------------------------------------------------------
 cmp.setup({
+	completion = {
+		autocomplete = false,
+	},
 	snippet = {
 		expand = function(args)
 			-- vim.fn["vsnip#anonymous"](args.body)     -- For `vsnip` users.
 			luasnip.lsp_expand(args.body) -- For `luasnip` users.
 		end
 	},
+	-- performance = {
+	-- 	-- debounce = 1500,
+	-- 	-- trigger_debounce_time = 1500,
+	-- 	debounce = 500,
+	-- 	throttle = 800,
+	-- 	fetching_timeout = 1200,
+	-- },
 	-- view = {            
 	-- 	entries = "native", -- can be "custom", "wildmenu" or "native"
 	-- },

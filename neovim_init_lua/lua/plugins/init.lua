@@ -7,6 +7,11 @@ require('plugins/lsp')
 require('plugins/luasnip')
 require('plugins/cmp')
 -- -------------------------------------------------------------------------- --
+vim.api.nvim_create_autocmd("TextChangedI", {
+	pattern = "*",
+	command = "lua require('plugins/debounce').debounce()"
+})
+-- -------------------------------------------------------------------------- --
 -- Plugin - Tree-sitter:
 -- -------------------------------------------------------------------------- --
 local treesitter = require('nvim-treesitter.configs')
