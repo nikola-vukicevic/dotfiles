@@ -2,7 +2,6 @@
 vim.opt.mouse         = "a"
 vim.g.floaterm_opener = "edit"
 vim.g.spell_check     = false
--- " autocmd BufEnter * setlocal formatoptions=crqn2l1j
 -- " let g:prvi_dir = getcwd() -- Ovo je kanda bio pokušaj da "odobrovoljim" LSP
 -- -----------------------------------------------------------------------------
 if vim.fn.argv(0) == "barebones" then
@@ -20,7 +19,8 @@ end
 -- -----------------------------------------------------------------------------
 -- netwr
 -- -----------------------------------------------------------------------------
--- Nije zgoreg malo ulepšati i Vim-ov default file manager. :)
+-- Nije zgoreg malo ulepšati i
+-- Vim-ov default file manager. :)
 vim.g.netrw_banner       = 0
 vim.g.netrw_liststyle    = 3
 vim.g.netrw_browse_split = 4
@@ -38,7 +38,7 @@ vim.opt.showmode    = false
 vim.opt.autoindent  = true
 vim.opt.smartindent = true
 vim.opt.cindent     = true
--- vim.opt.cinoptions += "g0"
+vim.opt.cinoptions:append("go")
 vim.opt.tabstop     = 4
 vim.opt.softtabstop = 4
 vim.opt.laststatus  = 2
@@ -83,6 +83,9 @@ if vim.g.barebones_CFG ~= true then
 	-- vim.cmd("colorscheme palenightfall")
 end
 -- -----
+require('04_highlighting')
+-- Obavezno POSLE izbora teme!
+-- -----
 vim.opt.syntax          = "on"
 vim.opt.filetype        = "on"
 vim.opt.filetype.plugin = "on"
@@ -105,44 +108,6 @@ vim.opt.fillchars:append("stlnc: ")
 -- endif
 -- ---------------------------------------------------------
 vim.opt.termguicolors = true
--- ---------------------------------------------------------
--- Let's make Vim great (again) - koja god tema je izabrana
-vim.cmd("hi Normal         ctermbg=NONE")
-vim.cmd("hi nonText        ctermbg=NONE")
-vim.cmd("hi Normal         guibg=NONE ctermbg=NONE")
-vim.cmd("hi CursorLine     ctermbg=none")
-vim.cmd("hi CursorLine     guibg=#333541")
-vim.cmd("hi CursorLineNr   cterm=bold guifg=#90a0b0")
-vim.cmd("hi VertSplit      guibg=NONE guifg=#20272a")
--- --------------------------------
--- Fix za znakove ^^^^^ koji se
--- pojave na statusnoj liniji
--- neaktivnog prozora:
-if vim.g.barebones_CFG ~= true then
-	vim.cmd("hi StatusLine     guibg=#2e2e31 guifg=#2e2e31")
-	vim.cmd("hi StatusLineNC   guibg=NONE guifg=NONE")
-end
--- -----
-vim.cmd("hi CmpItemMenuDefault        guifg=#999999")
-vim.cmd("hi CmpItemKind               guifg=#77aaff")
-vim.cmd("hi CmpItemAbbrMatch          guibg=NONE guifg=#eedd77")
-vim.cmd("hi CmpItemKindSnippetDefault guibg=NONE guifg=#cc8833")
-vim.cmd("hi CmpItemKindTextDefault    guibg=NONE guifg=#dddddd")
-vim.cmd("hi CmpItemKindFolderDefault  guibg=NONE guifg=#cc3388")
-vim.cmd("hi CmpItemKindFileDefault    guibg=NONE guifg=#cc3388")
--- -----
-vim.cmd("hi Search           guibg=#339966 guifg=#e0e0e0")
-vim.cmd("hi SpecialKey       guifg=#323d37")
-vim.cmd("hi NonText          guifg=#323d37 cterm=bold")
-vim.cmd("hi Visual           guibg=#444755")
-vim.cmd("hi Comment          guifg=#656a70")
--- lf border:
-vim.cmd("hi FloatermBorder guibg=#00000000 guifg=#cc8833")
--- Lazy border:
-vim.cmd("hi LazyNormal  guifg=#cccccc")
-vim.cmd("hi FloatBorder guifg=#cc8833")
--- LSP Saga border:
--- vim.cmd("hi SagaBorder guifg=#cc8833")
 -- --------------------------------------------------------- 
 -- Automatsko (ili bolje rečeno poluatomatsko) učitavanje
 -- sadržaja otvorenog dokumenta, kada neki drugi program
@@ -165,6 +130,12 @@ vim.api.nvim_create_autocmd("BufEnter" , {
 	pattern = "*",
 	command = "lua OpcijeZaFormatiranje()"
 })
+--
+vim.api.nvim_create_autocmd("BufEnter" , {
+	pattern = "*",
+	command = "setlocal formatoptions=crqn2l1j"
+})
+--
 vim.opt.updatetime = 100
 -- -----------------------------------------------------------------------------
 -- Save *.imd pokreće parsiranje članka:
