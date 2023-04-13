@@ -1,90 +1,106 @@
 -- -----------------------------------------------------------------------------
 vim.g.mapleader = " "
 -- -----------------------------------------------------------------------------
--- " inoremap <expr> <cr> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
--- " nmap <leader>r <Plug>(coc-rename)
--- noremap <leader>p va}:!clang-format -style=file:/home/korisnik/.config/clangd/clang_format<cr>
+local opts_nr = {
+	desc  = "",
+	remap = false,
+}
+--
+local opts = {
+	desc  = "",
+	remap = true,
+}
+--
+local opts_snr = {
+	desc   = "",
+	remap  = true,
+	silent = true,
+}
+--
+local opts_nrexp = {
+	desc  = "",
+	expr  = true,
+	remap = false,
+}
+-- ------ -----------------------------------------------------------------------
+vim.keymap.set( "" , "<leader>p" , ":!clang-format -style=file:/home/korisnik/.config/clangd/clang_format<cr>" , opts_nr )
 -- " ---------------------------------------------------------------------------- "
-vim.keymap.set( "n" , "<F2>" ,         ":NvimTreeToggle<cr>" ,                     { desc = "" , remap = false } )
--- vim.keymap.set( "n" , "<leader>e" ,    ":Lf<cr>" ,                                 { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<leader>f" ,    ":Lf<cr>" ,                                 { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<F3>" ,         ":Startify<cr>" ,                           { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<leader><F3>" , ":Telescope aerial<cr>" ,                   { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<F4>" ,         ":Telescope buffers<cr>" ,                  { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<leader><F4>" , ":Files<cr>" ,                              { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<F5>" ,         ":lua Uokviravanje()<cr>" ,                 { desc = "" , remap = false } )
-vim.keymap.set( "i" , "<F5>" ,         "<esc>l:lua Uokviravanje()<cr>" ,           { desc = "" , remap = false } )
-vim.keymap.set( "v" , "<F5>" ,         ":lua UokviravanjeVisualSelekcija(1)<cr>" , { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<F6>" ,         ":lua ProbaMenija()<cr>" ,                  { desc = "" , remap = false } )
-vim.keymap.set( "v" , "<F6>" ,         ":lua ProbaMenija()<cr>" ,                  { desc = "" , remap = false } )
--- inoremap <F5>         <esc>ebi<code class='kod_u_tekstu'><esc>ea</code><esc>a
--- nnoremap <leader><F5>     ebi&lt;<esc>ea&gt;<esc>
+vim.keymap.set( "n" , "<F2>" ,         ":NvimTreeToggle<cr>" ,                  opts_nr )
+-- vim.keymap.set( "n" , "<leader>e" ,    ":Lf<cr>" ,                              opts_nr )
+vim.keymap.set( "n" , "<leader>f" ,    ":Lf<cr>" ,                              opts_nr )
+vim.keymap.set( "n" , "<F3>" ,         ":Startify<cr>" ,                        opts_nr )
+vim.keymap.set( "n" , "<leader><F3>" , ":Telescope aerial<cr>" ,                opts_nr )
+vim.keymap.set( "n" , "<F4>" ,         ":Telescope buffers<cr>" ,               opts_nr )
+vim.keymap.set( "n" , "<leader><F4>" , ":Files<cr>" ,                           opts_nr )
+vim.keymap.set( "n" , "<F5>" ,         ":lua UokviravanjeSelekcije('n')<cr>" ,  opts_nr )
+vim.keymap.set( "v" , "<F5>" ,         ":lua UokviravanjeSelekcije('v')<cr>" ,  opts_nr )
+-- ---------------------------------------------------------
 --
 -- map      <F6> :Tabularize /
 -- nnoremap <F7> :w !python /home/korisnik/git/python/markdown/idiosync_parser.py<cr>
-vim.keymap.set( "" , "<F7>" ,      ":lua SpelovanjeToggle()<cr>" , { desc = "" , remap = false } )
-vim.keymap.set( "" , "<leader>g" , ":AerialToggle<cr>"           , { desc = "" , remap = false } )
+vim.keymap.set( "" , "<F7>" ,      ":lua SpelovanjeToggle()<cr>" , opts_nr )
+vim.keymap.set( "" , "<leader>g" , ":AerialToggle<cr>"           , opts_nr )
 --
-vim.keymap.set( "v" , "<" ,         "<gv" ,                         { desc = "" , remap = false } )
-vim.keymap.set( "v" , ">" ,         ">gv" ,                         { desc = "" , remap = false } )
+vim.keymap.set( "v" , "<" ,         "<gv" ,                        opts_nr )
+vim.keymap.set( "v" , ">" ,         ">gv" ,                        opts_nr )
 --
 -- " map <leader>= :Tabularize /=<cr>
 -- map <leader>= !python /home/korisnik/git/python/pretty_css.py<cr>
 -- --------------------------------------------------------
-vim.keymap.set( "" , "<F9>" ,      ":set number!<cr>"         , { desc = "" , remap = false } )
-vim.keymap.set( "" , "<F10>" ,     ":set relativenumber!<cr>" , { desc = "" , remap = false } )
-vim.keymap.set( "" , "<leader>y" , ":set wrap!<cr>" ,           { desc = "" , remap = false } )
-vim.keymap.set( "" , "<F11>" ,     ":VimadeToggle<cr>" ,        { desc = "" , remap = false } )
-vim.keymap.set( "" , "<F11>" ,     ":bd<cr>" ,                  { desc = "" , remap = false } )
-vim.keymap.set( "" , "<F12>" ,     ":qa<cr>" ,                  { desc = "" , remap = false } )
+vim.keymap.set( "" , "<F9>" ,      ":set number!<cr>"         , opts_nr )
+vim.keymap.set( "" , "<F10>" ,     ":set relativenumber!<cr>" , opts_nr )
+vim.keymap.set( "" , "<leader>y" , ":set wrap!<cr>" ,           opts_nr )
+vim.keymap.set( "" , "<F11>" ,     ":VimadeToggle<cr>" ,        opts_nr )
+vim.keymap.set( "" , "<F11>" ,     ":bd<cr>" ,                  opts_nr )
+vim.keymap.set( "" , "<F12>" ,     ":qa<cr>" ,                  opts_nr )
 -- -----
 -- uklanjanje oznake sa poslednjeg pretraživanog stringa
-vim.keymap.set( "n", "<esc><esc>", ":noh<cr>", { desc = "" , remap = true })
+vim.keymap.set( "n", "<esc><esc>", ":noh<cr>", opts )
 -- search za Normal mode:
-vim.keymap.set( "n" , "<leader><backspace>" , ":%s//gc<left><left><left>" , { desc = "" , remap = false } )
+vim.keymap.set( "n" , "<leader><backspace>" , ":%s//gc<left><left><left>" , opts_nr )
 -- search za Visual mode:
-vim.keymap.set( "v" , "<leader><backspace>" , ":s//gc<left><left><left>"  , { desc = "" , remap = false } )
+vim.keymap.set( "v" , "<leader><backspace>" , ":s//gc<left><left><left>"  , opts_nr )
 -- toggle za prikaz whitespace-ova preko specijalnih znakova
-vim.keymap.set( "" , "<leader>`" , ":set list!<cr>" , { desc = "" , remap = false })
+vim.keymap.set( "" , "<leader>`" , ":set list!<cr>" , opts_nr)
 -- -----
 -- premotavanje pola stranice na dole:
-vim.keymap.set( "n" , "<S-f>" , "<C-d>" , { desc = "" , remap = false } )
+vim.keymap.set( "n" , "<S-f>" , "<C-d>" , opts_nr )
 -- premotavanje pola stranice na gore:
-vim.keymap.set( "n" , "<S-b>" , "<C-u>" , { desc = "" , remap = false } )
+vim.keymap.set( "n" , "<S-b>" , "<C-u>" , opts_nr )
 -- premeštanje reda jedno mesto na dole:
-vim.keymap.set( "n" , "<S-j>" , ":lua PomeranjeLinijeNaDole()<cr>" , { desc = "" , silent = true , remap = false } )
+vim.keymap.set( "n" , "<S-j>" , ":lua PomeranjeLinijeNaDole()<cr>" , opts_snr )
 -- premeštanje reda jedno mesto na gore:
-vim.keymap.set( "n" , "<S-k>" , ":lua PomeranjeLinijeNaGore()<cr>" , { desc = "" , silent = true , remap = false } )
+vim.keymap.set( "n" , "<S-k>" , ":lua PomeranjeLinijeNaGore()<cr>" , opts_snr )
 -- dupliranje reda na dole (kursor prelazi u donji red):
-vim.keymap.set( "n" , "<S-h>", ":lua DupliranjeLinijeNaDole()<cr>" , { desc = "" , silent = true , remap = false } )
+vim.keymap.set( "n" , "<S-h>", ":lua DupliranjeLinijeNaDole()<cr>" , opts_snr )
 -- dupliranje reda na gore (kursor ostaje u istom redu):
-vim.keymap.set( "n" , "<S-l>", ":lua DupliranjeLinijeNaGore()<cr>" , { desc = "" , silent = true , remap = false } )
+vim.keymap.set( "n" , "<S-l>", ":lua DupliranjeLinijeNaGore()<cr>" , opts_snr )
 -- " horizontalni skok na početak reda:
-vim.keymap.set( "n" , "<leader>h" , "0" ,                            { desc = "" , silent = true , remap = false } )
+vim.keymap.set( "n" , "<leader>h" , "0" ,                            opts_snr )
 -- " horizontalni skok na kraj reda:
-vim.keymap.set( "n" , "<leader>l" , "$" ,                            { desc = "" , silent = true , remap = false } )
+vim.keymap.set( "n" , "<leader>l" , "$" ,                            opts_snr )
 -- vertikalni skok na sredinu ekrana:
-vim.keymap.set( "n" , "<leader>m" , "M" , { desc = "" , remap = false } )
+vim.keymap.set( "n" , "<leader>m" , "M" , opts_nr )
 -- vertikalni skok na dno ekrana:
-vim.keymap.set( "n" , "<leader>j" , "L" , { desc = "" , remap = false } )
+vim.keymap.set( "n" , "<leader>j" , "L" , opts_nr )
 -- vertikalni skok na vrh ekrana:
-vim.keymap.set( "n" , "<leader>k" , "H" , { desc = "" , remap = false } )
+vim.keymap.set( "n" , "<leader>k" , "H" , opts_nr )
 -- -----
 -- Simulacija ponašanja ostalih editora u Insert modu:
 -- 'Shift-Del' - brisanje sledeće reči
-vim.keymap.set( "i" , "<C-e>" , "<C-o>de" , { desc = "" , remap = false } )
+vim.keymap.set( "i" , "<C-e>" , "<C-o>de" , opts_nr )
 -- 'Ctrl-Shift-Del' - brisanje do kraja reda
-vim.keymap.set( "i" , "<C-r>" , "<C-o>D" , { desc = "" , remap = false } )
+vim.keymap.set( "i" , "<C-r>" , "<C-o>D" , opts_nr )
 -- 'Shift-Backspace' je već mapirano na <C-w>
 -- 'Ctrl-Shift-Backspace' - brisanje do početka reda:
-vim.keymap.set( "i" , "<C-q>" , "<C-o>d^" , { desc = "" , remap = false } )
+vim.keymap.set( "i" , "<C-q>" , "<C-o>d^" , opts_nr )
 -- Dupliranje reda:
-vim.keymap.set( "i" , "<C-d>" , "<C-o>:lua DupliranjeLinijeNaDole()<cr>" , { desc = "" , remap = false } )
+vim.keymap.set( "i" , "<C-d>" , "<C-o>:lua DupliranjeLinijeNaDole()<cr>" , opts_nr )
 -- -----
 -- Malo olakšanje za rad sa splitovanom
 -- radnom površinom
-vim.keymap.set( "n" , "<leader>v" , ":vsp<cr>" , { desc = "" , remap = false } )
-vim.keymap.set( "n" , "<leader>w" , "<C-w>w" ,    { desc = "" , remap = false } )
+vim.keymap.set( "n" , "<leader>v" , ":vsp<cr>" ,  opts_nr )
+vim.keymap.set( "n" , "<leader>w" , "<C-w>w" ,    opts_nr )
 -- -----
 -- Tabove zapravo ne koristim često, ali,
 -- neka bude ovako
@@ -105,8 +121,8 @@ vim.keymap.set( "n" , "<leader>w" , "<C-w>w" ,    { desc = "" , remap = false } 
 -- može biti zapravo nekoliko mesta ispod/iznad
 -- -Preko mapiranja, podešeno je da <j> i <k> pomeraju
 -- kursor jedno mesto dole/gore u prikazu
-vim.keymap.set( "n" , "j" , "(v:count == 0 ? 'gj' : 'j')" , { desc = "" , expr = true , remap = false } )
-vim.keymap.set( "n" , "k" , "(v:count == 0 ? 'gk' : 'k')" , { desc = "" , expr = true , remap = false } )
+vim.keymap.set( "n" , "j" , "(v:count == 0 ? 'gj' : 'j')" , opts_nrexp )
+vim.keymap.set( "n" , "k" , "(v:count == 0 ? 'gk' : 'k')" , opts_nrexp )
 -- " ----- "
 -- " bez donjih mapiranja, multicursor plugin ne radi
 -- map <Esc>[1;5A <C-Up>
@@ -118,5 +134,48 @@ vim.keymap.set( "n" , "k" , "(v:count == 0 ? 'gk' : 'k')" , { desc = "" , expr =
 -- map <Esc>[1;2C <S-Right>
 -- map <Esc>[1;2D <S-Left>
 -- map <Esc>[1;2C <S-Right>
--- " ---------------------------------------------------------------------------- "
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+-- LSP:
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+	group    = vim.api.nvim_create_augroup('UserLspConfig', {}),
+	callback = function(ev)
+		-- Enable completion triggered by <c-x><c-o>
+		vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+		-- Buffer local mappings.
+		-- See `:help vim.lsp.*` for documentation on any of the below functions
+		local opts      = { buffer = ev.buf }
+		local opts_sexp = { buffer = ev.buf, expr = true, silent = true }
+		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+		vim.keymap.set('n', 'gh', vim.lsp.buf.hover, opts)
+		-- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+		-- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+		-- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+		-- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+		vim.keymap.set('n', '<space>wl', function()
+			print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+		end, { buffer = ev.buf, expr = true, silent = true } )
+		-- vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+		--
+		-- vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
+		-- vim.keymap.set('n', '<space>r', ":IncRename <cword>", opts)
+		vim.keymap.set("n", "<leader>r", function()
+			return ":IncRename " .. vim.fn.expand("<cword>")
+		end, { expr = true })
+
+		--
+		vim.keymap.set('n', '<space>a', vim.lsp.buf.code_action, opts)
+		vim.keymap.set('n', 'gr', ":Telescope lsp_references<cr>", opts)
+		-- vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+		-- vim.keymap.set('n', '<space>f', function()
+		-- 	vim.lsp.buf.format { async = true }
+		-- end, opts)
+  end,
+})
 

@@ -51,76 +51,326 @@ function PomeranjeLinijeNaGore()
 	end
 end
 -- -----------------------------------------------------------------------------
-function Uokviravanje()
-	vim.cmd("normal wbi<code class='kod_u_tekstu'>")
-	vim.cmd("normal ea</code>")
+function RenameBezNezeljenihPosledica()
+	vim.ui.input({
+		prompt  ='Novo ime: ',
+		default = vim.fn.expand('<cword>'),
+	},
+		function (input)
+			if not vim.fn.empty(input) then
+				vim.lsp.buf.rename(input)
+			else
+				print("RENAME OTKAZAN!")
+			end
+		end
+	)
 end
 -- -----------------------------------------------------------------------------
-function IspisKoordinata(koord)
-	print( "[" .. koord.r1 .. "|" .. koord.k1 .. "|" .. koord.r2 .. "|" .. koord.k2 .. "]" )
+-- UokviravanjeSelekcije:
+-- -----------------------------------------------------------------------------
+function DaLiJeASCII(c)
+	-- print("ASCII provera: '" .. c .. "'")
+	return string.byte(c) <= 127
 end
 -- -----------------------------------------------------------------------------
-function CitanjeKoordinataSelekcije()
-	local pocetak = vim.fn.getcharpos("'<")
-	local kraj    = vim.fn.getcharpos("'>")
+function DaLiJeGranicnikZaProsirivanje(c)
+	if c == " " then return true end
+	if c == "<" then return true end
+	if c == ">" then return true end
+	if c == "#" then return true end
+	if c == "." then return true end
+	if c == "," then return true end
+	if c == ":" then return true end
+	if c == ";" then return true end
+
+	return false
+end
+-- -----------------------------------------------------------------------------
+function ProsirivanjeSelekcijeUlevo(s, k)
+	if k < 1 then return k + 1 end
+	--
+	local c = s:sub(k, k)
+	--
+	while k >= 1 and not DaLiJeGranicnikZaProsirivanje(c) do
+		-- print(c)
+		k = k - 1
+		c = s:sub(k, k)
+	end
+	--
+	return k + 1
+end
+-- -----------------------------------------------------------------------------
+function ProsirivanjeSelekcijeUdesno(s, k)
+	local g = string.len(s)
+	if k > g then return k - 1 end
+	--
+	local c = s:sub(k, k)
+	--
+	while k <= g and not DaLiJeGranicnikZaProsirivanje(c) do
+		-- print(c)
+		k = k + 1
+		c = s:sub(k, k)
+	end
+
+	return k - 1
+end
+-- -----------------------------------------------------------------------------
+function ProveraPoslednjegZnaka(s, koord)
+	local c = s:sub(koord.k2, koord.k2)
+
+	-- print(string.format("red: '%s'", s))
+	-- print(string.format("c:   '%s'", c))
+	return DaLiJeASCII(c)
+end
+-- -----------------------------------------------------------------------------
+-- Funkcija preko koje se određuje za koliko treba proširiti selekciju
+-- Funkcija se aktivira samo ukoliko je funkcija KorekcijaPoslednjiZnak
+-- (koja je definisana ispod), ustanovila da poslednji znak ima širinu
+-- veću od jednog bajta
+
+function ProsirivanjePoslednjegZnaka(s, koord, mode)
+	local i = koord.k2 + 1   -- pomoćni indeks
+	local d = string.len(s)
+
+	if i > d then return 0 end
+
+	local b = 0
+	local c = s:sub(i, i)
+
+	while not DaLiJeASCII(c) do
+		i = i + 1
+		b = b + 1
+		if i <= d then
+			c = s:sub(i, i)
+		else
+			c = 'a'
+		end
+	end
+
+	return b
+end
+
+-- function ProsirivanjePoslednjegZnaka(s, koord, mode)
+-- 	local i = koord.k2 + 1   -- pomoćni indeks
+-- 	local d = string.len(s)
+--
+-- 	if i > d then return 0 end
+--
+-- 	local b = 0  -- brojač
+-- 	local c      -- poslenji znak (s tim da nije ceo znak,
+-- 	             -- već jedan od UTF-8 bajtova)
+--
+-- 	repeat
+-- 		c       = s:sub(i, i)
+-- 		local u = not DaLiJeASCII(c)
+--
+-- 		if u then
+-- 			b = b + 1
+-- 		end
+-- 		
+-- 		i = i + 1
+-- 	until u and i <= d
+--
+-- 	return b
+-- end
+-- -----------------------------------------------------------------------------
+-- Ako Visual mode selekcija na poslednjem mestu "zahvati" neki od "ne-ASCII"
+-- znakova, biće obuhvaćen samo prvi bajt iz UTF-8 znaka - a treba da budu
+-- obuhvaćeni i svi ostali
+
+function KorekcijaPoslednjiZnak(koord, mode)
+	local korekcija = 0
+	local s         = vim.fn.getline(koord.r2)
+
+	-- print("'" .. s .. "'")
+	if not ProveraPoslednjegZnaka(s, koord) then
+		korekcija = ProsirivanjePoslednjegZnaka(s, koord, mode)
+	end
+
 	return {
-		r1 = pocetak[2] ,
-		k1 = pocetak[3] ,
-		r2 = kraj[2] ,
-		k2 = kraj[3] ,
+		r1 = koord.r1,
+		k1 = koord.k1,
+		r2 = koord.r2,
+		k2 = koord.k2 + korekcija,
 	}
 end
 -- -----------------------------------------------------------------------------
-function UokviravanjeVisual(s1, s2)
-	local koord     = CitanjeKoordinataSelekcije()
-	IspisKoordinata(koord)
+-- Za normal mode - posebna funkcija za automatsko proširivanje selekcije
+-- (selekcija iz normal moda je obavezno jedan znak)
+-- NAPOMENA: Korekcija za kolonu (-1), je vrlo čudna, ali, izgleda da 
+--           Telescope pomera kursor
+
+function CitanjeKoordinataNormalMode(mode)
+	local r = vim.fn.line(".")    -- red
+	local k = vim.fn.col(".") - 1 -- kolona
+	local s = vim.fn.getline(r)   -- sadržaj reda
+	local l = k                   -- levi graničnik
+	local d = k                   -- desni graničnik
+	local c = s:sub(k, k)         -- znak ispod kursora
+                                  -- (pri selektovanju)
+
+	if not DaLiJeGranicnikZaProsirivanje(c) then
+		l = ProsirivanjeSelekcijeUlevo(s, k - 1)
+		d = ProsirivanjeSelekcijeUdesno(s, k + 1)
+		-- d = d - UnicodeKorekcijaPartDeux(s, l, d)
+	end
+
+	return {
+		r1 = r,
+		k1 = l,
+		r2 = r,
+		k2 = d,
+	}
+end
+-- -----------------------------------------------------------------------------
+-- Za Visual mode može da se napravi normalna selekcija preko API markera
+-- (za normal mode je bilo problema, da se selekcija "uhvati" preko markera, pa
+-- sam zato pisao custom funckiju)
+
+function CitanjeKoordinataVisualMode(mode)
+	local p = nil -- pocetak[x, y]
+	local k = nil -- kraj[x, y]
+
+	if mode == "v" then
+		p = vim.fn.getpos("'<")
+		k = vim.fn.getpos("'>")
+	end
+
+	return KorekcijaPoslednjiZnak(
+		{
+			r1 = p[2] ,
+			k1 = p[3] ,
+			r2 = k[2] ,
+			k2 = k[3] ,
+		},
+		mode
+	)
+end
+-- -----------------------------------------------------------------------------
+-- Ako se selekcija prostire na više redova, kursor se pomera za širinu
+-- zatvarajućeg taga, a ako je selekcija u jednom redu, kursor se pomera
+-- za zbirnu širinu oba taga
+
+function RacunanjeOffseta(par, koord)
+	-- print(par[1])
+	-- print(par[2])
+
+	if math.abs(koord.r2 - koord.r1) > 0 then
+		return string.len(par[2])
+	else
+		return string.len(par[1]) + string.len(par[2])
+	end
+end
+-- -----------------------------------------------------------------------------
+-- Uokviravanje funkcioniše po principu "<tag>" + selekcija + "</tag>"
+-- par[1] je tipično otvarajući tag
+-- par[2] je tipično zatvarajući tag
+-- Međutim ....
+-- Lista "linije" je tu zato što (Neo)Vim ne čita izabrani tekst kao
+-- blok teksta (to jest, kao "jednu" nisku), već kao listu linija
+
+function UokviravanjeSelekcijeRadni(par, koord)
+	-- IspisKoordinata(koord)
+
 	local linije    = vim.api.nvim_buf_get_text(0, koord.r1 - 1, koord.k1 - 1, koord.r2 - 1, koord.k2, {})
-	linije[1]       = s1 .. linije[1]
-	linije[#linije] = linije[#linije] .. s2
+
+	linije[1]       = par[1]          .. linije[1]
+	linije[#linije] = linije[#linije] .. par[2]
+
 	vim.api.nvim_buf_set_text(0, koord.r1 - 1, koord.k1 - 1, koord.r2 - 1, koord. k2, linije)
 end
 -- -----------------------------------------------------------------------------
-function UokviravanjeVisualSelekcija(indeks)
-	local parovi = {
-		{ "<code class='kod_u_tekstu'>" , "</code>" },
-		{ "&lt;"                        , "&gt;"    },
-		{ "<em>"                        , "</em>"   },
-	}
+-- Ideja je da se otvarajući i zatvarajući tag 'izvuku' iz teksta koji
+-- se prikazuje u meniju (umesto da se čuvaju u zasebnoj listi i sl)
+-- Cela linija ima format: "1. <tag>%s</tag>"
+-- Traže se: (1) prvi spejs posle broja i (2) niska "%s" (koja predstavlja
+-- realnu nisku iz teksta, koja se uokviruje)
 
-	UokviravanjeVisual(parovi[indeks][1] , parovi[indeks][2])
+function CitanjeParovaIzStringa(s)
+	local p1 = string.sub(s, string.find(s, " ") + 1, string.find(s, "%%s<") - 1)
+	local p2 = string.sub(s, string.find(s, "%%s.*") + 2)
+
+	return { p1 , p2 }
 end
 -- -----------------------------------------------------------------------------
-function SelekcijaDaLiJeSingl(koord)
-	return koord.r1 == koord.r2 and koord.k1 == koord.k2
+function IzlazakVMPostavljanjeKursora(koord, offset)
+	vim.api.nvim_win_set_cursor( 0 , { koord.r2, koord.k2 + offset } )
 end
 -- -----------------------------------------------------------------------------
-function ObradaMenija(ulaz)
-	local parovi = {
-		["c1"] = 1,
-		["c2"] = 2,
-		["em"] = 3,
-	}
-	
-	local v = parovi[ulaz]
+-- Kanda radi lepo, ali sve ovo bi definitivno trebalo
+-- istražiti detaljnije (i izgleda da je postavljanje modova
+-- preko API-ja, poveća zezancija)!
 
-	if v == nil then
-		print(" [GREŠKA: Nepostojeći indeks!]")
-		return
+function IzlazakIzVisualModa(mode, offset, koord)
+	if mode == "n" then
+		-- Kanda radi lepo, ali sve ovo bi definitivno trebalo
+		-- istražiti detaljnije !!
+		local esc = vim.api.nvim_replace_termcodes('<esc>', true, false, true)
+		vim.api.nvim_feedkeys(esc, 'x', false)
 	end
 
-	local koord = CitanjeKoordinataSelekcije()
+	IzlazakVMPostavljanjeKursora(koord, offset)
+end
 
-	if SelekcijaDaLiJeSingl(koord) then
-		vim.cmd("normal viw")
+-- P.S.
+-- Ispod su dve "fore" koje NISU radile:
+-- vim.api.nvim_input("<ESC>")
+-- vim.api.nvim_feedkeys("\\<ESC>", "n", true)
+-- -----------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
+-- Prilično je bezbedno ispitivati samo one uslove koji su dole navedeni,
+-- budući da se funkcija poziva samo preko zasebnih prečica, koje su
+-- definisane samo za odgovarajući mod
+-- NAPOMENA: funkcija koja se 'zapravo' poziva iz programa,
+--           definisana je ispod
+
+function ObradaMenija(ulaz, mode)
+	local koord
+
+	if mode == "n" then
+		koord = CitanjeKoordinataNormalMode(mode)
 	end
-	local koord = CitanjeKoordinataSelekcije()
-	IspisKoordinata(koord)
-	
-	UokviravanjeVisualSelekcija(v)
+
+	if mode == "v" then
+		koord  = CitanjeKoordinataVisualMode(mode)
+	end
+
+	local par = CitanjeParovaIzStringa(ulaz)
+
+	-- IspisKoordinata(koord)
+	UokviravanjeSelekcijeRadni(par, koord)
+
+	local offset = RacunanjeOffseta(par, koord)
+
+	-- if mode == "v" then
+	IzlazakIzVisualModa(mode, offset, koord)
+	-- end
 end
 -- -----------------------------------------------------------------------------
-function ProbaMenija()
-	-- vim.ui.menu( { "Meni ....", "i tebi ....", "i drugima ...." } , { prompt = "Choooose .... your destiny!" },  ObradaMenija )
-	vim.ui.input( { prompt = "Tag: " } , ObradaMenija )
+-- Funkcija koja se poziva direktno iz programa
+-- Na ovom mestu biće definisana lista tagova (neće biti prevelika)
+-- Radna funkcija (definisana iznad) je callback funkcija funkcije
+-- select (iz Neovim-ovog API-ja)
+
+function UokviravanjeSelekcije(mode)
+	-- print(string.format("mode: %s", mode))
+	vim.ui.select(
+		{
+			"1. <code class='kod_u_tekstu'>%s</code>" ,
+			"2. <%s>" ,
+			"3. <em>%s</em>",
+			"4. <strong>%s</strong>",
+			"5. <a href=''>%s</a>",
+		} ,
+	    {
+			prompt = "Izbor taga",
+		} ,
+		function(choice)
+			ObradaMenija(choice, mode)
+		end
+	)
 end
 -- -----------------------------------------------------------------------------
+-- END OF UokviravanjeSelekcije
+-- -----------------------------------------------------------------------------
+
