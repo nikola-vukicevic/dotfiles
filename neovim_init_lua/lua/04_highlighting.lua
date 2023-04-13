@@ -1,7 +1,7 @@
 -- -------------------------------------------------------------------------- --
 local basicHL      = true
-local treesitterHL = true
-local lspHL        = true
+local treesitterHL = false
+local lspHL        = false
 -- -------------------------------------------------------------------------- --
 local boja_00 = "#ffffff"
 local boja_01 = "#cc99ff" -- ljubicasta 1

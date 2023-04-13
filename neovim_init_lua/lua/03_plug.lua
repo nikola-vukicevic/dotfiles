@@ -90,6 +90,7 @@ require("lazy").setup({
 	"rebelot/kanagawa.nvim",
 	"catppuccin/nvim",
 	"flazz/vim-colorschemes",
+	"EdenEast/nightfox.nvim",
 	-- "chriskempson/base16-vim",
 	-- "sonph/onehalfi", { 'rtp': 'vim' },
 	-- "gilgigilgil/anderson.vim"
