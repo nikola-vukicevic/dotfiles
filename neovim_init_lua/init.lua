@@ -79,12 +79,13 @@ if vim.g.barebones_CFG ~= true then
 	-- vim.cmd("colorscheme Tomorrow-Night-Eighties")
 	-- vim.cmd("colorscheme tokyonight")
 	-- vim.cmd("colorscheme onehalfdark")
+	-- vim.cmd("colorscheme catppuccin")
+	-- vim.cmd("colorscheme kanagawa")
 	vim.cmd("colorscheme palenight")
 	-- vim.cmd("colorscheme palenightfall")
 end
 -- -----
-require('04_highlighting')
--- Obavezno POSLE izbora teme!
+require('04_highlighting') -- Obavezno POSLE izbora teme!
 -- -----
 vim.opt.syntax          = "on"
 vim.opt.filetype        = "on"
