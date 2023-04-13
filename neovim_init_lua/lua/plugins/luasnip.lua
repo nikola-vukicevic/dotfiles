@@ -3,8 +3,8 @@ luasnip         = require("luasnip")
 -- -----------------------------------------------------------------------------
 local ls_snip   = luasnip.snippet
 local ls_ispis  = luasnip.text_node
-local ls_func   = luasnip.function_node
 local ls_insert = luasnip.insert_node
+local ls_func   = luasnip.function_node
 -- local date     = function() return {os.date('%Y-%m-%d')} end
 -- local node     = luasnip.snippet_node
 -- local choice   = luasnip.choice_node
