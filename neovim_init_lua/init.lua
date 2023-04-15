@@ -29,6 +29,7 @@ vim.g.netrw_winsize      = 20
 -- -----------------------------------------------------------------------------
 vim.opt.encoding    = "utf-8"
 vim.opt.hidden      = true
+vim.opt.showcmdloc  = "statusline"
 vim.opt.clipboard   = "unnamedplus"
 vim.opt.pumheight   = 20
 vim.opt.ttimeout    = true
@@ -78,6 +79,7 @@ end
 if vim.g.barebones_CFG ~= true then
 	-- vim.cmd("colorscheme Tomorrow-Night-Eighties")
 	-- vim.cmd("colorscheme tokyonight-moon")
+	-- vim.cmd("colorscheme tokyonight")
 	-- vim.cmd("colorscheme onehalfdark")
 	-- vim.cmd("colorscheme nightfox")
 	vim.cmd("colorscheme catppuccin-macchiato")
@@ -86,6 +88,8 @@ if vim.g.barebones_CFG ~= true then
 	-- vim.cmd("colorscheme kanagawa")
 	-- vim.cmd("colorscheme palenight")
 	-- vim.cmd("colorscheme palenightfall")
+	-- vim.cmd("colorscheme sonokai")
+	-- vim.cmd("colorscheme edge")
 end
 -- -----
 require('04_highlighting') -- Obavezno POSLE izbora teme!
