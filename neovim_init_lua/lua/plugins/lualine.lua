@@ -116,6 +116,10 @@ end
 function format_rezultati_pretrage()
 end
 -- -----------------------------------------------------------------------------
+function format_cmdshow()
+	return string.format("%")
+end
+-- -----------------------------------------------------------------------------
 require('lualine').setup {
 	options = {
 		theme = '00_tema_1',
@@ -130,7 +134,7 @@ require('lualine').setup {
 			{ format_read_only,    padding = { left = 0, right = 0 }, component_separators = { left = "", right = "" }, color = { fg = "#5588ee" } },
 			{ format_separator,    padding = { left = 1, right = 1 }, component_separators = { left = "", right = "" }, color = { fg = "#aaaaaa" } },
 			{ 'searchcount',       padding = { left = 0, right = 1 }, component_separators = { left = "", right = "" }, color = { fg = "#aaaaff" } },
-			{ 'showcmd',           padding = { left = 0, right = 1 }, component_separators = { left = "", right = "" }, color = { fg = "#aaaaff" } },
+			{ '%S',                padding = { left = 0, right = 1 }, component_separators = { left = "", right = "" }, color = { fg = "#ee4455" } },
 			-- { 'selectioncount',    padding = { left = 0, right = 1 }, component_separators = { left = "", right = "" }, color = { fg = "#ffffaa" } },
 			{ format_v_select,     padding = { left = 0, right = 1 }, component_separators = { left = "", right = "" }, color = { fg = "#ffffaa" } },
 			{ '%f',                padding = { left = 0, right = 0 }, component_separators = { left = "", right = "" } },
