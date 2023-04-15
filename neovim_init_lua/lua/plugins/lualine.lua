@@ -122,8 +122,8 @@ end
 -- -----------------------------------------------------------------------------
 require('lualine').setup {
 	options = {
-		theme = '00_tema_1',
-		-- theme = 'onedark',
+		-- theme = '00_tema_1',
+		theme = 'onedark',
 	},
 	sections = {
 		lualine_b = { 'branch', 'diff' },
