@@ -91,13 +91,21 @@ require("lazy").setup({
 	"catppuccin/nvim",
 	"flazz/vim-colorschemes",
 	"EdenEast/nightfox.nvim",
+	"sainnhe/sonokai",
+	"sainnhe/everforest",
+	"sainnhe/edge",
 	-- "chriskempson/base16-vim",
 	-- "sonph/onehalfi", { 'rtp': 'vim' },
 	-- "gilgigilgil/anderson.vim"
 	-- ---------------------------------------------
 	-- Ostalo:
 	-- ---------------------------------------------
-	"ap/vim-css-color",
+	-- "ap/vim-css-color",
+	-- "norcalli/nvim-colorizer.lua",
+	{
+		"rrethy/vim-hexokinase",
+		run = 'make hexokinase'
+	},
 	-- "jiangmiao/auto-pairs",
 	-- "LunarWatcher/auto-pairs",
 	"windwp/nvim-autopairs",

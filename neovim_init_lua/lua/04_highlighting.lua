@@ -1,7 +1,8 @@
 -- -------------------------------------------------------------------------- --
 local basicHL      = true
+local cmpHL        = false
 local treesitterHL = false
-local lspHL        = false
+local LspHL        = false
 -- -------------------------------------------------------------------------- --
 local boja_00 = "#ffffff"
 local boja_01 = "#cc99ff" -- ljubicasta 1
@@ -19,6 +20,7 @@ if basicHL == true then
 	vim.cmd("hi Normal         ctermbg=NONE")
 	vim.cmd("hi nonText        ctermbg=NONE")
 	vim.cmd("hi Normal         guibg=NONE ctermbg=NONE")
+	vim.cmd("hi NormalNC       guibg=NONE ctermbg=NONE")
 	vim.cmd("hi CursorLine     ctermbg=none")
 	vim.cmd("hi CursorLine     guibg=#333541")
 	vim.cmd("hi CursorLineNr   cterm=bold guifg=#90a0b0")
@@ -32,19 +34,12 @@ if basicHL == true then
 		vim.cmd("hi StatusLineNC   guibg=NONE guifg=NONE")
 	end
 	-- -----
-	vim.cmd("hi CmpItemMenuDefault        guifg=#999999")
-	vim.cmd("hi CmpItemKind               guifg=#77aaff")
-	vim.cmd("hi CmpItemAbbrMatch          guibg=NONE guifg=#eedd77")
-	vim.cmd("hi CmpItemKindSnippetDefault guibg=NONE guifg=#cc8833")
-	vim.cmd("hi CmpItemKindTextDefault    guibg=NONE guifg=#dddddd")
-	vim.cmd("hi CmpItemKindFolderDefault  guibg=NONE guifg=#cc3388")
-	vim.cmd("hi CmpItemKindFileDefault    guibg=NONE guifg=#cc3388")
-	-- -----
 	vim.cmd("hi Search                 guibg=#339966 guifg=#e0e0e0")
-	vim.cmd("hi SpecialKey             guifg=#323d37")
-	vim.cmd("hi NonText                guifg=#323d37 cterm=bold")
-	vim.cmd("hi Visual                 guibg=#444755")
-	vim.cmd("hi Comment                guifg=#656a70")
+	vim.cmd("hi Whitespace             gui=NONE guifg=#323d37")
+	vim.cmd("hi SpecialKey             gui=NONE guifg=#323d37")
+	vim.cmd("hi NonText                gui=NONE guifg=#323d37 cterm=bold")
+	vim.cmd("hi Visual                 gui=NONE guibg=#444755")
+	vim.cmd("hi Comment                gui=NONE guifg=#656a70")
 	vim.cmd("hi DiagnosticUnnecessary  guifg=#775533")
 	vim.cmd("hi StartifyFile           guifg=#ee5599")
 	-- lf border:
@@ -56,7 +51,19 @@ if basicHL == true then
 	-- vim.cmd("hi SagaBorder guifg=#cc8833")
 end
 -- -----------------------------------------------------------------------------
--- Tree-sitter:
+-- nvim-cmp
+-- -----------------------------------------------------------------------------
+if cmpHL == true then
+	vim.cmd("hi CmpItemMenuDefault        guifg=#999999")
+	vim.cmd("hi CmpItemKind               guifg=#77aaff")
+	vim.cmd("hi CmpItemAbbrMatch          guibg=NONE guifg=#eedd77")
+	vim.cmd("hi CmpItemKindSnippetDefault guibg=NONE guifg=#cc8833")
+	vim.cmd("hi CmpItemKindTextDefault    guibg=NONE guifg=#dddddd")
+	vim.cmd("hi CmpItemKindFolderDefault  guibg=NONE guifg=#cc3388")
+	vim.cmd("hi CmpItemKindFileDefault    guibg=NONE guifg=#cc3388")
+end
+-- -----------------------------------------------------------------------------
+-- Treesitter:
 -- -----------------------------------------------------------------------------
 if treesitterHL == true then
 	vim.api.nvim_set_hl ( 0 , "@variable" ,              { fg = boja_00 })
@@ -103,7 +110,7 @@ end
 -- -------------------------------------------------------------------------- --
 -- LSP:
 -- -------------------------------------------------------------------------- --
-if lspHL == true then
+if LspHL == true then
 	vim.api.nvim_set_hl ( 0 , "@lsp.type.variable" ,     { fg = boja_00 })
 	vim.api.nvim_set_hl ( 0 , "@lsp.type.property" ,     { fg = boja_08 } )
 	vim.api.nvim_set_hl ( 0 , "@lsp.type.parameter" ,    { fg = boja_00 } )
