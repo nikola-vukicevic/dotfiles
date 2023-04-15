@@ -112,5 +112,5 @@ require('dressing').setup()
 -- require('colorizer').setup()
 -- -----------------------------------------------------------------------------
 -- vim.g.Hexonicase_highlighters = "sign_column"
-vim.g.Hexonicase_highlighters = "backgroundfull"
+-- vim.g.Hexonicase_highlighters = "backgroundfull"
 -- -----------------------------------------------------------------------------
