@@ -102,10 +102,10 @@ require("lazy").setup({
 	-- ---------------------------------------------
 	-- "ap/vim-css-color",
 	-- "norcalli/nvim-colorizer.lua",
-	{
-		"rrethy/vim-hexokinase",
-		run = 'make hexokinase'
-	},
+	-- {
+	-- 	"rrethy/vim-hexokinase",
+	-- 	run = 'make hexokinase'
+	-- },
 	-- "jiangmiao/auto-pairs",
 	-- "LunarWatcher/auto-pairs",
 	"windwp/nvim-autopairs",
