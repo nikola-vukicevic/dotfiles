@@ -115,8 +115,6 @@ void *xmalloc(size_t);
 void *xrealloc(void *, size_t);
 char *xstrdup(const char *);
 
-int xgetcolor(int x, unsigned char *r, unsigned char *g, unsigned char *b);
-
 int isboxdraw(Rune);
 ushort boxdrawindex(const Glyph *);
 #ifdef XFT_VERSION
@@ -138,5 +136,5 @@ extern unsigned int tabspaces;
 extern unsigned int defaultfg;
 extern unsigned int defaultbg;
 extern unsigned int defaultcs;
-extern float alpha, alphaUnfocused;
 extern const int boxdraw, boxdraw_bold, boxdraw_braille;
+extern float alpha, alphaUnfocused;

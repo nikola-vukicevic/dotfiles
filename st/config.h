@@ -5,23 +5,8 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-
-//static char *font = "Inconsolata:style=Regular:size=19.0:antialias=true:autohint=true";
-//static char *font = "Inconsolata for Powerline:style=Regular:size=19.0:antialias=true:autohint=true";
-static char *font = "Inconsolata-g:style=g:size=19.0:antialias=true:autohint=true";
-//static char *font = "Inconsolata-dz for Powerline:style=dz:size=19.0:antialias=true:autohint=false";
-//static char *font = "Office Code Pro:style=Regular:size=16.0:antialias=true:autohint=true";
-
-/* Spare fonts */
-
-static char *font2[] = {
-	//"Inconsolata for Powerline:size=19.0:antialias=true:autohint=true",
-	//"Inconsolata Regular Nerd Font Complete Mono:size=19.0:antialias=true:autohint=true",
-	"Noto Emoji:size=15.0:antialias=true:autohint=true",
-	//"Symbola:size=15.0:antialias=true:autohint=true",
-	//"Inconsolata:size=19.0:antialias=true:autohint=true",
-};
-
+// static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+static char *font = "monospace:size=16:antialias=true:autohint=true";
 static int borderpx = 0;
 
 /*
@@ -41,11 +26,9 @@ char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 /* identification sequence returned in DA and DECID */
 char *vtiden = "\033[?6c";
 
-//static float cwscale = 0.9;
-//static float chscale = 0.95;
-
-static float cwscale = 1.0;
-static float chscale = 1.0;
+/* Kerning / character bounding-box multipliers */
+static float cwscale = 0.9;
+static float chscale = 0.95;
 
 /*
  * word delimiter string
@@ -101,7 +84,6 @@ const int boxdraw_braille = 1;
  * bell volume. It must be a value between -100 and 100. Use 0 for disabling
  * it
  */
-
 static int bellvolume = 0;
 
 /* default TERM value */
@@ -125,7 +107,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 4;
 
 /* bg opacity */
-float alpha = 0.96, alphaUnfocused = 0.90;
+float alpha = 0.95, alphaUnfocused = 0.85;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -138,7 +120,7 @@ static const char *colorname[] = {
 	"#eb4f97",  /*  5:  magenta  */
 	"#78cbce",  /*  6:  cyan     */
 	"#dadada",  /*  7:  white    */
-	
+
 	/* 8 bright colors */
 	"#555555",  /*  8:  brblack  */
 	"#f39b9b",  /*  9:  brred    */
@@ -149,7 +131,7 @@ static const char *colorname[] = {
 	"#b4ecee",  /* 14:  brcyan   */
 	"#eeeeee",  /* 15:  brwhite  */
 
-	 [255] = 0,
+	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
 	"#cccccc",  /* 256:  */
@@ -158,6 +140,7 @@ static const char *colorname[] = {
 	"black",    /* 259: default background colour */
 	"#272935",  /* 260: custom bg                 */
 };
+
 
 /*
  * Default colors (colorname index)
@@ -168,7 +151,7 @@ unsigned int defaultbg = 1;
 unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
 unsigned int bg = 260, bgUnfocused = 260;
- 
+
 /*
  * Default shape of cursor
  * 2: Block ("█")
@@ -230,9 +213,12 @@ static Shortcut shortcuts[] = {
 	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
 	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
 	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
-	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
-	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
+	// { TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
+	// { TERMMOD,              XK_Next,        zoom,           {.f = -1} },
+	// { TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
+	{ TERMMOD,              XK_K,           zoom,           {.f = +1} },
+	{ TERMMOD,              XK_J,           zoom,           {.f = -1} },
+	{ TERMMOD,              XK_L,           zoomreset,      {.f =  0} },
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
