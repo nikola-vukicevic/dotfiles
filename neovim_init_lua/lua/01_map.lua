@@ -25,15 +25,16 @@ local opts_nrexp = {
 -- ------ -----------------------------------------------------------------------
 vim.keymap.set( "" , "<leader>p" , ":!clang-format -style=file:/home/korisnik/.config/clangd/clang_format<cr>" , opts_nr )
 -- " ---------------------------------------------------------------------------- "
-vim.keymap.set( "n" , "<F2>" ,         ":NvimTreeToggle<cr>" ,                  opts_nr )
--- vim.keymap.set( "n" , "<leader>e" ,    ":Lf<cr>" ,                              opts_nr )
-vim.keymap.set( "n" , "<leader>f" ,    ":Lf<cr>" ,                              opts_nr )
-vim.keymap.set( "n" , "<F3>" ,         ":Startify<cr>" ,                        opts_nr )
-vim.keymap.set( "n" , "<leader><F3>" , ":Telescope aerial<cr>" ,                opts_nr )
-vim.keymap.set( "n" , "<F4>" ,         ":Telescope buffers<cr>" ,               opts_nr )
-vim.keymap.set( "n" , "<leader><F4>" , ":Files<cr>" ,                           opts_nr )
-vim.keymap.set( "n" , "<F5>" ,         ":lua UokviravanjeSelekcije('n')<cr>" ,  opts_nr )
-vim.keymap.set( "v" , "<F5>" ,         ":lua UokviravanjeSelekcije('v')<cr>" ,  opts_nr )
+vim.keymap.set( "n" , "<F2>" ,         ":NvimTreeToggle<cr>" ,                                                opts_nr )
+vim.keymap.set( "n" , "<leader><F2>" , ":Telescope find_files<cr>" ,                                          opts_nr )
+-- vim.keymap.set( "n" , "<leader>e" ,    ":Lf<cr>" ,                                                            opts_nr )
+vim.keymap.set( "n" , "<leader>f" ,    ":Lf<cr>" ,                                                            opts_nr )
+vim.keymap.set( "n" , "<F3>" ,         ":Startify<cr>" ,                                                      opts_nr )
+vim.keymap.set( "n" , "<leader><F3>" , ":Telescope aerial<cr>" ,                                              opts_nr )
+vim.keymap.set( "n" , "<F4>" ,         ":lua require('telescope.builtin').buffers( { sort_mru = true})<cr>" , opts_nr )
+vim.keymap.set( "n" , "<leader><F4>" , ":Telescope live_grep<cr>" ,                                           opts_nr )
+vim.keymap.set( "n" , "<F5>" ,         ":lua UokviravanjeSelekcije('n')<cr>" ,                                opts_nr )
+vim.keymap.set( "v" , "<F5>" ,         ":lua UokviravanjeSelekcije('v')<cr>" ,                                opts_nr )
 -- ---------------------------------------------------------
 --
 -- map      <F6> :Tabularize /

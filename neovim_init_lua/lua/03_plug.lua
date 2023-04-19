@@ -58,7 +58,11 @@ require("lazy").setup({
 		'nvim-telescope/telescope.nvim', tag = '0.1.1',
 		-- or                              , branch = '0.1.1',
 		dependencies = { { 'nvim-lua/plenary.nvim' } }
-    	},
+    },
+	{
+		'nvim-telescope/telescope-fzf-native.nvim',
+		run = 'make'
+	},
 	-- ---------------------------------------------
 	-- Vim visual multi (multi cursor):
 	-- ---------------------------------------------
@@ -102,10 +106,10 @@ require("lazy").setup({
 	-- ---------------------------------------------
 	-- "ap/vim-css-color",
 	-- "norcalli/nvim-colorizer.lua",
-	-- {
-	-- 	"rrethy/vim-hexokinase",
-	-- 	run = 'make hexokinase'
-	-- },
+	{
+		"rrethy/vim-hexokinase",
+		run = 'make hexokinase'
+	},
 	-- "jiangmiao/auto-pairs",
 	-- "LunarWatcher/auto-pairs",
 	"windwp/nvim-autopairs",
