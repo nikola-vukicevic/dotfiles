@@ -3,13 +3,9 @@
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 -- -----------------------------------------------------------------------------
 local on_attach = function(client, bufnr)
-	-- Enable completion triggered by <c-x><c-o>
 	-- client.server_capabilities.semanticTokensProvider = nil
 	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 	vim.api.nvim_buf_set_option(0, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-
-	-- Mappings.
-	-- See `:help vim.lsp.*` for documentation on any of the below functions
 end
 --------------------------------------------------------------------------------
 local lsp_flags = {
@@ -23,15 +19,57 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 -- capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 -- deprecated
 -- ---------------------------------------------------------
-local izborC      = 2 -- 1: Clang,        2: CCLS
-local izborPHP    = 1 -- 1: intelephense, 2: PHP actor
-local izborPython = 1 -- 1: Jedi,         2: Pyright:
+local autoStartLSP  = true
+-- ---------------------------------------------------------
+local izborC        = 2 -- 1: Clang,        2: CCLS
+local izborPHP      = 1 -- 1: intelephense, 2: PHP actor
+local izborPython   = 1 -- 1: Jedi,         2: Pyright:
+-- ---------------------------------------------------------
+local aktivanC      = true
+local aktivanCSS    = true
+local aktivanHTML   = true
+local aktivanJS     = true
+local aktivanLua    = true
+local aktivanPHP    = true
+local aktivanPython = true
+local aktivanRust   = true
+-- ---------------------------------------------------------
+local nazivServeraC
+if izborC == 1 then
+	nazivServeraC      = 'clangd'
+else
+	nazivServeraC      = 'ccls'
+end
+-- -----
+local nazivServeraCSS  = 'cssls'
+local nazivServeraHTML = 'html'
+local nazivServeraJS   = 'tsserver'
+local nazivServeraLua  = 'lua_ls'
+-- -----
+local nazivServeraPHP
+if izborPHP == 1 then
+	nazivServeraPHP    = 'intelephense'
+else
+	nazivServeraPHP    = 'phpactor'
+end
+-- -----
+local nazivServeraPython
+if izborPython == 1 then
+	nazivServeraPython  = 'jedi_language_server'
+else
+	nazivServeraPython  = 'pyright'
+end
+-- -----
+local nazivServeraRust  = 'rust_analyzer'
 -- ---------------------------------------------------------
 -- C/C++
 -- ---------------------------------------------------------
+local configC
+-- -----
 if izborC == 1 then
 	-- ------------
-	require('lspconfig')['clangd'].setup {
+	-- require('lspconfig')['clangd'].setup {
+	configC = {
 		capabilities = capabilities,
 		cmd = {
 			"clangd",
@@ -48,7 +86,8 @@ end
 -- -------------------------------------
 if izborC == 2 then
 	-- ------------
-	require('lspconfig')['ccls'].setup {
+	-- require('lspconfig')['ccls'].setup {
+	configC = {
 		capabilities = capabilities,
 		init_options = {
 			compilationDatabaseDirectory = "build";
@@ -68,7 +107,8 @@ end
 -- ---------------------------------------------------------
 -- CSS:
 -- ---------------------------------------------------------
-require('lspconfig')['cssls'].setup {
+-- require('lspconfig')['cssls'].setup {
+local configCSS = {
 	capabilities = capabilities,
 	cmd = {
 		"vscode-css-language-server",
@@ -89,7 +129,8 @@ require('lspconfig')['cssls'].setup {
 -- ---------------------------------------------------------
 -- HTML:
 -- ---------------------------------------------------------
-require('lspconfig')['html'].setup {
+-- require('lspconfig')['html'].setup {
+local configHTML = {
 	capabilities = capabilities,
 	cmd = {
 		"vscode-html-language-server",
@@ -105,7 +146,8 @@ require('lspconfig')['html'].setup {
 -- ---------------------------------------------------------
 -- Javascript:
 -- ---------------------------------------------------------
-require('lspconfig')['tsserver'].setup {
+-- require('lspconfig')['tsserver'].setup {
+local configJS = {
 	capabilities = capabilities,
 	on_attach = on_attach,
 	flags     = lsp_flags,
@@ -119,7 +161,8 @@ require('lspconfig')['tsserver'].setup {
 -- ---------------------------------------------------------
 -- Lua:
 -- ---------------------------------------------------------
-require('lspconfig')['lua_ls'].setup {
+-- require('lspconfig')['lua_ls'].setup {
+local configLua = {
 	capabilities = capabilities,
 	cmd          = {
 		"/home/korisnik/git/lua-language-server/bin/lua-language-server"
@@ -151,8 +194,11 @@ require('lspconfig')['lua_ls'].setup {
 -- ---------------------------------------------------------
 -- PHP:
 -- ---------------------------------------------------------
+local configPHP
+-- -----
 if izborPHP == 1 then
-	require('lspconfig')['intelephense'].setup {
+	-- require('lspconfig')['intelephense'].setup {
+	configPHP = {
 		capabilities = capabilities,
 		on_attach    = on_attach,
 		flags        = lsp_flags,
@@ -161,7 +207,8 @@ if izborPHP == 1 then
 end
 -- -------------------------------------
 if izborPHP == 2 then
-	require('lspconfig')['phpactor'].setup {
+	-- require('lspconfig')['phpactor'].setup {
+	configPHP = {
 		capabilities = capabilities,
 		on_attach = on_attach,
 		flags     = lsp_flags,
@@ -175,9 +222,12 @@ end
 -- ---------------------------------------------------------
 -- Python:
 -- ---------------------------------------------------------
+local configPython
+-- -----
 if izborPython == 1 then
 	-- -----------------
-	require('lspconfig')['jedi_language_server'].setup {
+	-- require('lspconfig')['jedi_language_server'].setup {
+	configPython = {
 		capabilities = capabilities,
 		on_attach    = on_attach,
 		flags        = lsp_flags,
@@ -188,7 +238,8 @@ end
 -- -------------------------------------
 if izborPython == 2 then
 	-- -----------------
-	require('lspconfig')['pyright'].setup {
+	-- require('lspconfig')['pyright'].setup {
+	configPython = {
 		on_attach = on_attach,
 		flags     = lsp_flags,
 	}
@@ -197,7 +248,8 @@ end
 -- ---------------------------------------------------------
 -- Rust:
 -- ---------------------------------------------------------
-require('lspconfig')['rust_analyzer'].setup {
+-- require('lspconfig')['rust_analyzer'].setup {
+local configRust = {
 	capabilities = capabilities,
 	on_attach    = on_attach,
 	flags        = lsp_flags,
@@ -210,3 +262,23 @@ require('lspconfig')['rust_analyzer'].setup {
 	root_dir = function() return vim.loop.cwd() end
 }
 --------------------------------------------------------------------------------
+local configServeri = {
+	{ aktivanC,      nazivServeraC,      configC      },
+	{ aktivanCSS,    nazivServeraCSS,    configCSS    },
+	{ aktivanHTML,   nazivServeraHTML,   configHTML   },
+	{ aktivanJS,     nazivServeraJS,     configJS     },
+	{ aktivanLua,    nazivServeraLua,    configLua    },
+	{ aktivanPHP,    nazivServeraPHP,    configPHP    },
+	{ aktivanPython, nazivServeraPython, configPython },
+	{ aktivanRust,   nazivServeraRust,   configRust   },
+}
+--------------------------------------------------------------------------------
+if autoStartLSP == true then
+	for k, v in pairs(configServeri) do
+		if v[1] == true then
+			require('lspconfig')[v[2]].setup(v[3])
+		end
+	end
+end
+--------------------------------------------------------------------------------
+

@@ -69,9 +69,9 @@ require("telescope").load_extension("ui-select")
 require("telescope").setup {
   extensions = {
     ["ui-select"] = {
-      require("telescope.themes").get_dropdown {
-        -- even more opts
-      }
+		require("telescope.themes").get_dropdown {
+		-- even more opts
+	}
 
       -- pseudo code / specification for writing custom displays, like the one
       -- for "codeactions"
@@ -86,8 +86,19 @@ require("telescope").setup {
       --      do the following
       --   codeactions = false,
       -- }
+    },
+	['fzf'] = {
+		fuzzy                   = true,          -- false will only do exact matching
+		override_generic_sorter = true,          -- override the generic sorter
+		override_file_sorter    = true,          -- override the file sorter
+		case_mode               = "smart_case",  -- or "ignore_case" or "respect_case"
+                                                 -- the default case_mode is "smart_case"
     }
-  }
+  },
+  pickers = {
+	  ignore_current_buffer = true,
+	  sort_mru              = true,
+  },
 }
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
@@ -112,5 +123,5 @@ require('dressing').setup()
 -- require('colorizer').setup()
 -- -----------------------------------------------------------------------------
 -- vim.g.Hexonicase_highlighters = "sign_column"
--- vim.g.Hexonicase_highlighters = "backgroundfull"
+vim.g.Hexonicase_highlighters = "backgroundfull"
 -- -----------------------------------------------------------------------------

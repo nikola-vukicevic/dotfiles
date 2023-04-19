@@ -24,7 +24,7 @@ luasnip.add_snippets(nil, {
 		}, {
 			ls_ispis("<span class='kod'>"),
 			ls_insert(1, "kod"),
-			ls_ispis("</span>"),
+			ls_ispis("</span> "),
 			ls_insert(0)
 		}),
 		-- ---------------------------------------------------------------------
@@ -37,7 +37,7 @@ luasnip.add_snippets(nil, {
 		}, {
 			ls_ispis("console.log('"),
 			ls_insert(1, "ispis"),
-			ls_ispis("')"),
+			ls_ispis("') "),
 			ls_insert(0)
 		}),
 		-- ---------------------------------------------------------------------
@@ -50,7 +50,7 @@ luasnip.add_snippets(nil, {
 		}, {
 			ls_ispis("console.log(\""),
 			ls_insert(1, "ispis"),
-			ls_ispis("\")"),
+			ls_ispis("\") "),
 			ls_insert(0)
 		}),
 		-- ---------------------------------------------------------------------
@@ -63,7 +63,7 @@ luasnip.add_snippets(nil, {
 		}, {
 			ls_ispis("console.log(`"),
 			ls_insert(1, "ispis"),
-			ls_ispis("`)"),
+			ls_ispis("`) "),
 			ls_insert(0)
 		}),
 		-- ---------------------------------------------------------------------
