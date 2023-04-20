@@ -21,7 +21,7 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 -- ---------------------------------------------------------
 local autoStartLSP  = true
 -- ---------------------------------------------------------
-local izborC        = 2 -- 1: Clang,        2: CCLS
+local izborC        = 1 -- 1: Clang,        2: CCLS
 local izborPHP      = 1 -- 1: intelephense, 2: PHP actor
 local izborPython   = 1 -- 1: Jedi,         2: Pyright:
 -- ---------------------------------------------------------
