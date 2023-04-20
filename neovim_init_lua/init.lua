@@ -32,12 +32,12 @@ vim.opt.hidden      = true
 vim.opt.showcmdloc  = "statusline"
 vim.opt.clipboard   = "unnamedplus"
 vim.opt.pumheight   = 20
-vim.opt.ttimeout    = true
-vim.opt.ttimeoutlen = 10
+-- vim.opt.ttimeout    = true
+vim.opt.ttimeoutlen = 4
 vim.opt.number      = true
 vim.opt.showmode    = false
-vim.opt.autoindent  = true
-vim.opt.smartindent = true
+-- vim.opt.autoindent  = true
+-- vim.opt.smartindent = true
 vim.opt.cindent     = true
 vim.opt.cinoptions:append("go")
 vim.opt.tabstop     = 4
@@ -144,7 +144,7 @@ vim.api.nvim_create_autocmd("BufEnter" , {
 	command = "setlocal formatoptions=crqn2l1j"
 })
 --
-vim.opt.updatetime = 100
+vim.opt.updatetime = 500
 -- -----------------------------------------------------------------------------
 -- Save *.imd pokreće parsiranje članka:
 -- -----------------------------------------------------------------------------
