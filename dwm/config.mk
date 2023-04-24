@@ -19,16 +19,15 @@ FREETYPELIBS = -lfontconfig -lXft
 FREETYPEINC = /usr/include/freetype2
 # OpenBSD (uncomment)
 #FREETYPEINC = ${X11INC}/freetype2
+#MANPREFIX = ${PREFIX}/man
+#KVMLIB = -lkvm
 
 # Imlib2 (tag previews)
 IMLIB2LIBS = -lImlib2
 
-#MANPREFIX = ${PREFIX}/man
-#KVMLIB = -lkvm
-
 # includes and libs
 INCS = -I${X11INC} -I${FREETYPEINC}
-# LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} -lX11-xcb -lxcb -lxcb-res ${KVMLIB}
+# LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS}
 LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} ${IMLIB2LIBS} -lX11-xcb -lxcb -lxcb-res ${KVMLIB}
 
 # flags

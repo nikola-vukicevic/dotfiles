@@ -40,13 +40,13 @@
 #include <X11/extensions/Xinerama.h>
 #endif /* XINERAMA */
 #include <X11/Xft/Xft.h>
-#include <Imlib2.h>
 #include <X11/Xlib-xcb.h>
 #include <xcb/res.h>
 #ifdef __OpenBSD__
 #include <sys/sysctl.h>
 #include <kvm.h>
 #endif /* __OpenBSD */
+#include <Imlib2.h>
 
 #include "drw.h"
 #include "util.h"
@@ -253,16 +253,17 @@ static int xerror(Display *dpy, XErrorEvent *ee);
 static int xerrordummy(Display *dpy, XErrorEvent *ee);
 static int xerrorstart(Display *dpy, XErrorEvent *ee);
 static void zoom(const Arg *arg);
-static void showtagpreview(unsigned int i);
-static void takepreview(void);
-static void previewtag(const Arg *arg);
+static void bstack(Monitor *m);
+static void bstackhoriz(Monitor *m);
 static pid_t getparentprocess(pid_t p);
 static int isdescprocess(pid_t p, pid_t c);
 static Client *swallowingclient(Window w);
 static Client *termforwin(const Client *c);
 static pid_t winpid(Window w);
-static void bstack(Monitor *m);
-static void bstackhoriz(Monitor *m);
+
+static void showtagpreview(unsigned int i);
+static void takepreview(void);
+// static void previewtag(const Arg *arg);
 
 /* variables */
 static const char broken[] = "broken";
@@ -1007,25 +1008,6 @@ drawbars(void)
 }
 
 void
-enternotify(XEvent *e)
-{
-	Client *c;
-	Monitor *m;
-	XCrossingEvent *ev = &e->xcrossing;
-
-	if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != root)
-		return;
-	c = wintoclient(ev->window);
-	m = c ? c->mon : wintomon(ev->window);
-	if (m != selmon) {
-		unfocus(selmon->sel, 1);
-		selmon = m;
-	} else if (!c || c == selmon->sel)
-		return;
-	focus(c);
-}
-
-void
 expose(XEvent *e)
 {
 	Monitor *m;
@@ -1400,7 +1382,6 @@ motionnotify(XEvent *e)
 	static Monitor *mon = NULL;
 	Monitor *m;
 	XMotionEvent *ev = &e->xmotion;
-
 	unsigned int i, x;
 
 	if (ev->window == selmon->barwin) {
@@ -1411,7 +1392,7 @@ motionnotify(XEvent *e)
 	/* FIXME when hovering the mouse over the tags and we view the tag,
 	 *       the preview window get's in the preview shot */
 
-	     	if (i < LENGTH(tags)) {
+		if (i < LENGTH(tags)) {
 			if (selmon->previewshow != (i + 1)
 			&& !(selmon->tagset[selmon->seltags] & 1 << i)) {
 				selmon->previewshow = i + 1;
@@ -2334,7 +2315,7 @@ updategeom(void)
 				m->clients = c->next;
 				detachstack(c);
 				c->mon = mons;
-				// attach(c);
+				attach(c);
 				attachbottom(c);
 				attachstack(c);
 			}

@@ -1,24 +1,27 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 0;   /* border pixel of windows */
-static const unsigned int gappx     = 0;   /* gaps between windows */
-static const unsigned int snap      = 32;  /* snap pixel */
-static const int scalepreview       = 3;   /* preview scaling (display w and h / scalepreview) */
-static const int previewbar         = 1;   /* show the bar in the preview window */
-static const int swallowfloating    = 0;   /* 1 means swallow floating windows by default */
-static const int showbar            = 1;   /* 0 means no bar */
-static const int topbar             = 1;   /* 0 means bottom bar */
+static const unsigned int borderpx  = 0;        /* border pixel of windows */
+static const unsigned int gappx     = 0;        /* gaps between windows */
+static const unsigned int snap      = 32;       /* snap pixel */
+static const int scalepreview       = 4;        /* preview scaling (display w and h / scalepreview) */
+static const int previewbar         = 1;        /* show the bar in the preview window */
+static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
+static const int showbar            = 1;        /* 0 means no bar */
+static const int topbar             = 1;        /* 0 means bottom bar */
+static const int focusonwheel       = 0;
 static const int user_bh            = 27;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const int user_bh_padding    = 3;   /* if user_bh == 0, user bh padding is added to font height */
-static const int focusonwheel       = 0;
-static const char *fonts[]          = { "monospace:size=11" };
-static const char dmenufont[]       = "monospace:size=16";
+static const int user_attach_bottom = 1;
+static const char *fonts[]          = {
+	"monospace:size=11"
+};
+static const char dmenufont[]       = "monospace:size=15";
 static const char col_gray1[]       = "#2e2e31";
 static const char col_gray2[]       = "#2e2e31";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#6b7084";
+static const char col_cyan[]        = "#6b7084"; //"#005577";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -35,18 +38,18 @@ static const Rule rules[] = {
 	 */
 	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
 	{ "Sublime_text",    NULL,     NULL,           1 << 6,    0,          0,           0,        -1 },
-	{ "Gimp",            NULL,     NULL,           0,         0,          0,           0,        -1 },
-	{ "st",              NULL,     NULL,           0,         0,          1,           0,        -1 },
+	{ "Gimp",            NULL,     NULL,           0,         1,          0,           0,        -1 },
+	{ "Firefox",         NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
+	{ "St",              NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ NULL,              NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 	{ "Brave-browser",   NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
-	{ "Firefox",         NULL,     NULL,           1 << 7,    0,          0,          -1,        -1 },
 };
 
 /* layout(s) */
-static const float mfact          = 0.6;  /* factor of master area size [0.05..0.95] */
-static const int   nmaster        = 1;    /* number of clients in master area */
-static const int   resizehints    = 1;    /* 1 means respect size hints in tiled resizals */
-static const int   lockfullscreen = 1;    /* 1 will force focus on the fullscreen window */
+static const float mfact        = 0.6;  /* factor of master area size [0.05..0.95] */
+static const int nmaster        = 1;    /* number of clients in master area */
+static const int resizehints    = 0;    /* 1 means respect size hints in tiled resizals */
+static const int lockfullscreen = 1;    /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -60,10 +63,11 @@ static const Layout layouts[] = {
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      previewtag,     {.ui = TAG } },     \
+	{ MODKEY,                       KEY,      view,           { .ui = 1 << TAG } }, \
+	{ MODKEY|ControlMask,           KEY,      toggleview,     { .ui = 1 << TAG } }, \
+	{ MODKEY|ShiftMask,             KEY,      tag,            { .ui = 1 << TAG } }, \
+	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      { .ui = 1 << TAG } },     \
+	/* { MODKEY|ControlMask|ShiftMask, KEY,      previewtag,     {.ui = TAG } },     \ */
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
@@ -71,18 +75,17 @@ static const Layout layouts[] = {
 #define STATUSBAR "dwmblocks"
 
 /* commands */
-static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, "-i" , NULL };
 static const char *termcmd[]  = { "st", NULL };
+
 #include "shift-tools.c"
 
 static Key keys[] = {
 	
 	/* modifier             key         function           argument */
 	
-	{ MODKEY,               XK_o,       shiftviewclients,  { .i = +1 } },
-	{ MODKEY|ShiftMask,     XK_o,	    shiftview,         { .i = +1 } },
-//	{ MODKEY|ShiftMask,     XK_i,	    shiftview,         { .i = -1 } },
-//	{ MODKEY,	            XK_i,       shiftviewclients,  { .i = -1 } },
+	{ MODKEY,	            XK_n,       shiftviewclients,  { .i = -1 } },
+	{ MODKEY,	            XK_m,       shiftviewclients,  { .i = +1 } },
 	{ MODKEY,               XK_d,       spawn,             {.v = dmenucmd } },   /* izmena - bilo p */
 	{ MODKEY,               XK_Return,  spawn,             {.v = termcmd } },    /* izmena */
 	{ MODKEY,               XK_b,       togglebar,         {0} },
@@ -91,17 +94,13 @@ static Key keys[] = {
 	{ MODKEY,               XK_i,       incnmaster,        {.i = +1 } },
 	{ MODKEY,               XK_p,       incnmaster,        {.i = -1 } },         /* izmena - bilo d */
 	{ MODKEY,               XK_h,       setmfact,          {.f = -0.05} },
-	{ MODKEY|ShiftMask,		XK_h,       shiftboth,         { .i = -1 }	},
-	{ MODKEY|ControlMask,   XK_h,       shiftswaptags,     { .i = -1 }	},
-	{ MODKEY|ControlMask,   XK_l,       shiftswaptags,     { .i = +1 }	},
-	{ MODKEY|ShiftMask,     XK_l,       shiftboth,         { .i = +1 }	},
 	{ MODKEY,               XK_l,       setmfact,          {.f = +0.05} },
 	{ MODKEY|ShiftMask,     XK_Return,  zoom,              {0} },                /* izmena */
 	{ MODKEY,               XK_Tab,     view,              {0} },
 	{ MODKEY|ShiftMask,     XK_c,       killclient,        {0} },
 	{ MODKEY,               XK_t,       setlayout,         {.v = &layouts[0]} },
 	{ MODKEY,               XK_f,       setlayout,         {.v = &layouts[1]} },
-	{ MODKEY,               XK_m,       setlayout,         {.v = &layouts[2]} },
+	{ MODKEY|ShiftMask,     XK_m,       setlayout,         {.v = &layouts[2]} },
 	{ MODKEY,               XK_u,       setlayout,         {.v = &layouts[3]} },
 	{ MODKEY,               XK_o,       setlayout,         {.v = &layouts[4]} },
 	{ MODKEY,               XK_space,   setlayout,         {0} },
@@ -118,18 +117,17 @@ static Key keys[] = {
 	
 	/* ----- Moji bind-ovi -------------------------------------------------- */
     
-	{ MODKEY,           XK_F1,      spawn, SHCMD("amixer set Master toggle ; pkill -RTMIN+6 dwmblocks")             },
-	{ MODKEY,           XK_F2,      spawn, SHCMD("amixer -q set Master 1%- ; pkill -RTMIN+6 dwmblocks")             },
-	{ MODKEY,           XK_F3,      spawn, SHCMD("amixer -q set Master 1%+ ; pkill -RTMIN+6 dwmblocks")             },
-	{ MODKEY,           XK_F9,      spawn, SHCMD("setxkbmap -layout us                ; pkill -RTMIN+7 dwmblocks")  },
-	{ MODKEY,           XK_F10,     spawn, SHCMD("setxkbmap -layout rs -variant latin ; pkill -RTMIN+7 dwmblocks")  },
-	{ MODKEY,           XK_F11,     spawn, SHCMD("setxkbmap -layout rs                ; pkill -RTMIN+7 dwmblocks")  },
-	{ MODKEY,           XK_F12,     spawn, SHCMD("screenshot_f12")                                                  },  
-	{ MODKEY,           XK_grave,   spawn, SHCMD("promena_tastature")                                               },
-	{ MODKEY,           XK_q,       spawn, SHCMD("dunstctl close-all")                                              },
-	{ MODKEY,           XK_z,       spawn, SHCMD("slock")                                                           },
-	{ MODKEY,           XK_e,       spawn, SHCMD("st lfrun")                                                        },
-	{ MODKEY|ShiftMask, XK_r,       spawn, SHCMD("shutdown_menu.sh")                                                },
+	{ MODKEY, XK_F1,      spawn, SHCMD("amixer set Master toggle ; pkill -RTMIN+16 dwmblocks")            },
+	{ MODKEY, XK_F2,      spawn, SHCMD("amixer -q set Master 1%- ; pkill -RTMIN+16 dwmblocks")            },
+	{ MODKEY, XK_F3,      spawn, SHCMD("amixer -q set Master 1%+ ; pkill -RTMIN+16 dwmblocks")            },
+	{ MODKEY, XK_F9,      spawn, SHCMD("setxkbmap -layout us                ; pkill -RTMIN+17 dwmblocks") },
+	{ MODKEY, XK_F10,     spawn, SHCMD("setxkbmap -layout rs -variant latin ; pkill -RTMIN+17 dwmblocks") },
+	{ MODKEY, XK_F11,     spawn, SHCMD("setxkbmap -layout rs                ; pkill -RTMIN+17 dwmblocks") },
+	{ MODKEY, XK_F12,     spawn, SHCMD("scrot ~/slike/screenshots/%b%d::%H%M%S.png")                      },  
+	{ MODKEY, XK_grave,   spawn, SHCMD("promena_tastature")                                               },
+	{ MODKEY, XK_q,       spawn, SHCMD("dunstctl close-all")                                              },
+	{ MODKEY, XK_z,       spawn, SHCMD("slock")                                                           },
+	{ MODKEY, XK_e,       spawn, SHCMD("st lfrun")                                                        },
 	
 	/* ----- nastavak (default keybinds) ------------------------------------ */
 
@@ -143,7 +141,8 @@ static Key keys[] = {
 	TAGKEYS(                XK_8,                      7)
 	TAGKEYS(                XK_9,                      8)
 	
-	{ MODKEY|ShiftMask,     XK_q,      quit,           {0} },
+	// { MODKEY|ShiftMask,     XK_q,      quit,           {0} },
+	{ MODKEY|ControlMask|ShiftMask,     XK_q,      quit,           {0} },
 };
 
 /* button definitions */
