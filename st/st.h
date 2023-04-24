@@ -83,6 +83,7 @@ void redraw(void);
 void tfulldirt(void);
 void draw(void);
 
+void iso14755(const Arg *);
 void kscrolldown(const Arg *);
 void kscrollup(const Arg *);
 void printscreen(const Arg *);
@@ -138,3 +139,5 @@ extern unsigned int defaultbg;
 extern unsigned int defaultcs;
 extern const int boxdraw, boxdraw_bold, boxdraw_braille;
 extern float alpha, alphaUnfocused;
+extern char *iso14755_cmd;
+

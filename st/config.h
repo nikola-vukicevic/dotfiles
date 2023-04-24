@@ -5,9 +5,19 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-// static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
-static char *font = "monospace:size=16:antialias=true:autohint=true";
+static char *font = "monospace:size=15:antialias=true:autohint=true";
+/* Spare fonts */
+static char *font2[] = {
+	"Inconsolata Nerd Font Mono:size=18:antialias=true:autohint=true",
+	"Noto Emoji:style=Regular:size=14:antialias=true:autohint=true"
+/*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
+/*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
+};
+
 static int borderpx = 0;
+static int user_offset_underline     = 1;
+static int user_offset_strikethrough = 2;
+static int user_vert_korekcija       = -1;
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -27,8 +37,8 @@ char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 char *vtiden = "\033[?6c";
 
 /* Kerning / character bounding-box multipliers */
-static float cwscale = 0.9;
-static float chscale = 0.95;
+static float cwscale = 0.92;
+static float chscale = 1.01;
 
 /*
  * word delimiter string
@@ -54,8 +64,8 @@ int allowwindowops = 0;
  * near minlatency, but it waits longer for slow updates to avoid partial draw.
  * low minlatency will tear/flicker more, as it can "detect" idle too early.
  */
-static double minlatency = 8;
-static double maxlatency = 33;
+static double minlatency = 2;
+static double maxlatency = 25;
 
 /*
  * blinking timeout (set to 0 to disable blinking) for the terminal blinking
@@ -74,8 +84,8 @@ static unsigned int cursorthickness = 2;
  *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
  * 0: disable (render all U25XX glyphs normally from the font).
  */
-const int boxdraw = 1;
-const int boxdraw_bold = 1;
+const int boxdraw         = 1;
+const int boxdraw_bold    = 1;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
 const int boxdraw_braille = 1;
@@ -107,7 +117,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 4;
 
 /* bg opacity */
-float alpha = 0.95, alphaUnfocused = 0.85;
+float alpha = 0.95, alphaUnfocused = 0.88;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -120,7 +130,7 @@ static const char *colorname[] = {
 	"#eb4f97",  /*  5:  magenta  */
 	"#78cbce",  /*  6:  cyan     */
 	"#dadada",  /*  7:  white    */
-
+	
 	/* 8 bright colors */
 	"#555555",  /*  8:  brblack  */
 	"#f39b9b",  /*  9:  brred    */
@@ -146,8 +156,8 @@ static const char *colorname[] = {
  * Default colors (colorname index)
  * foreground, background, cursor, reverse cursor
  */
-unsigned int defaultfg = 7;
-unsigned int defaultbg = 1;
+unsigned int defaultfg = 258;
+unsigned int defaultbg = 259;
 unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
 unsigned int bg = 260, bgUnfocused = 260;
@@ -189,6 +199,11 @@ static unsigned int defaultattr = 11;
 static uint forcemousemod = ShiftMask;
 
 /*
+ * Command used to query unicode glyphs.
+ */
+char *iso14755_cmd = "dmenu -w \"$WINDOWID\" -p codepoint: </dev/null";
+
+/*
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
  */
@@ -213,12 +228,9 @@ static Shortcut shortcuts[] = {
 	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
 	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
 	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
-	// { TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
-	// { TERMMOD,              XK_Next,        zoom,           {.f = -1} },
-	// { TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
-	{ TERMMOD,              XK_K,           zoom,           {.f = +1} },
-	{ TERMMOD,              XK_J,           zoom,           {.f = -1} },
-	{ TERMMOD,              XK_L,           zoomreset,      {.f =  0} },
+	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
+	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
+	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
@@ -226,6 +238,7 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
 	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
+	{ TERMMOD,              XK_I,           iso14755,       {.i =  0} },
 };
 
 /*
