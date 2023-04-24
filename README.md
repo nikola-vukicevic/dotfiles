@@ -3,11 +3,11 @@ In 2016, after a long hiatus, I returned to Linux and Arch was a nice discovery 
 
 So far so good! :)
 
-## dwm
+## dwm (6.4)
 
 My build of the Suckless dwm window manager. Simple and effective with only a few patches:
 
-- patched for dwmblocks adn color output
+- patched for dwmblocks and color output
 - bottom stack (a nice additional layout)
 - shift tools (for easier acces to adjacent tags)
 - swallow (GUI app started from terminal 'swallows' the terminal, i.e. - the terminal temporarily disappears until the app is closed)
@@ -20,13 +20,13 @@ In order for scripts to work, the following software is required:
 - sysstat
 - dunst
 
-## st
+## st (0.9)
 
 My build of the Suckless Simple Terminal. Also simple and effective with not too many patches:
 
 - del key (del key is not functional by default)
 - focus (separate alpha for the main/aux windows)
-- font 2 (so you can list backup fonts)
+- font 2 (so you can use backup fonts)
 - scrollback & scrollback mouse (scrolling is not a default option in ST)
 
 ## i3 (legacy)
