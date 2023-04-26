@@ -123,7 +123,7 @@ static Key keys[] = {
 	{ MODKEY, XK_F9,      spawn, SHCMD("setxkbmap -layout us                ; pkill -RTMIN+17 dwmblocks") },
 	{ MODKEY, XK_F10,     spawn, SHCMD("setxkbmap -layout rs -variant latin ; pkill -RTMIN+17 dwmblocks") },
 	{ MODKEY, XK_F11,     spawn, SHCMD("setxkbmap -layout rs                ; pkill -RTMIN+17 dwmblocks") },
-	{ MODKEY, XK_F12,     spawn, SHCMD("scrot ~/slike/screenshots/%b%d::%H%M%S.png")                      },  
+	{ MODKEY, XK_F12,     spawn, SHCMD("/home/korisnik/.dwm/skripte/screenshot_f12")                      },  
 	{ MODKEY, XK_grave,   spawn, SHCMD("promena_tastature")                                               },
 	{ MODKEY, XK_q,       spawn, SHCMD("dunstctl close-all")                                              },
 	{ MODKEY, XK_z,       spawn, SHCMD("slock")                                                           },
