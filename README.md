@@ -5,20 +5,28 @@ So far so good! :)
 
 ## dwm (6.4)
 
-My build of the Suckless dwm window manager. Simple and effective with only a few patches:
+Patches:
 
-- patched for dwmblocks and color output
-- bottom stack (a nice additional layout)
-- shift tools (for easier acces to adjacent tags)
-- swallow (GUI app started from terminal 'swallows' the terminal, i.e. - the terminal temporarily disappears until the app is closed)
-- full gaps (by default, it's practiaclly 'turned-off', as you can see in the config file, but I guess I like it sometimes, so I keep it
+https://dwm.suckless.org/patches/alwayscenter/
 
-#### Dependencies
+https://dwm.suckless.org/patches/attachbottom/
 
-In order for scripts to work, the following software is required:
+https://dwm.suckless.org/patches/bottomstack/
 
-- sysstat
-- dunst
+https://dwm.suckless.org/patches/focusonclick/
+
+https://dwm.suckless.org/patches/fullgaps/
+
+https://dwm.suckless.org/patches/status2d/
+
+https://dwm.suckless.org/patches/statuscmd/
+
+https://dwm.suckless.org/patches/swallow/
+
+https://dwm.suckless.org/patches/tag-previews/
+
+
+(+ some small custom tweaks)
 
 ## st (0.9)
 
