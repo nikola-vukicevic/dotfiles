@@ -56,7 +56,11 @@ vim.keymap.set( "" , "<F11>" ,     ":bd<cr>" ,                  opts_nr )
 vim.keymap.set( "" , "<F12>" ,     ":qa<cr>" ,                  opts_nr )
 -- -----
 -- uklanjanje oznake sa poslednjeg pretraživanog stringa
-vim.keymap.set( "n", "<esc><esc>", ":noh<cr>", opts )
+-- vim.keymap.set( "n", "<esc><esc>", ":noh<cr>", opts )
+vim.keymap.set( "n", "<esc><esc>", function()
+	vim.cmd("noh")
+	vim.lsp.buf.clear_references()
+end, opts )
 -- search za Normal mode:
 vim.keymap.set( "n" , "<leader><backspace>" , ":%s//gc<left><left><left>" , opts_nr )
 -- search za Visual mode:
@@ -155,6 +159,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
 		vim.keymap.set('n', 'gh', vim.lsp.buf.hover, opts)
+		vim.keymap.set('n', 'ga', ":lua vim.diagnostic.open_float({ border='single', width=60 })<cr>", opts_nr )
 		-- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
 		-- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
 		-- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
@@ -166,9 +171,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		--
 		-- vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
 		-- vim.keymap.set('n', '<space>r', ":IncRename <cword>", opts)
-		vim.keymap.set("n", "<leader>r", function()
-			return ":IncRename " .. vim.fn.expand("<cword>")
-		end, { expr = true })
+		vim.keymap.set('n', '<space>r', ":lua FancyRenamePoziv()<cr>", opts)
+		-- vim.keymap.set("n", "<leader>r", function()
+		-- 	vim.lsp.buf.document_highlight()
+		-- 	vim.lsp.buf.rename()
+		-- 	vim.lsp.buf.clear_references()
+		-- 	-- return ":IncRename " .. vim.fn.expand("<cword>")
+		-- end, opts_snr)
 
 		--
 		vim.keymap.set('n', '<space>a', vim.lsp.buf.code_action, opts)

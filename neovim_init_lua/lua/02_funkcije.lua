@@ -373,4 +373,107 @@ end
 -- -----------------------------------------------------------------------------
 -- END OF UokviravanjeSelekcije
 -- -----------------------------------------------------------------------------
+function RenameHandler()
+	print("LSP rocx!")
+end
+-- -----------------------------------------------------------------------------
+-- FANCY RENAME:
+-- -----------------------------------------------------------------------------
+function FancyRenamePripremaQuickFixa(promena, bufnr)
+	local linija_start = promena.range.start.line + 1
+	local linija       = vim.api.nvim_buf_get_lines(bufnr, linija_start - 1, linija_start, false)[1]
+
+	local quickFix = {
+		bufnr = bufnr,
+		lnum  = linija_start,
+		col   = promena.range.start.character + 1,
+		text  = linija,
+	}
+
+	print(vim.inspect(promena))
+	print(vim.inspect(quickFix))
+
+	return quickFix
+end
+-- -----------------------------------------------------------------------------
+function FancyRenameCitanjeChanges(JSON_lista, ctx)
+	local lista = { }
+
+	for uri, izmene in pairs(JSON_lista) do
+		local bufnr = vim.uri_to_bufnr(uri)
+
+		for _, izmena in ipairs(izmene) do
+			local quickFix = FancyRenamePripremaQuickFixa(izmena, bufnr)
+			table.insert(lista, quickFix)
+		end
+	end
+
+	return lista
+end
+-- -----------------------------------------------------------------------------
+function FancyRenameCitanjeDocumentChanges(JSON_lista, ctx)
+	local lista = { }
+
+	for _, izmene in ipairs(JSON_lista) do
+		local bufnr = vim.uri_to_bufnr(izmene.textDocument.uri)
+		for _, izmena in ipairs(izmene.edits) do
+			local quickFix = FancyRenamePripremaQuickFixa(izmena, bufnr)
+			table.insert(lista, quickFix)
+		end
+	end
+
+	return lista
+end
+-- -----------------------------------------------------------------------------
+function FancyRenameKreiranjeQFListe(result, ctx)
+	if result.changes then
+		return FancyRenameCitanjeChanges(result.changes, ctx)
+	elseif result.documentChanges then
+		return FancyRenameCitanjeDocumentChanges(result.documentChanges, ctx)
+	else
+		return { }
+	end
+end
+-- -----------------------------------------------------------------------------
+function FancyRenameHandler(err, result, context, config)
+	if not result then return end
+	--
+	print(vim.inspect(context))
+	print(vim.inspect(result))
+	--
+	local client = vim.lsp.get_client_by_id(context.client_id)
+	vim.lsp.util.apply_workspace_edit(result, client.offset_encoding)
+	--
+	local lista = FancyRenameKreiranjeQFListe(result, context)
+	--
+	print(vim.inspect(lista))
+	vim.fn.setqflist(lista, "r")
+	vim.cmd("copen")
+	-- require('telescope.builtin').quickfix()
+end
+-- -----------------------------------------------------------------------------
+function FancyRename(ime)
+	local position_params   = vim.lsp.util.make_position_params()
+	local novoIme           = ime
+	position_params.newName = novoIme
+	-- print(vim.inspect(position_params))
+
+	vim.lsp.buf_request(0, "textDocument/rename", position_params, FancyRenameHandler)
+end
+-- -----------------------------------------------------------------------------
+function FancyRenamePoziv()
+	vim.lsp.buf.document_highlight()
+	vim.ui.input(
+		{
+			prompt  = "Novo ime:",
+			default = vim.fn.expand('<cword>')
+
+		},
+		FancyRename
+	)
+	vim.lsp.buf.clear_references()
+end
+-- -----------------------------------------------------------------------------
+-- END OF FANCY RENAME
+-- -----------------------------------------------------------------------------
 

@@ -90,14 +90,10 @@ require("lazy").setup({
 	-- ---------------------------------------------
 	"drewtempelmeyer/palenight.vim",
 	"JoosepAlviste/palenightfall.nvim",
-	"folke/tokyonight.nvim",
-	"rebelot/kanagawa.nvim",
 	"catppuccin/nvim",
-	"flazz/vim-colorschemes",
-	"EdenEast/nightfox.nvim",
-	"sainnhe/sonokai",
-	"sainnhe/everforest",
-	"sainnhe/edge",
+	"folke/tokyonight.nvim",
+	-- "sainnhe/sonokai",
+	-- "flazz/vim-colorschemes",
 	-- "chriskempson/base16-vim",
 	-- "sonph/onehalfi", { 'rtp': 'vim' },
 	-- "gilgigilgil/anderson.vim"
@@ -110,15 +106,19 @@ require("lazy").setup({
 		"rrethy/vim-hexokinase",
 		run = 'make hexokinase'
 	},
+	"windwp/nvim-autopairs",
+	"RRethy/vim-illuminate",
+	"nvim-telescope/telescope-ui-select.nvim",
+	"filipdutescu/renamer.nvim",
+	"mfussenegger/nvim-dap",
 	-- "jiangmiao/auto-pairs",
 	-- "LunarWatcher/auto-pairs",
-	"windwp/nvim-autopairs",
 	-- "cohama/lexima.vim",
-	"RRethy/vim-illuminate",
 	-- "godlygeek/tabular",
-	"nvim-telescope/telescope-ui-select.nvim",
-	"smjonas/inc-rename.nvim",
 	"stevearc/dressing.nvim",
+	-- "stevearc/qf_helper.nvim",
+	"kevinhwang91/nvim-bqf",
+	-- "smjonas/inc-rename.nvim",
 	-- ---------------------------------------------
 	}, { -- Lazy options:
 	-- ---------------------------------------------
@@ -132,7 +132,7 @@ require("lazy").setup({
 		}
 	},	
 	-- ---------------------------------------------
-})  -- require("lazy").setup()
+})  -- END OF require("lazy").setup()
 -- -----------------------------------------------------------------------------
 -- -----------------------------------------------------------------------------
 
