@@ -30,12 +30,39 @@ https://dwm.suckless.org/patches/tag-previews/
 
 ## st (0.9)
 
-My build of the Suckless Simple Terminal. Also simple and effective with not too many patches:
+Patches:
 
-- del key (del key is not functional by default)
-- focus (separate alpha for the main/aux windows)
-- font 2 (so you can use backup fonts)
-- scrollback & scrollback mouse (scrolling is not a default option in ST)
+https://st.suckless.org/patches/alpha_focus_highlight/
+
+https://st.suckless.org/patches/boxdraw/
+
+https://st.suckless.org/patches/delkey/
+
+https://st.suckless.org/patches/font2/
+
+https://st.suckless.org/patches/iso14755/
+
+https://st.suckless.org/patches/scrollback/
+
+(+ scrollback-mouse)
+
+https://st.suckless.org/patches/vertcenter/
+
+## dmenu (5.2)
+
+Patches:
+
+https://tools.suckless.org/dmenu/patches/alpha/
+
+https://tools.suckless.org/dmenu/patches/border/
+
+https://tools.suckless.org/dmenu/patches/center/
+
+https://tools.suckless.org/dmenu/patches/fuzzyhighlight/
+
+https://tools.suckless.org/dmenu/patches/fuzzymatch/
+
+https://tools.suckless.org/dmenu/patches/line-height/
 
 ## i3 (legacy)
 Nothing fancy here. Simple and functional (a few dedicated shortcuts for switching the keyboard layout and some minor visual tweaks)
