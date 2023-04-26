@@ -2,6 +2,8 @@
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 -- -----------------------------------------------------------------------------
+require('lspconfig.ui.windows').default_options.border = 'single'
+-- -----------------------------------------------------------------------------
 local on_attach = function(client, bufnr)
 	-- client.server_capabilities.semanticTokensProvider = nil
 	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -21,8 +23,8 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 -- ---------------------------------------------------------
 local autoStartLSP  = true
 -- ---------------------------------------------------------
-local izborC        = 1 -- 1: Clang,        2: CCLS
-local izborPHP      = 1 -- 1: intelephense, 2: PHP actor
+local izborC        = 2 -- 1: Clang,        2: CCLS
+local izborPHP      = 2 -- 1: intelephense, 2: PHP actor
 local izborPython   = 1 -- 1: Jedi,         2: Pyright:
 -- ---------------------------------------------------------
 local aktivanC      = true

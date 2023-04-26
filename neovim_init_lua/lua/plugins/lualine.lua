@@ -122,9 +122,11 @@ end
 -- -----------------------------------------------------------------------------
 require('lualine').setup {
 	options = {
-		-- theme = '00_tema_1',
-		theme = 'onedark',
-		-- section_separators = { left = '', right = '' }
+		theme = '00_tema_1',
+		-- theme = 'onedark',
+		--                         
+		section_separators = { left = '', right = '' }
+		-- section_separators = { left = '', right = '' }
 	},
 	sections = {
 		lualine_b = { 'branch', 'diff' },
