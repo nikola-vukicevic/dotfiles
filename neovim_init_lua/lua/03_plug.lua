@@ -54,6 +54,10 @@ require("lazy").setup({
 	-- ---------------------------------------------
 	-- Telescope:
 	-- ---------------------------------------------
+	'junegunn/fzf',
+	'junegunn/fzf.vim',
+	'ibhagwan/fzf-lua',
+	
 	{
 		'nvim-telescope/telescope.nvim', tag = '0.1.1',
 		-- or                              , branch = '0.1.1',
@@ -116,9 +120,8 @@ require("lazy").setup({
 	-- "cohama/lexima.vim",
 	-- "godlygeek/tabular",
 	"stevearc/dressing.nvim",
-	-- "stevearc/qf_helper.nvim",
-	"kevinhwang91/nvim-bqf",
 	-- "smjonas/inc-rename.nvim",
+	"kevinhwang91/nvim-bqf",
 	-- ---------------------------------------------
 	}, { -- Lazy options:
 	-- ---------------------------------------------

@@ -51,21 +51,6 @@ function PomeranjeLinijeNaGore()
 	end
 end
 -- -----------------------------------------------------------------------------
-function RenameBezNezeljenihPosledica()
-	vim.ui.input({
-		prompt  ='Novo ime: ',
-		default = vim.fn.expand('<cword>'),
-	},
-		function (input)
-			if not vim.fn.empty(input) then
-				vim.lsp.buf.rename(input)
-			else
-				print("RENAME OTKAZAN!")
-			end
-		end
-	)
-end
--- -----------------------------------------------------------------------------
 -- UokviravanjeSelekcije:
 -- -----------------------------------------------------------------------------
 function DaLiJeASCII(c)
@@ -463,14 +448,22 @@ end
 -- -----------------------------------------------------------------------------
 function FancyRenamePoziv()
 	vim.lsp.buf.document_highlight()
-	vim.ui.input(
-		{
-			prompt  = "Novo ime:",
-			default = vim.fn.expand('<cword>')
 
-		},
-		FancyRename
+	vim.ui.input({
+		prompt  = "Novo ime:",
+		default = vim.fn.expand('<cword>')
+	},
+		function(input)
+			print(string.format("Input=%s", input))
+			if input ~= nil and input ~= "" then
+				FancyRename(input)
+			else
+				print("Rename otkazan ....")
+				vim.lsp.buf.clear_references()
+			end
+		end
 	)
+
 	vim.lsp.buf.clear_references()
 end
 -- -----------------------------------------------------------------------------

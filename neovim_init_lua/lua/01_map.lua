@@ -58,8 +58,17 @@ vim.keymap.set( "" , "<F12>" ,     ":qa<cr>" ,                  opts_nr )
 -- uklanjanje oznake sa poslednjeg pretraživanog stringa
 -- vim.keymap.set( "n", "<esc><esc>", ":noh<cr>", opts )
 vim.keymap.set( "n", "<esc><esc>", function()
-	vim.cmd("noh")
-	vim.lsp.buf.clear_references()
+	local ft = vim.bo.filetype
+	if ft == "NvimTree" then
+		vim.cmd("NvimTreeClose")
+	elseif ft == "qf" then
+		vim.cmd("cclose")
+	elseif ft == "help" then
+		vim.cmd("q")
+	else
+		vim.cmd("noh")
+		vim.lsp.buf.clear_references()
+	end
 end, opts )
 -- search za Normal mode:
 vim.keymap.set( "n" , "<leader><backspace>" , ":%s//gc<left><left><left>" , opts_nr )
