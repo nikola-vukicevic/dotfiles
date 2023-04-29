@@ -7,24 +7,15 @@ So far so good! :)
 
 Patches:
 
-https://dwm.suckless.org/patches/alwayscenter/
-
-https://dwm.suckless.org/patches/attachbottom/
-
-https://dwm.suckless.org/patches/bottomstack/
-
-https://dwm.suckless.org/patches/focusonclick/
-
-https://dwm.suckless.org/patches/fullgaps/
-
-https://dwm.suckless.org/patches/status2d/
-
-https://dwm.suckless.org/patches/statuscmd/
-
-https://dwm.suckless.org/patches/swallow/
-
-https://dwm.suckless.org/patches/tag-previews/
-
+- https://dwm.suckless.org/patches/alwayscenter/
+- https://dwm.suckless.org/patches/attachbottom/
+- https://dwm.suckless.org/patches/bottomstack/
+- https://dwm.suckless.org/patches/focusonclick/
+- https://dwm.suckless.org/patches/fullgaps/
+- https://dwm.suckless.org/patches/status2d/
+- https://dwm.suckless.org/patches/statuscmd/
+- https://dwm.suckless.org/patches/swallow/
+- https://dwm.suckless.org/patches/tag-previews/
 
 (+ some small custom tweaks)
 
@@ -32,40 +23,29 @@ https://dwm.suckless.org/patches/tag-previews/
 
 Patches:
 
-https://st.suckless.org/patches/alpha_focus_highlight/
-
-https://st.suckless.org/patches/boxdraw/
-
-https://st.suckless.org/patches/delkey/
-
-https://st.suckless.org/patches/font2/
-
-https://st.suckless.org/patches/iso14755/
-
-https://st.suckless.org/patches/scrollback/
-
-(+ scrollback-mouse)
-
-https://st.suckless.org/patches/vertcenter/
+- https://st.suckless.org/patches/alpha_focus_highlight/
+- https://st.suckless.org/patches/boxdraw/
+- https://st.suckless.org/patches/delkey/
+- https://st.suckless.org/patches/font2/
+- https://st.suckless.org/patches/iso14755/
+- https://st.suckless.org/patches/scrollback/ (+ scrollback-mouse)
+- https://st.suckless.org/patches/vertcenter/
 
 ## dmenu (5.2)
 
 Patches:
 
-https://tools.suckless.org/dmenu/patches/alpha/
-
-https://tools.suckless.org/dmenu/patches/border/
-
-https://tools.suckless.org/dmenu/patches/center/
-
-https://tools.suckless.org/dmenu/patches/fuzzyhighlight/
-
-https://tools.suckless.org/dmenu/patches/fuzzymatch/
-
-https://tools.suckless.org/dmenu/patches/line-height/
+- https://tools.suckless.org/dmenu/patches/alpha/
+- https://tools.suckless.org/dmenu/patches/border/
+- https://tools.suckless.org/dmenu/patches/center/
+- https://tools.suckless.org/dmenu/patches/fuzzyhighlight/
+- https://tools.suckless.org/dmenu/patches/fuzzymatch/
+- https://tools.suckless.org/dmenu/patches/line-height/
 
 ## i3 (legacy)
+
 Nothing fancy here. Simple and functional (a few dedicated shortcuts for switching the keyboard layout and some minor visual tweaks)
 
 ## Xresources (legacy)
+
 These settings are for the urxvt terminal (which is what I used before switching to ST)
