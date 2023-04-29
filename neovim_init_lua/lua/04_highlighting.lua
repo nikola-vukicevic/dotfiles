@@ -5,6 +5,9 @@ local treesitterHL = true
 local LspHL        = true
 local TelescopeHL  = true
 -- -------------------------------------------------------------------------- --
+vim.cmd("hi BreadcrumbsNormal gui=None guibg=#2c323c guifg=Blue")
+vim.cmd("hi BreadcrumbsColor  gui=None guibg=#2c323c guifg=Red")
+-- -------------------------------------------------------------------------- --
 local boja_01 = "#e0e0e0" -- osnovna
 local boja_02 = "#cc99ff" -- komentari
 local boja_03 = "#2e313e" -- pozadina float
@@ -17,23 +20,25 @@ local boja_03 = "#2e313e" -- pozadina float
 -- #94C9A9
 local boja_111 = "#80a0f0"
 local boja_112 = "#93ada2" -- niska
-local boja_113 = "#F49FBC" -- brojevi
-local boja_114 = "#F7DCC0" -- zagrade
+local boja_113 = "#f49fbc" -- brojevi
+local boja_114 = "#f7dcc0" -- zagrade
 local boja_115 = "#b0b0b0" -- punktuacija
 local boja_116 = "#e2b380" -- operatori
 local boja_117 = "#7399bf" -- include, define
 local boja_118 = "#c0d0f7" -- builtin promenlji, atributi tagova i sl 
 local boja_119 = "#6f9283" -- 
-local boja_120 = "#B480F0" -- boolean
+local boja_120 = "#b480f0" -- boolean
 --
 local boja_201 = "#eedd00" -- hint
 -- local boja_202 = "#ee9900" -- warning
-local boja_202 = "#F09050" -- warning
+local boja_202 = "#f09050" -- warning
 local boja_203 = "#ee4400" -- error
 -- local boja_113 = "#e5ff99"
 -- local boja_114 = "#ffcc99"
 -- local boja_115 = "#ffff99"
 -- local boja_116 = "#ffdfbf"
+--
+local boja_breadcrumbs_bg = "#2c323c"
 -- -------------------------------------------------------------------------- --
 if basicHL == true then
 	-- Let's make Vim great (again) - koja god tema je izabrana
@@ -168,5 +173,41 @@ if TelescopeHL == true then
 	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,  { bg = None } )                 --"#2c303d",                } )
 	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,  { bg = None, fg = "#d0d0d0" } ) --"#2c303d", fg = "#d0d0d0" } )
 end
+-- -------------------------------------------------------------------------- --
+-- Breadcrumbs plugin:
+-- -------------------------------------------------------------------------- --
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsNormal" ,        { bg = boja_breadcrumbs_bg , fg = "#b0b0b0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsSeparator" ,     { bg = boja_breadcrumbs_bg , fg = "#7a7470" } )
+-- vim.api.nvim_set_hl ( 0 , "BreadcrumbsSeparator" ,     { bg = boja_breadcrumbs_bg , fg = "#f7dcc0" } )
+--
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsDefaultIcon" ,   { bg = boja_breadcrumbs_bg , fg = "#7fc29b" } )
+--
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsFile" ,          { bg = boja_breadcrumbs_bg , fg = "#7fc29b" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsModule" ,        { bg = boja_breadcrumbs_bg , fg = "#7fc29b" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsNamespace" ,     { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsPackage" ,       { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsClass" ,         { bg = boja_breadcrumbs_bg , fg = "#f0a080" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsMethod" ,        { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsProperty" ,      { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsField" ,         { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsConstructor" ,   { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsEnum" ,          { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsInterface" ,     { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsFunction" ,      { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsVariable" ,      { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsConstant" ,      { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsString" ,        { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsNumber" ,        { bg = boja_breadcrumbs_bg , fg = "#f49fbc" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsBoolean" ,       { bg = boja_breadcrumbs_bg , fg = "#b480f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsArray" ,         { bg = boja_breadcrumbs_bg , fg = "#c0d0f7" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsObject" ,        { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsKey" ,           { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsNull" ,          { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsEnumMember" ,    { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsStruct" ,        { bg = boja_breadcrumbs_bg , fg = "#f49fbc" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsEvent" ,         { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsOperator" ,      { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsTypeParameter" , { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
+vim.api.nvim_set_hl ( 0 , "BreadcrumbsMacro" ,         { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
 -- -------------------------------------------------------------------------- --
 

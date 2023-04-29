@@ -17,7 +17,6 @@ require("lazy").setup({
 	-- ---------------------------------------------
 	"folke/neodev.nvim",
 	"nvim-tree/nvim-web-devicons",
-	"stevearc/aerial.nvim",
 	"kyazdani42/nvim-tree.lua",
 	"dstein64/vim-startuptime",
 	-- ---------------------------------------------
@@ -54,10 +53,8 @@ require("lazy").setup({
 	-- ---------------------------------------------
 	-- Telescope:
 	-- ---------------------------------------------
-	'junegunn/fzf',
 	'junegunn/fzf.vim',
 	'ibhagwan/fzf-lua',
-	
 	{
 		'nvim-telescope/telescope.nvim', tag = '0.1.1',
 		-- or                              , branch = '0.1.1',
@@ -120,8 +117,8 @@ require("lazy").setup({
 	-- "cohama/lexima.vim",
 	-- "godlygeek/tabular",
 	"stevearc/dressing.nvim",
-	-- "smjonas/inc-rename.nvim",
 	"kevinhwang91/nvim-bqf",
+	-- "nikola-vukicevic/breadcrumbs-nvim",
 	-- ---------------------------------------------
 	}, { -- Lazy options:
 	-- ---------------------------------------------
