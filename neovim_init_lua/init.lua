@@ -138,6 +138,15 @@ vim.api.nvim_create_autocmd("BufEnter" , {
 	command = "setlocal formatoptions=crqn2l1j"
 })
 --
+vim.api.nvim_create_autocmd( { "InsertLeave" } , {
+	pattern = "*",
+	command = "lua require('breadcrumbs').Load()"
+})
+vim.api.nvim_create_autocmd("CursorMoved" , {
+	pattern = "*",
+	command = "lua require('breadcrumbs').Update()"
+})
+--
 vim.opt.updatetime = 500
 -- -----------------------------------------------------------------------------
 -- Save *.imd pokreće parsiranje članka:
@@ -151,4 +160,4 @@ if vim.g.barebones_CFG ~= true then
 	require ('plugins')
 end
 -- -----------------------------------------------------------------------------
-
+require('breadcrumbs')
