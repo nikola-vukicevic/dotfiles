@@ -43,26 +43,8 @@ require('illuminate').configure({
      delay = 40,
 })
 -- -------------------------------------------------------------------------- -
--- Plugin - Aerial:
--- -------------------------------------------------------------------------- -
-require('aerial').setup({
-	backends = {
-		-- "ale",
-		"lsp",
-		"treesitter",
-		-- "markdown",
-		-- "man"
-	},
-	show_guides        = true,
-	filter_kind        = false,
-	highlight_closest  = false,
-	highlight_on_hover = true,
-	manage_folds       = true,
-})
--- -------------------------------------------------------------------------- -
 -- Plugin - Telescope:
 -- -------------------------------------------------------------------------- -
-require('telescope').load_extension('aerial')
 require("telescope").load_extension("ui-select")
 local telescope_actions = require('telescope.actions')
 
@@ -123,10 +105,6 @@ ft.set("imd" , "!!%s")
 -- require("inc_rename").setup({
 -- 	input_buffer_type = "dressing",
 -- })
--- -----------------------------------------------------------------------------
-require('renamer').setup({
-	-- handler = RenameHandler,
-})
 -- -----------------------------------------------------------------------------
 require('dressing').setup({
 	input = {

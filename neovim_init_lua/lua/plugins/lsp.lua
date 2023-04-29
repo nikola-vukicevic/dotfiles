@@ -6,6 +6,9 @@ require('lspconfig.ui.windows').default_options.border = 'single'
 -- -----------------------------------------------------------------------------
 local on_attach = function(client, bufnr)
 	-- client.server_capabilities.semanticTokensProvider = nil
+	if client.server_capabilities.documentSymbolProvider then
+		require('breadcrumbs').Load()
+    end
 	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 	vim.api.nvim_buf_set_option(0, "formatexpr", "v:lua.vim.lsp.formatexpr()")
 end
@@ -24,7 +27,7 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 local autoStartLSP  = true
 -- ---------------------------------------------------------
 local izborC        = 2 -- 1: Clang,        2: CCLS
-local izborPHP      = 2 -- 1: intelephense, 2: PHP actor
+local izborPHP      = 1 -- 1: intelephense, 2: PHP actor
 local izborPython   = 1 -- 1: Jedi,         2: Pyright:
 -- ---------------------------------------------------------
 local aktivanC      = true

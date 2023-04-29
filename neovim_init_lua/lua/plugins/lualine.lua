@@ -120,6 +120,15 @@ function format_cmdshow()
 	return vim.fn.hostname()
 end
 -- -----------------------------------------------------------------------------
+function proba()
+	return "%#Comment#  Pera  %#Normal#  Mika  "
+end
+-- -----------------------------------------------------------------------------
+function ReadLSPSymbol()
+	if vim.g.lsp_current_symbol == nil then return "" end
+	return vim.g.lsp_current_symbol
+end
+-- -----------------------------------------------------------------------------
 require('lualine').setup {
 	options = {
 		theme = '00_tema_1',
@@ -143,9 +152,14 @@ require('lualine').setup {
 			{ format_v_select,     padding = { left = 0, right = 1 }, component_separators = { left = "", right = "" }, color = { fg = "#ffffaa" } },
 			{ '%f',                padding = { left = 0, right = 0 }, component_separators = { left = "", right = "" } },
 			{ format_separator,    padding = { left = 1, right = 1 }, component_separators = { left = "", right = "" }, color = { fg = "#aaaaaa" } },
-			{ 'aerial' },
+			-- -- --
+			-- { 'aerial' },
+			-- { 'navic' },
+			-- { '%#Comment#g:lsp_current_symbol', padding = { left = 0, right = 0 }, color = { gui = 'none' } },
+			{ ReadLSPSymbol },
+			-- { 'g:lsp_current_symbol', padding = { left = 0, right = 0 } },
+			-- -- --
 			-- {
-				-- aerial je 'novi tagbar'
 			-- 	function()
 			-- 		local p = vim.fn['tagbar#currenttag']('%s', '')
 			-- 		return p
