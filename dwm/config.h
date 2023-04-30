@@ -1,28 +1,29 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 0;        /* border pixel of windows */
-static const unsigned int gappx     = 0;        /* gaps between windows */
-static const unsigned int snap      = 32;       /* snap pixel */
-static const int scalepreview       = 4;        /* preview scaling (display w and h / scalepreview) */
-static const int previewbar         = 1;        /* show the bar in the preview window */
-static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
-static const int showbar            = 1;        /* 0 means no bar */
-static const int topbar             = 1;        /* 0 means bottom bar */
+static const unsigned int borderpx  = 0;   /* border pixel of windows */
+static const unsigned int gappx     = 0;   /* gaps between windows */
+static const unsigned int snap      = 32;  /* snap pixel */
+static const int swallowfloating    = 0;   /* 1 means swallow floating windows by default */
+static const int scalepreview       = 4;   /* tag preview scaling */
+static const int showbar            = 1;   /* 0 means no bar */
+static const int topbar             = 1;   /* 0 means bottom bar */
 static const int focusonwheel       = 0;
+/* ----- */
 static const int user_bh            = 27;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const int user_bh_padding    = 3;   /* if user_bh == 0, user bh padding is added to font height */
 static const int user_attach_bottom = 1;
-static const char *fonts[]          = {
+/* ----- */
+static const char *fonts[]      = {
 	"monospace:size=11"
 };
-static const char dmenufont[]       = "monospace:size=15";
-static const char col_gray1[]       = "#2e2e31";
-static const char col_gray2[]       = "#2e2e31";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#6b7084"; //"#005577";
-static const char *colors[][3]      = {
+static const char dmenufont[]   = "monospace:size=15";
+static const char col_gray1[]   = "#2e2e31";
+static const char col_gray2[]   = "#2e2e31";
+static const char col_gray3[]   = "#bbbbbb";
+static const char col_gray4[]   = "#eeeeee";
+static const char col_cyan[]    = "#6b7084";  // "#005577";
+static const char *colors[][3]  = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
@@ -48,7 +49,7 @@ static const Rule rules[] = {
 /* layout(s) */
 static const float mfact        = 0.6;  /* factor of master area size [0.05..0.95] */
 static const int nmaster        = 1;    /* number of clients in master area */
-static const int resizehints    = 0;    /* 1 means respect size hints in tiled resizals */
+static const int resizehints    = 1;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1;    /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
@@ -63,11 +64,10 @@ static const Layout layouts[] = {
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           { .ui = 1 << TAG } }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     { .ui = 1 << TAG } }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            { .ui = 1 << TAG } }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      { .ui = 1 << TAG } },     \
-	/* { MODKEY|ControlMask|ShiftMask, KEY,      previewtag,     {.ui = TAG } },     \ */
+	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
