@@ -170,8 +170,9 @@ end
 -- Telescope:
 -- -------------------------------------------------------------------------- --
 if TelescopeHL == true then
-	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,  { bg = None } )                 --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,  { bg = None, fg = "#d0d0d0" } ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,         { bg = None } )                 --"#2c303d",                } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         { bg = None, fg = "#d0d0d0" } ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  { bg = None, fg = "#f09080" } ) --"#2c303d", fg = "#d0d0d0" } )
 end
 -- -------------------------------------------------------------------------- --
 -- Breadcrumbs plugin:
