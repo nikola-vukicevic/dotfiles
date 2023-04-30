@@ -8,7 +8,12 @@ local on_attach = function(client, bufnr)
 	-- client.server_capabilities.semanticTokensProvider = nil
 	if client.server_capabilities.documentSymbolProvider then
 		require('breadcrumbs').Load()
+		vim.api.nvim_create_autocmd( { "InsertLeave", "CursorHold" } , {
+			pattern = "*",
+			command = "lua require('breadcrumbs').Load()"
+		})
     end
+	--
 	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 	vim.api.nvim_buf_set_option(0, "formatexpr", "v:lua.vim.lsp.formatexpr()")
 end

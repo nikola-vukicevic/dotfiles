@@ -47,7 +47,8 @@ require('illuminate').configure({
 -- -------------------------------------------------------------------------- -
 require("telescope").load_extension("ui-select")
 local telescope_actions = require('telescope.actions')
-
+vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
+--
 -- This is your opts table
 require("telescope").setup({
 	extensions = {
@@ -73,8 +74,9 @@ require("telescope").setup({
 	defaults = {
 		layout_config = {
 			horizontal = {
-				width  = 0.75,
-				height = 0.85,
+				width         = 0.75,
+				height        = 0.85,
+				preview_width = 0.45,
 			},
 		},
 		mappings = {
