@@ -7,11 +7,28 @@ require('lspconfig.ui.windows').default_options.border = 'single'
 local on_attach = function(client, bufnr)
 	-- client.server_capabilities.semanticTokensProvider = nil
 	if client.server_capabilities.documentSymbolProvider then
-		require('breadcrumbs').Load()
-		vim.api.nvim_create_autocmd( { "InsertLeave", "CursorHold" } , {
-			pattern = "*",
-			command = "lua require('breadcrumbs').Load()"
+		vim.api.nvim_create_autocmd(
+			{
+				"InsertLeave",
+				"BufEnter",
+				"CursorHold"
+			} , {
+			command = "lua require('breadcrumbs').Load()",
+			buffer  = bufnr,
 		})
+		--
+		vim.api.nvim_create_autocmd("CursorMoved" , {
+			command = "lua require('breadcrumbs').Update()",
+			buffer  = bufnr,
+		})
+		--
+		vim.api.nvim_create_autocmd("BufDelete" , {
+			command = "lua require('breadcrumbs').Reset()",
+			buffer  = bufnr,
+		})
+		--
+		require('breadcrumbs').Load()
+		--
     end
 	--
 	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
