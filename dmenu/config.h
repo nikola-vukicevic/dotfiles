@@ -8,23 +8,21 @@ static int min_width            = 500;   /* minimum width when centered */
 static const unsigned int alpha = 0xf0;
 /* -fn option overrides fonts[0]; default X11 font or font set */
 static const char *fonts[] = {
-	"monospace:size=15"
+	"Inconsolata:style=Bold:size=16"
 };
 static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
 static const char *colors[SchemeLast][2] = {
-	/*     fg         bg       */
-	[SchemeNorm]          = { "#bbbbbb", "#222222" },
-	[SchemeSel]           = { "#eeeeee", "#1166c8" }, // #005577
+	/*                         fg         bg      */
+	[SchemeNorm]          = { "#bbbbbb", "#272935" },
+	[SchemeSel]           = { "#eeeeee", "#6b7084" }, // #005577
 	[SchemeSelHighlight]  = { "#ffc978", "#6b7084" }, // #005577" },
 	[SchemeNormHighlight] = { "#80a0f0", "#2e2e31" }, // #222222" },
-	[SchemeOut]           = { "#000000", "#00ffff" },
+	[SchemeOut]           = { "#ff0000", "#00ffff" },
 };
 
 static const unsigned int alphas[SchemeLast][2] = {
 	[SchemeNorm] = { OPAQUE, alpha },
 	[SchemeSel]  = { OPAQUE, alpha },
-	// [SchemeSelHighlight]  = { OPAQUE, alpha },
-	// [SchemeNormHighlight] = { OPAQUE, alpha },
 	[SchemeOut]  = { OPAQUE, alpha },
 };
 

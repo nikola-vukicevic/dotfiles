@@ -34,7 +34,6 @@
 enum { SchemeNorm, SchemeSel, SchemeNormHighlight, SchemeSelHighlight,
        SchemeOut, SchemeLast }; /* color schemes */
 
-
 struct item {
 	char *text;
 	struct item *left, *right;
@@ -167,17 +166,20 @@ drawhighlights(struct item *item, int x, int y, int maxw)
 	                   ? SchemeSelHighlight
 	                   : SchemeNormHighlight]);
 	for (i = 0, highlight = item->text; *highlight && text[i];) {
-		if (!fstrncmp(&text[i], highlight, 1)) {
-			c = highlight[1];
-			highlight[1] = '\0';
-
+		// if (*highlight == text[i]) {
+		if (!fstrncmp(&(*highlight), &text[i], 1)) {
 			/* get indentation */
+			c = *highlight;
+			*highlight = '\0';
 			indent = TEXTW(item->text);
+			*highlight = c;
 
 			/* highlight character */
+			c = highlight[1];
+			highlight[1] = '\0';
 			drw_text(
 				drw,
-				x + indent - lrpad,
+				x + indent - (lrpad / 2),
 				y,
 				MIN(maxw - indent, TEXTW(highlight) - lrpad),
 				bh, 0, highlight, 0
