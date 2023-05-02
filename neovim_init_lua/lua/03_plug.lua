@@ -62,6 +62,7 @@ require("lazy").setup({
 		'nvim-telescope/telescope-fzf-native.nvim',
 		run = 'make'
 	},
+	"nvim-telescope/telescope-ui-select.nvim",
 	-- ---------------------------------------------
 	-- Vim visual multi (multi cursor):
 	-- ---------------------------------------------
@@ -107,8 +108,6 @@ require("lazy").setup({
 	},
 	"windwp/nvim-autopairs",
 	"RRethy/vim-illuminate",
-	"nvim-telescope/telescope-ui-select.nvim",
-	"filipdutescu/renamer.nvim",
 	"mfussenegger/nvim-dap",
 	-- "jiangmiao/auto-pairs",
 	-- "LunarWatcher/auto-pairs",
@@ -117,7 +116,6 @@ require("lazy").setup({
 	"stevearc/dressing.nvim",
 	"kevinhwang91/nvim-bqf",
 	-- "nikola-vukicevic/breadcrumbs-nvim",
-	"ibhagwan/fzf-lua",
 	-- ---------------------------------------------
 	}, { -- Lazy options:
 	-- ---------------------------------------------

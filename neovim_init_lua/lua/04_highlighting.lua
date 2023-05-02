@@ -1,16 +1,21 @@
 -- -------------------------------------------------------------------------- --
-local basicHL      = true
-local cmpHL        = false
-local treesitterHL = true
-local LspHL        = true
-local TelescopeHL  = true
+local mainHL       = true
+local basicHL      = mainHL and true
+local cmpHL        = mainHL and false
+local treesitterHL = mainHL and true
+local LspHL        = mainHL and true
+local TelescopeHL  = mainHL and true
+-- -------------------------------------------------------------------------- --
+local bold = true
 -- -------------------------------------------------------------------------- --
 vim.cmd("hi BreadcrumbsNormal gui=None guibg=#2c323c guifg=Blue")
 vim.cmd("hi BreadcrumbsColor  gui=None guibg=#2c323c guifg=Red")
 -- -------------------------------------------------------------------------- --
-local boja_01 = "#e0e0e0" -- osnovna
-local boja_02 = "#cc99ff" -- komentari
-local boja_03 = "#2e313e" -- pozadina float
+local boja_01 = "#e7e7e7" -- osnovna
+local boja_02 = "#d4d4d4" -- osnovna (pozivi funkcija)
+local boja_03 = "#d0d3d4" -- osnovna (konstante)
+local boja_04 = "#cc99ff" -- komentari
+local boja_05 = "#2e313e" -- pozadina float
 --
 -- #80a0f0
 -- #f0ba80
@@ -18,8 +23,9 @@ local boja_03 = "#2e313e" -- pozadina float
 -- #B48B60
 -- #7FC29B
 -- #94C9A9
+-- #93ada2
 local boja_111 = "#80a0f0"
-local boja_112 = "#93ada2" -- niska
+local boja_112 = "#a5bbb2" -- niska
 local boja_113 = "#f49fbc" -- brojevi
 local boja_114 = "#f7dcc0" -- zagrade
 local boja_115 = "#b0b0b0" -- punktuacija
@@ -94,85 +100,90 @@ end
 -- -----------------------------------------------------------------------------
 if treesitterHL == true then
 	-- Generički:
-	vim.api.nvim_set_hl ( 0 , "Keyword" ,               { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "Number" ,                { fg = boja_113 } )
-	vim.api.nvim_set_hl ( 0 , "String" ,                { fg = boja_112 } )
-	vim.api.nvim_set_hl ( 0 , "Operator" ,              { fg = boja_116 } )
+	vim.api.nvim_set_hl ( 0 , "Keyword" ,               { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "Number" ,                { fg = boja_113 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "String" ,                { fg = boja_112 , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "Operator" ,              { fg = boja_116 , bold = bold  } )
 	--
 	vim.api.nvim_set_hl ( 0 , "DiagnosticUnderlineHint" ,  { fg = boja_201, underline = true, bold = true } )
 	vim.api.nvim_set_hl ( 0 , "DiagnosticUnderlineWarn" ,  { fg = boja_202, underline = true, bold = true } )
 	vim.api.nvim_set_hl ( 0 , "DiagnosticUnderlineError" , { fg = boja_203, underline = true, bold = true } )
 	--
-	vim.api.nvim_set_hl ( 0 , "@variable" ,              { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@variable.builtin" ,      { fg = boja_118 } )
-	vim.api.nvim_set_hl ( 0 , "@field" ,                 { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@constant" ,              { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@property" ,              { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@parameter" ,             { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@boolean" ,               { fg = boja_120 } )
-	vim.api.nvim_set_hl ( 0 , "@keyword" ,               { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "@keyword.function" ,      { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "@keyword.operator" ,      { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "@conditional" ,           { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "@repeat" ,                { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "@operator" ,              { fg = boja_116 } )
-	vim.api.nvim_set_hl ( 0 , "@punctuation" ,           { fg = boja_114 } )
-	vim.api.nvim_set_hl ( 0 , "@punctuation.bracket" ,   { fg = boja_114 } )
-	vim.api.nvim_set_hl ( 0 , "@punctuation.delimiter" , { fg = boja_115 } )
-	vim.api.nvim_set_hl ( 0 , "@punctuation" ,           { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@string" ,                { fg = boja_112 } )
-	vim.api.nvim_set_hl ( 0 , "@function" ,              { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@function.call" ,         { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@function.builtin" ,      { fg = boja_118 } )
-	vim.api.nvim_set_hl ( 0 , "@method.call" ,           { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@string.regex" ,          { fg = boja_01 } )
+	vim.api.nvim_set_hl ( 0 , "@variable" ,              { fg = boja_01  , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@variable.builtin" ,      { fg = boja_118 , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@field" ,                 { fg = boja_01  , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@constant" ,              { fg = boja_03  , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@property" ,              { fg = boja_01  , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@parameter" ,             { fg = boja_01  , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@boolean" ,               { fg = boja_120 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@keyword" ,               { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@keyword.function" ,      { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@keyword.operator" ,      { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@conditional" ,           { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@repeat" ,                { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@operator" ,              { fg = boja_116 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@punctuation" ,           { fg = boja_114 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@punctuation.bracket" ,   { fg = boja_114 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@punctuation.delimiter" , { fg = boja_115 , bold = bold  } )
+	-- vim.api.nvim_set_hl ( 0 , "@punctuation" ,           { fg = boja_01  , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@string" ,                { fg = boja_112 , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@function" ,              { fg = boja_01  , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@function.call" ,         { fg = boja_02  , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@function.builtin" ,      { fg = boja_118 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@method.call" ,           { fg = boja_02  , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@string.regex" ,          { fg = boja_02  , bold = bold  } )
 	-- CSS:
-	vim.api.nvim_set_hl ( 0 , "@type.tag.css" ,          { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@property.id" ,           { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@property.class" ,        { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@property.css" ,          { fg = boja_01 } )
+	vim.api.nvim_set_hl ( 0 , "@type.tag.css" ,          { fg = boja_01 , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@property.id" ,           { fg = boja_02 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@property.class" ,        { fg = boja_02 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@property.css" ,          { fg = boja_01 , bold = false } )
 	-- HTML:   
-	vim.api.nvim_set_hl ( 0 , "@tag.html" ,              { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "@tag.delimiter.html" ,    { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "@tag.attribute.html" ,    { fg = boja_118 } )
+	vim.api.nvim_set_hl ( 0 , "@tag.html" ,              { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@tag.delimiter.html" ,    { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@tag.attribute.html" ,    { fg = boja_118 , bold = bold  } )
 	-- PHP:
-	vim.api.nvim_set_hl ( 0 , "@include.php" ,           { fg = boja_01 } )
+	vim.api.nvim_set_hl ( 0 , "@include.php" ,           { fg = boja_02  , bold = bold  } )
 	-- C/C++
-	vim.api.nvim_set_hl ( 0 , "@include.c" ,             { fg = boja_117 } )
-	vim.api.nvim_set_hl ( 0 , "@define.c" ,              { fg = boja_117 } )
-	vim.api.nvim_set_hl ( 0 , "@storageClass.c" ,        { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@type.qualifier.c" ,      { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@type.builtin.c" ,        { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "@keyword.return.c" ,      { fg = boja_111 } )
-	vim.api.nvim_set_hl ( 0 , "@type.c" ,                { fg = boja_01 } )
+	vim.api.nvim_set_hl ( 0 , "@include.c" ,             { fg = boja_117 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@define.c" ,              { fg = boja_117 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@storageClass.c" ,        { fg = boja_01  , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@type.qualifier.c" ,      { fg = boja_01  , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@type.builtin.c" ,        { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@keyword.return.c" ,      { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@type.c" ,                { fg = boja_02  , bold = bold  } )
 end
 -- -------------------------------------------------------------------------- --
 -- LSP:
 -- -------------------------------------------------------------------------- --
 if LspHL == true then
-	vim.api.nvim_set_hl ( 0 , "LspReferenceText" ,       { bg = "#f0a080", fg = "#000000"})
-	vim.api.nvim_set_hl ( 0 , "LspReferenceRead" ,       { bg = "#a0f080", fg = "#000000"})
-	vim.api.nvim_set_hl ( 0 , "LspReferenceWrite" ,      { bg = "#f08000", fg = "#000000"})
-	vim.api.nvim_set_hl ( 0 , "@lsp.type.variable" ,     { fg = boja_01 })
-	vim.api.nvim_set_hl ( 0 , "@lsp.type.property" ,     { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@lsp.type.parameter" ,    { fg = boja_01 } )
-	vim.api.nvim_set_hl ( 0 , "@lsp.type.function" ,     { fg = boja_01 } )
+	vim.api.nvim_set_hl ( 0 , "LspReferenceText" ,       { bg = "#f0a080", fg = "#000000" } )
+	vim.api.nvim_set_hl ( 0 , "LspReferenceRead" ,       { bg = "#a0f080", fg = "#000000" } )
+	vim.api.nvim_set_hl ( 0 , "LspReferenceWrite" ,      { bg = "#f08000", fg = "#000000" } )
+	vim.api.nvim_set_hl ( 0 , "@lsp.type.variable" ,     { fg = boja_01 , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@lsp.type.property" ,     { fg = boja_02 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@lsp.type.parameter" ,    { fg = boja_01 , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@lsp.type.function" ,     { fg = boja_01 , bold = false } )
 	-- C/C++:
-	vim.api.nvim_set_hl ( 0 , "@lsp.type.macro.c" ,      { fg = boja_118 } )
+	vim.api.nvim_set_hl ( 0 , "@lsp.type.macro.c" ,           { fg = boja_03  , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@storageclass.cpp" ,           { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@type.cpp" ,                   { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@type.builtin.cpp" ,           { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@type.qualifier.cpp" ,         { fg = boja_111 , bold = bold  } )
 	-- PHP:
-	vim.api.nvim_set_hl ( 0 , "@include.php" ,           { fg = boja_118 } )
+	vim.api.nvim_set_hl ( 0 , "@include.php" ,                { fg = boja_118 , bold = false } )
 	-- HTML:
-	vim.api.nvim_set_hl ( 0 , "@text.uri.html" ,         { fg = boja_112, underline = true } )
+	vim.api.nvim_set_hl ( 0 , "@text.uri.html" ,              { fg = boja_112, underline = bold } )
 	-- Lua:
-	vim.api.nvim_set_hl ( 0 , "@lsp.mod.defaultLibrary.lua" ,   { fg = boja_118 } )
+	vim.api.nvim_set_hl ( 0 , "@lsp.mod.defaultLibrary.lua" , { fg = boja_118 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@keyword.return.lua" ,         { fg = boja_120 , bold = bold  } )
 end
 -- -------------------------------------------------------------------------- --
 -- Telescope:
 -- -------------------------------------------------------------------------- --
 if TelescopeHL == true then
-	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,         { bg = None } )                 --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         { bg = None, fg = "#d0d0d0" } ) --"#2c303d", fg = "#d0d0d0" } )
-	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  { bg = None, fg = "#f09080" } ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,         { } )                 --"#2c303d",                } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#b0b0b0" } ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#f09080" } ) --"#2c303d", fg = "#d0d0d0" } )
 end
 -- -------------------------------------------------------------------------- --
 -- Breadcrumbs plugin:
