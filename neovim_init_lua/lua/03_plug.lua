@@ -70,12 +70,34 @@ require("lazy").setup({
 	-- ---------------------------------------------
 	-- Startify:
 	-- ---------------------------------------------
-	"mhinz/vim-startify",
+	-- "mhinz/vim-startify",
+	{
+		"goolord/alpha-nvim",
+		config = function()
+			local alpha = require'alpha'
+            local startify = require'alpha.themes.startify'
+            startify.section.header.val = CowSay
+   --              -- "                                                     ",
+			--     "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+			--     "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+			--     "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+			--     "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+			--     "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+			--     "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+			--     -- "                                                     ",
+			-- }
+			startify.section.bottom_buttons.val = {
+                startify.button( "q", "  Quit" , ":lua AlphaQuit()<cr>"),
+            }
+			alpha.setup(startify.config)
+		end
+	},
 	-- ---------------------------------------------
 	-- lf vim:
 	-- ---------------------------------------------
 	"ptzz/lf.vim",
 	"voldikss/vim-floaterm",
+	-- "henriquehbr/nvim-startup.lua",
 	-- ---------------------------------------------
 	-- Comment.nvim:
 	-- ---------------------------------------------

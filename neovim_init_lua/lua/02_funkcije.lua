@@ -470,3 +470,137 @@ end
 -- END OF FANCY RENAME
 -- -----------------------------------------------------------------------------
 
+-- -----------------------------------------------------------------------------
+-- Cowsay za Alpha
+-- -----------------------------------------------------------------------------
+function CowSayPadding(s, w)
+	local t = ""
+	local i = 1
+	local d = w - #s
+	--
+	while i <= d do
+		t = t .. " "
+		i = i + 1
+	end
+	--
+	return s .. t
+end
+-- -----------------------------------------------------------------------------
+function CowSayCorrectLine(s, width)
+	local corr = 0
+	local last = false
+	local left = #s
+	--
+	if #s < width then
+		last = true
+	else
+		local c = s:sub(left, left)
+		while c ~= " " do
+			left = left - 1
+			corr = corr + 1
+			c = s:sub(left, left)
+		end
+		--
+		s    = s:sub(1, left - 1)
+		left = left
+	end
+	--
+	s = CowSayPadding(s, width)
+	--
+	return {
+		line = s,
+		corr = corr,
+		last = last
+	}
+end
+-- -----------------------------------------------------------------------------
+function CowSayFormatLines(s)
+	local lines = { }
+	local width = 56
+	local char  = "│"
+	local l     = 1
+	local r     = width + 1
+	--
+	if r > #s then
+		r = #s
+	end
+	--
+	while l <= #s do
+		local t   = s:sub(l, r)
+		local res = CowSayCorrectLine(t, width)
+		t = res.line
+		t = char .. " " .. t .. " " .. char
+		table.insert(lines, t)
+		--
+		if res.last == false then
+			l = r - res.corr + 1
+		else
+			l = #s + 1
+		end
+		--
+		r = l + width
+		--
+		if r > #s then
+			r = #s
+		end
+	end
+	--
+	return lines
+end
+-- -----------------------------------------------------------------------------
+function CowsayMergeQuoteLines(lines, quote_lines, i)
+	for _,line in ipairs(quote_lines) do
+		-- print(vim.inspect(line))
+		table.insert(lines, i, line)
+		i = i + 1
+	end
+	--
+	return i
+end
+-- -----------------------------------------------------------------------------
+function CowSayGetIndex(t)
+	math.randomseed(os.clock())
+	return math.random(1, #t)
+end
+-- -----------------------------------------------------------------------------
+function CowSay()
+	local i = 2
+	local lines = {
+		"╭──────────────────────────────────────────────────────────╮",
+		"╰──────────────────────────────────────────────────────────╯",
+        "   o                                                        ",
+        "    o   ^__^                                                ",
+        "     o  (oo)\\_______                                       ",
+        "        (__)\\       )\\/\\                                 ",
+        "            ||----w |                                       ",
+        "            ||     ||                                       ",
+	}
+	--
+	local quotes      = require("cowsay").quotes
+	local index       = CowSayGetIndex(quotes)
+	local quote       = quotes[index][1]
+	local author      = quotes[index][2] 
+	local quote_lines = CowSayFormatLines(quote)
+	local author_lines
+	if author == "" then
+		author_lines = { }
+	else
+		author_lines = CowSayFormatLines("- " .. author)
+	end
+	--
+	i = CowsayMergeQuoteLines(lines, quote_lines, i)
+	i = CowsayMergeQuoteLines(lines, author_lines, i)
+	--
+	return lines
+end
+-- -----------------------------------------------------------------------------
+function AlphaQuit()
+	local n = #vim.fn.filter(vim.fn.range(vim.fn.bufnr("$")), 'buflisted(v:val)') - vim.fn.buflisted(0)
+	if n > 0 then -- more than one window?
+		vim.cmd("Alpha")
+	else
+		vim.cmd("q")
+	end
+end
+-- -----------------------------------------------------------------------------
+
