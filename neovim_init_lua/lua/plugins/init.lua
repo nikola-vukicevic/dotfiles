@@ -94,11 +94,12 @@ require("telescope").setup({
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
 -- -------------------------------------------------------------------------- -
-vim.g.lf_replace_netrw    = false
-vim.g.lf_command_override = 'lfrun'
-vim.g.floaterm_title      = "[lf]"
-vim.g.lf_width            = 0.6
-vim.g.lf_height           = 0.7
+vim.g.lf_replace_netrw     = false
+vim.g.lf_command_override  = 'lfrun'
+vim.g.floaterm_title       = "─ [lf] "
+vim.g.floaterm_borderchars = "─│─│╭╮╯╰"
+vim.g.lf_width             = 0.6
+vim.g.lf_height            = 0.7
 -- Auto-pairs:
 -- vim.g.AutoPairs           = { ['['] = ']' , ['{'] = '}' }
 -- -----------------------------------------------------------------------------
