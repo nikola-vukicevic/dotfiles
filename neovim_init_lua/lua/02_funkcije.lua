@@ -67,6 +67,11 @@ function DaLiJeGranicnikZaProsirivanje(c)
 	if c == "," then return true end
 	if c == ":" then return true end
 	if c == ";" then return true end
+	if c == "(" then return true end
+	if c == ")" then return true end
+	--
+	if c == "\t" then return true end
+	if c == "\"" then return true end
 
 	return false
 end
@@ -473,7 +478,7 @@ end
 -- -----------------------------------------------------------------------------
 -- Cowsay za Alpha
 -- -----------------------------------------------------------------------------
-function CowSayPadding(s, w)
+function cowsay_padding(s, w)
 	local t = ""
 	local i = 1
 	local d = w - #s
@@ -486,7 +491,7 @@ function CowSayPadding(s, w)
 	return s .. t
 end
 -- -----------------------------------------------------------------------------
-function CowSayCorrectLine(s, width)
+function cowsay_correct_line(s, width)
 	local corr = 0
 	local last = false
 	local left = #s
@@ -505,7 +510,7 @@ function CowSayCorrectLine(s, width)
 		left = left
 	end
 	--
-	s = CowSayPadding(s, width)
+	s = cowsay_padding(s, width)
 	--
 	return {
 		line = s,
@@ -514,7 +519,7 @@ function CowSayCorrectLine(s, width)
 	}
 end
 -- -----------------------------------------------------------------------------
-function CowSayFormatLines(s)
+function cowsay_format_lines(s)
 	local lines = { }
 	local width = 56
 	local char  = "│"
@@ -527,7 +532,7 @@ function CowSayFormatLines(s)
 	--
 	while l <= #s do
 		local t   = s:sub(l, r)
-		local res = CowSayCorrectLine(t, width)
+		local res = cowsay_correct_line(t, width)
 		t = res.line
 		t = char .. " " .. t .. " " .. char
 		table.insert(lines, t)
@@ -548,7 +553,7 @@ function CowSayFormatLines(s)
 	return lines
 end
 -- -----------------------------------------------------------------------------
-function CowsayMergeQuoteLines(lines, quote_lines, i)
+function cowsay_merge_quote_lines(lines, quote_lines, i)
 	for _,line in ipairs(quote_lines) do
 		-- print(vim.inspect(line))
 		table.insert(lines, i, line)
@@ -558,7 +563,7 @@ function CowsayMergeQuoteLines(lines, quote_lines, i)
 	return i
 end
 -- -----------------------------------------------------------------------------
-function CowSayGetIndex(t)
+function cowsay_get_index(t)
 	math.randomseed(os.clock())
 	return math.random(1, #t)
 end
@@ -577,19 +582,19 @@ function CowSay()
 	}
 	--
 	local quotes      = require("cowsay").quotes
-	local index       = CowSayGetIndex(quotes)
+	local index       = cowsay_get_index(quotes)
 	local quote       = quotes[index][1]
 	local author      = quotes[index][2] 
-	local quote_lines = CowSayFormatLines(quote)
+	local quote_lines = cowsay_format_lines(quote)
 	local author_lines
 	if author == "" then
 		author_lines = { }
 	else
-		author_lines = CowSayFormatLines("- " .. author)
+		author_lines = cowsay_format_lines("- " .. author)
 	end
 	--
-	i = CowsayMergeQuoteLines(lines, quote_lines, i)
-	i = CowsayMergeQuoteLines(lines, author_lines, i)
+	i = cowsay_merge_quote_lines(lines, quote_lines, i)
+	i = cowsay_merge_quote_lines(lines, author_lines, i)
 	--
 	return lines
 end
