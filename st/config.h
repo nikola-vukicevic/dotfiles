@@ -8,16 +8,14 @@
 static char *font = "monospace:size=15:antialias=true:autohint=true";
 /* Spare fonts */
 static char *font2[] = {
-	"Inconsolata Nerd Font Mono:size=18:antialias=true:autohint=true",
-	"Noto Emoji:style=Regular:size=14:antialias=true:autohint=true"
 /*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
 /*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
 };
 
 static int borderpx = 0;
-static int user_offset_underline     = 1;
-static int user_offset_strikethrough = 2;
-static int user_vert_korekcija       = 1;
+static int user_offset_underline     = -3;
+static int user_offset_strikethrough = -2;
+static int user_baseline             = 1;
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -37,8 +35,10 @@ char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 char *vtiden = "\033[?6c";
 
 /* Kerning / character bounding-box multipliers */
-static float cwscale = 0.92;
+static float cwscale = 0.95;
 static float chscale = 1.01;
+// static float chscale = 0.95; // JetBrains Mono
+// static float chscale = 1.1;  // Cascadia
 
 /*
  * word delimiter string
@@ -84,11 +84,11 @@ static unsigned int cursorthickness = 2;
  *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
  * 0: disable (render all U25XX glyphs normally from the font).
  */
-const int boxdraw         = 1;
-const int boxdraw_bold    = 1;
+const int boxdraw         = 0;
+const int boxdraw_bold    = 0;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
-const int boxdraw_braille = 1;
+const int boxdraw_braille = 0;
 
 /*
  * bell volume. It must be a value between -100 and 100. Use 0 for disabling
@@ -117,7 +117,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 4;
 
 /* bg opacity */
-float alpha = 0.95, alphaUnfocused = 0.88;
+float alpha = 0.96, alphaUnfocused = 0.90;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -132,7 +132,7 @@ static const char *colorname[] = {
 	"#dadada",  /*  7:  white    */
 	
 	/* 8 bright colors */
-	"#555555",  /*  8:  brblack  */
+	"#888888",  /*  8:  brblack  */
 	"#f39b9b",  /*  9:  brred    */
 	"#cef6ad",  /* 10:  brgreen  */
 	"#fdf9a5",  /* 11:  bryellow */
