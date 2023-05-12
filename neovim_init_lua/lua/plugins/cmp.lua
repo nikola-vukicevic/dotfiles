@@ -4,8 +4,8 @@ local cmp     = require'cmp'
 local lspkind = require'lspkind'
 --------------------------------------------------------------------------------
 local has_words_before = function()
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 --------------------------------------------------------------------------------
 local SmartEscCmd = function(fallback)
@@ -16,14 +16,14 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 require("nvim-autopairs").setup()
 -- ---------------------------
 cmp.event:on(
-  'confirm_done',
-  cmp_autopairs.on_confirm_done()
+	'confirm_done',
+	cmp_autopairs.on_confirm_done()
 )
 --------------------------------------------------------------------------------
 cmp.setup({
-	completion = {
-		autocomplete = false,
-	},
+	-- completion = {
+	-- 	autocomplete = false,
+	-- },
 	snippet = {
 		expand = function(args)
 			luasnip.lsp_expand(args.body) -- For `luasnip` users.
@@ -31,7 +31,9 @@ cmp.setup({
 	},
 	experimental = {
 		native_menu = false,
-		ghost_text  = true,
+		ghost_text  = {
+			hl_group = 'CMPGhostText',
+		},
 	},
 	window = {
 		-- completion    = cmp.config.window.bordered(),
@@ -156,18 +158,13 @@ cmp.setup({
 	}),
 	sources = cmp.config.sources({
 		{ name = 'luasnip' }, -- For luasnip users.
-		-- { name = 'vsnip'    }, -- For vsnip users.
 		-- { name = 'nvim_lua' }, -- Kanda neodev.vim
 		                          -- radi sve što treba
 		{ name = 'path' },
 		{ name = 'calc' },
 		{ name = 'nvim_lsp' },
-		{ name = 'buffer',
-			-- option = {
-			-- 	get_bufnrs = function()
-			-- 		return vim.api.nvim_list_bufs()
-			-- 	end
-			-- },
+		{
+			name           = 'buffer',
 			keyword_length = 3,
 		},
 		{ name = 'nvim_lsp_signature_help' },
@@ -186,7 +183,7 @@ cmp.setup.filetype('gitcommit', {
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline('/', {
-	completion = { autocomplete = true },
+	-- completion = { autocomplete = true },
 	mapping    = cmp.mapping.preset.cmdline({
 		['<Down>'] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
         ['<Up>']   = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
@@ -199,7 +196,7 @@ cmp.setup.cmdline('/', {
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(':', {
-	completion = { autocomplete = true },
+	-- completion = { autocomplete = true },
 	mapping    = cmp.mapping.preset.cmdline({
 		['<Down>'] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
         ['<Up>']   = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },

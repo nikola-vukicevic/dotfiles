@@ -130,6 +130,43 @@ luasnip.add_snippets(nil, {
 			ls_insert(0)
 		}),
 		-- ---------------------------------------------------------------------
+		-- figure, figcaption, img:
+		-- ---------------------------------------------------------------------
+		ls_snip ({
+			trig = "ski",
+			namr = "Figure, figcaption, img",
+			dscr = "Figure tag koji sadrži img i figcaption",
+		},{
+			ls_ispis({
+				"``",
+				"<figure>",
+				"	<img src='",
+			}),
+			ls_insert(1, "src"),
+			ls_ispis({
+				"' title='",
+			}),
+			ls_insert(2, "title"),
+			ls_ispis({
+				"' alt='",
+			}),
+			ls_insert(3, "alt"),
+			ls_ispis({
+				"'>",
+				"	<figcaption>",
+				"		Slika #s#. ",
+			}),
+			ls_insert(4, "Opis"),
+			ls_ispis({
+				"",
+				"	</figcaption>",
+				"</figure>",
+				"~~",
+				"",
+			}),
+			ls_insert(0),
+		}),
+		-- ---------------------------------------------------------------------
 		-- Blok komentar C:
 		-- ---------------------------------------------------------------------
 		ls_snip ({
