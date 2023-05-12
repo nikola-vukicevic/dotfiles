@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "monospace:size=15:antialias=true:autohint=true";
+static char *font = "monospace:size=16:antialias=true:autohint=true";
 /* Spare fonts */
 static char *font2[] = {
 /*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
@@ -36,8 +36,8 @@ char *vtiden = "\033[?6c";
 
 /* Kerning / character bounding-box multipliers */
 static float cwscale = 0.95;
-static float chscale = 1.01;
-// static float chscale = 0.95; // JetBrains Mono
+// static float chscale = 1.01;
+static float chscale = 0.95; // JetBrains Mono
 // static float chscale = 1.1;  // Cascadia
 
 /*
@@ -233,10 +233,11 @@ static Shortcut shortcuts[] = {
 	// { TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
 	// { TERMMOD,              XK_Next,        zoom,           {.f = -1} },
 	// { TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
-	{ TERMMOD,              XK_K,           zoom,           {.f = +1} },
+	{ TERMMOD,              XK_H,           zoom15,         {       } },
 	{ TERMMOD,              XK_J,           zoom,           {.f = -1} },
-	{ MODKEY|ShiftMask,     XK_K,           kscrollup,      {.i =  1} },
+	{ TERMMOD,              XK_K,           zoom,           {.f = +1} },
 	{ MODKEY|ShiftMask,     XK_J,           kscrolldown,    {.i =  1} },
+	{ MODKEY|ShiftMask,     XK_K,           kscrollup,      {.i =  1} },
 	{ TERMMOD,              XK_L,           zoomreset,      {.f =  0} },
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },

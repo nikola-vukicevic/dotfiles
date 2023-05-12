@@ -58,6 +58,7 @@ static void selpaste(const Arg *);
 static void zoom(const Arg *);
 static void zoomabs(const Arg *);
 static void zoomreset(const Arg *);
+static void zoom15();
 static void ttysend(const Arg *);
 
 /* config.h for applying patches and the configuration. */
@@ -329,6 +330,14 @@ zoomreset(const Arg *arg)
 		larg.f = defaultfontsize;
 		zoomabs(&larg);
 	}
+}
+
+void
+zoom15()
+{
+	Arg arg;
+	arg.f = defaultfontsize - 1;
+	zoomabs(&arg);
 }
 
 void
@@ -1052,7 +1061,8 @@ xloadfonts(const char *fontstr, double fontsize)
 
 	/* Setting character width and height. */
 	win.cw = ceilf(dc.font.width * cwscale);
-	win.ch = ceilf(dc.font.height * chscale);
+	win.ch = (dc.font.height >= 26 && dc.font.height <= 27)? 27 : ceilf(dc.font.height * chscale);
+	// win.ch = 27;
 	win.cyo = ceilf(dc.font.height * (chscale - 1) / 2) - user_baseline;
 
 	FcPatternDel(pattern, FC_SLANT);
@@ -2245,6 +2255,9 @@ run:
 	defaultbg = MAX(LEN(colorname), 256);
 	tnew(cols, rows);
 	xinit(cols, rows);
+	// ----------------
+	zoom15();
+	// ----------------
 	xsetenv();
 	selinit();
 	run();
