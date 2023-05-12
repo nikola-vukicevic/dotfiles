@@ -98,7 +98,6 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		"ptzz/lf.vim",
 		"voldikss/vim-floaterm",
-		-- "henriquehbr/nvim-startup.lua",
 		-- ---------------------------------------------
 		-- Comment.nvim:
 		-- ---------------------------------------------
