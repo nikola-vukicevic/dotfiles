@@ -1061,8 +1061,8 @@ xloadfonts(const char *fontstr, double fontsize)
 
 	/* Setting character width and height. */
 	win.cw = ceilf(dc.font.width * cwscale);
-	win.ch = (dc.font.height >= 26 && dc.font.height <= 27)? 27 : ceilf(dc.font.height * chscale);
 	// win.ch = 27;
+	win.ch = (dc.font.height >= 26 && dc.font.height <= 27)? 27 : ceilf(dc.font.height * chscale);
 	win.cyo = ceilf(dc.font.height * (chscale - 1) / 2) - user_baseline;
 
 	FcPatternDel(pattern, FC_SLANT);
@@ -1643,6 +1643,7 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
 	}
 
 	/* Render underline and strikethrough. */
+	// Moje prepravke (malo drugačije u odnosu na diff)
 	if (base.mode & ATTR_UNDERLINE) {
 		// XftDrawRect(xw.draw, fg, winx, winy + dc.font.ascent * chscale + 1,
 		XftDrawRect(xw.draw, fg, winx, winy + win.cyo - user_offset_underline + dc.font.ascent * chscale + 1,
