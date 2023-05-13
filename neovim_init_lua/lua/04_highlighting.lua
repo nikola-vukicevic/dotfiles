@@ -89,7 +89,7 @@ end
 -- -----------------------------------------------------------------------------
 -- nvim-cmp
 -- -----------------------------------------------------------------------------
-vim.api.nvim_set_hl ( 0 , "CMPGhostText" ,  { fg = boja_118 , bold = bold  } )
+vim.api.nvim_set_hl ( 0 , "CMPGhostText" ,  { fg = "#808284" , bold = bold } )
 --
 if cmpHL == true then
 	vim.cmd("hi CmpItemMenuDefault        guifg=#999999")
