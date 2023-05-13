@@ -241,7 +241,27 @@ luasnip.add_snippets(nil, {
 			dscr = "Neovim keymap Lua",
 		}, {
 			ls_ispis({
-				"vim.keymap.set(\"\" , \"\" , \"\" , { desc = \"\" , remap = true } )",
+				"vim.keymap.set(\""
+			}),
+			ls_insert(1, "mode"),
+			ls_ispis({
+				"\" , \""
+			}),
+			ls_insert(2, "key"),
+			ls_ispis({
+				"\" , \""
+			}),
+			ls_insert(3, "command"),
+			ls_ispis({
+				"\" , { desc = \""
+			}),
+			ls_insert(4, "desc"),
+			ls_ispis({
+				"\" , remap = "
+			}),
+			ls_insert(5, "false"),
+			ls_ispis({
+				" } )",
 			}),
 			ls_insert(0),
 		}),
