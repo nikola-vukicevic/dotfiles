@@ -176,6 +176,7 @@ if LspHL == true then
 	vim.api.nvim_set_hl ( 0 , "@type.cpp" ,            { fg = boja_111 , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@type.builtin.cpp" ,    { fg = boja_111 , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@type.qualifier.cpp" ,  { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@type.qualifier.c" ,    { fg = boja_111 , bold = bold  } )
 	-- PHP:
 	vim.api.nvim_set_hl ( 0 , "@include.php" ,         { fg = boja_118 , bold = false } )
 	-- HTML:
