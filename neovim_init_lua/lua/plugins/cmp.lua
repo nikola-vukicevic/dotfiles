@@ -59,9 +59,9 @@ cmp.setup({
 				cmp.close()
 				print("CMP [Esc]: Meni zatvoren")
 			else
-				cmp.mapping.abort()
-				print("CMP [Esc]: Meni otkazan")
+				-- cmp.mapping.abort()
 				fallback()
+				print("CMP [Esc]: Meni otkazan")
 			end
 		end	),
 		-- ----------------------------------
