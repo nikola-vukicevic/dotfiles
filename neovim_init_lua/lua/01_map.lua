@@ -55,8 +55,12 @@ vim.keymap.set( "" , "<F11>" ,     ":VimadeToggle<cr>" ,        opts_nr )
 vim.keymap.set( "" , "<F11>" ,     ":bd<cr>" ,                  opts_nr )
 vim.keymap.set( "" , "<F12>" ,     ":qa<cr>" ,                  opts_nr )
 -- -----
-vim.keymap.set("c" , "<C-h>" , "<Down>" , { desc = "" , remap = false } )
-vim.keymap.set("c" , "<C-l>" , "<Up>"   , { desc = "" , remap = false } )
+vim.keymap.set("c" , "<C-h>" , "<Down>"  , { desc = "" , remap = false } )
+vim.keymap.set("c" , "<C-l>" , "<Up>"    , { desc = "" , remap = false } )
+vim.keymap.set("i" , "<C-j>" , "<Down>"  , { desc = "" , remap = false } )
+vim.keymap.set("i" , "<C-k>" , "<Up>"    , { desc = "" , remap = false } )
+vim.keymap.set("i" , "<C-h>" , "<Left>"  , { desc = "" , remap = false } )
+vim.keymap.set("i" , "<C-l>" , "<Right>" , { desc = "" , remap = false } )
 -- -----
 -- uklanjanje oznake sa poslednjeg pretraživanog stringa
 -- vim.keymap.set( "n", "<esc><esc>", ":noh<cr>", opts )
