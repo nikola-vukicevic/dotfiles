@@ -54,16 +54,17 @@ cmp.setup({
 		-- ----------------------------------
 		['<C-j>'] = cmp.mapping.select_next_item(),
 		-- ----------------------------------
-		['<ESC>']  = cmp.mapping(function(fallback)
-			if cmp.visible() and not cmp.get_selected_entry() then
-				cmp.close()
-				print("CMP [Esc]: Meni zatvoren")
-			else
-				-- cmp.mapping.abort()
-				fallback()
-				print("CMP [Esc]: Meni otkazan")
-			end
-		end	),
+		-- ['<Esc>'] = cmp.mapping(function(fallback)
+		-- 	if cmp.visible() then
+		-- 		if not cmp.get_selected_entry() then
+		-- 			cmp.close()
+		-- 		else
+		-- 			fallback()
+		-- 		end
+		-- 	else
+		-- 		fallback()
+		-- 	end
+		-- end),
 		-- ----------------------------------
 		['<CR>'] = cmp.mapping.confirm({
 			behavior = cmp.ConfirmBehavior.Replace ,
