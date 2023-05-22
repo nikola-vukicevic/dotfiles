@@ -1,4 +1,5 @@
 -- -------------------------------------------------------------------------- --
+-- -------------------------------------------------------------------------- --
 local mainHL       = true
 local basicHL      = mainHL and true
 local cmpHL        = mainHL and false
@@ -85,6 +86,9 @@ if basicHL == true then
 	vim.cmd("hi LazyNormal  guifg=#cccccc")
 	-- LSP Saga border:
 	-- vim.cmd("hi SagaBorder guifg=#cc8833")
+	-- NvimTree:
+	vim.api.nvim_set_hl(0, "NvimTreeNormal",       {  } )
+	vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", {  } )
 end
 -- -----------------------------------------------------------------------------
 -- nvim-cmp
@@ -230,4 +234,5 @@ vim.api.nvim_set_hl ( 0 , "BreadcrumbsOperator" ,       { bg = boja_breadcrumbs_
 vim.api.nvim_set_hl ( 0 , "BreadcrumbsTypeParameter" ,  { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
 vim.api.nvim_set_hl ( 0 , "BreadcrumbsMacro" ,          { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
 -- -------------------------------------------------------------------------- --
+
 
