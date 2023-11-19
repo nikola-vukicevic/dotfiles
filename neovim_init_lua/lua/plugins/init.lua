@@ -94,12 +94,18 @@ require("telescope").setup({
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
 -- -------------------------------------------------------------------------- -
-vim.g.lf_replace_netrw     = false
-vim.g.lf_command_override  = 'lfrun'
-vim.g.floaterm_title       = "─ [lf] "
-vim.g.floaterm_borderchars = "─│─│╭╮╯╰"
-vim.g.lf_width             = 0.6
-vim.g.lf_height            = 0.7
+require('lf').setup({
+	winblend = 0,
+	width    = 102,
+	height   = 25,
+	border   = "rounded",
+})
+-- vim.g.lf_replace_netrw     = false
+-- vim.g.lf_command_override  = 'lfrun'
+-- vim.g.floaterm_title       = "─ [lf] "
+-- vim.g.floaterm_borderchars = "─│─│╭╮╯╰"
+-- vim.g.lf_width             = 0.6
+-- vim.g.lf_height            = 0.7
 -- Auto-pairs:
 -- vim.g.AutoPairs           = { ['['] = ']' , ['{'] = '}' }
 -- -----------------------------------------------------------------------------
@@ -122,6 +128,6 @@ require('dressing').setup({
 -- require('colorizer').setup()
 -- -----------------------------------------------------------------------------
 -- vim.g.Hexonicase_highlighters = "sign_column"
-vim.g.Hexonicase_highlighters = "backgroundfull"
+-- vim.g.Hexonicase_highlighters = "backgroundfull"
 -- -----------------------------------------------------------------------------
 

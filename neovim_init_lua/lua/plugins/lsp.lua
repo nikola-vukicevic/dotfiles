@@ -50,7 +50,7 @@ local autoStartLSP  = true
 -- ---------------------------------------------------------
 local izborC        = 2 -- 1: Clang,        2: CCLS
 local izborPHP      = 1 -- 1: intelephense, 2: PHP actor
-local izborPython   = 1 -- 1: Jedi,         2: Pyright:
+local izborPython   = 2 -- 1: Jedi,         2: Pyright:
 -- ---------------------------------------------------------
 local aktivanC      = true
 local aktivanCSS    = true
