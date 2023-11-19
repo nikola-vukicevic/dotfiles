@@ -191,8 +191,9 @@ end
 --           Telescope pomera kursor
 
 function CitanjeKoordinataNormalMode(mode)
+	local K = 0                   -- Korekcija za kolonu
 	local r = vim.fn.line(".")    -- red
-	local k = vim.fn.col(".") - 1 -- kolona
+	local k = vim.fn.col(".") + K -- kolona
 	local s = vim.fn.getline(r)   -- sadržaj reda
 	local l = k                   -- levi graničnik
 	local d = k                   -- desni graničnik

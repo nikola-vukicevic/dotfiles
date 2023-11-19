@@ -1,5 +1,4 @@
 -- -------------------------------------------------------------------------- --
--- -------------------------------------------------------------------------- --
 local mainHL       = true
 local basicHL      = mainHL and true
 local cmpHL        = mainHL and false
@@ -89,6 +88,8 @@ if basicHL == true then
 	-- NvimTree:
 	vim.api.nvim_set_hl(0, "NvimTreeNormal",       {  } )
 	vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", {  } )
+	-- Spell checker:
+	vim.api.nvim_set_hl(0, "SpellBad", { fg = "#ff3355", underline = true, bold = true } )
 end
 -- -----------------------------------------------------------------------------
 -- nvim-cmp
@@ -234,5 +235,4 @@ vim.api.nvim_set_hl ( 0 , "BreadcrumbsOperator" ,       { bg = boja_breadcrumbs_
 vim.api.nvim_set_hl ( 0 , "BreadcrumbsTypeParameter" ,  { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
 vim.api.nvim_set_hl ( 0 , "BreadcrumbsMacro" ,          { bg = boja_breadcrumbs_bg , fg = "#80a0f0" } )
 -- -------------------------------------------------------------------------- --
-
 

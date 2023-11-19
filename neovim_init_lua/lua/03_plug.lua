@@ -44,7 +44,8 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		{
 			"nvim-treesitter/nvim-treesitter",
-			build = ":TSUpdate"
+			build  = ":TSUpdate",
+			-- commit = "64d1696"
 		},
 		"nvim-treesitter/playground",
 		-- ---------------------------------------------
@@ -55,7 +56,7 @@ require("lazy").setup(
 		-- Telescope:
 		-- ---------------------------------------------
 		{
-			'nvim-telescope/telescope.nvim', tag = '0.1.1',
+			'nvim-telescope/telescope.nvim', tag = '0.1.4',
 			-- or                              , branch = '0.1.1',
 			dependencies = { { 'nvim-lua/plenary.nvim' } }
 		},
@@ -94,10 +95,12 @@ require("lazy").setup(
 			end
 		},
 		-- ---------------------------------------------
-		-- lf vim:
+		-- lf nvim:
 		-- ---------------------------------------------
-		"ptzz/lf.vim",
-		"voldikss/vim-floaterm",
+		"akinsho/toggleterm.nvim",
+		"lmburns/lf.nvim",
+		-- "ptzz/lf.vim",
+		-- "voldikss/vim-floaterm",
 		-- ---------------------------------------------
 		-- Comment.nvim:
 		-- ---------------------------------------------
@@ -125,8 +128,8 @@ require("lazy").setup(
 		-- "ap/vim-css-color",
 		-- "norcalli/nvim-colorizer.lua",
 		{
-			"rrethy/vim-hexokinase",
-			run = 'make hexokinase'
+			-- "rrethy/vim-hexokinase",
+			-- run = 'make hexokinase'
 		},
 		"windwp/nvim-autopairs",
 		"RRethy/vim-illuminate",
