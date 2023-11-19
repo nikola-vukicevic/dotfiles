@@ -49,7 +49,7 @@ vim.opt.incsearch   = true
 -- " set completeopt=menu
 vim.opt.completeopt = "menu,menuone,noselect"
 vim.opt.cursorline  = true
-vim.opt.wrap        = false
+vim.opt.wrap        = true
 vim.opt.linebreak   = true
 vim.opt.breakindent = true
 vim.opt.list        = true
@@ -121,13 +121,13 @@ vim.opt.termguicolors = true
 -- au CursorHold,CursorHoldI * checktime
 -- au FocusGained,BufEnter * checktime
 
-vim.api.nvim_create_autocmd("CursorHold,CursorHoldI", {
-	command = "checktime"
-})
+-- vim.api.nvim_create_autocmd("CursorHold,CursorHoldI", {
+-- 	command = "checktime"
+-- })
 --
-vim.api.nvim_create_autocmd("FocusGained,BufEnter", {
-	command = "checktime"
-})
+-- vim.api.nvim_create_autocmd("FocusGained,BufEnter", {
+-- 	command = "checktime"
+-- })
 --
 vim.api.nvim_create_autocmd("BufEnter" , {
 	pattern = "*",
@@ -153,3 +153,4 @@ if vim.g.barebones_CFG ~= true then
 end
 -- -----------------------------------------------------------------------------
 require('breadcrumbs')
+
