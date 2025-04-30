@@ -48,7 +48,7 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 -- ---------------------------------------------------------
 local autoStartLSP  = true
 -- ---------------------------------------------------------
-local izborC        = 2 -- 1: Clang,        2: CCLS
+local izborC        = 1 -- 1: Clang,        2: CCLS
 local izborPHP      = 1 -- 1: intelephense, 2: PHP actor
 local izborPython   = 2 -- 1: Jedi,         2: Pyright:
 -- ---------------------------------------------------------
@@ -60,6 +60,7 @@ local aktivanLua    = true
 local aktivanPHP    = true
 local aktivanPython = true
 local aktivanRust   = true
+local aktivanZig    = true
 -- ---------------------------------------------------------
 local nazivServeraC
 if izborC == 1 then
@@ -70,7 +71,8 @@ end
 -- -----
 local nazivServeraCSS  = 'cssls'
 local nazivServeraHTML = 'html'
-local nazivServeraJS   = 'tsserver'
+-- local nazivServeraJS   = 'tsserver' -- poruka 05.09.2024
+local nazivServeraJS   = 'ts_ls'
 local nazivServeraLua  = 'lua_ls'
 -- -----
 local nazivServeraPHP
@@ -88,6 +90,8 @@ else
 end
 -- -----
 local nazivServeraRust  = 'rust_analyzer'
+-- -----
+local nazivServeraZig   = 'zls'
 -- ---------------------------------------------------------
 -- C/C++
 -- ---------------------------------------------------------
@@ -288,6 +292,22 @@ local configRust = {
 	},
 	root_dir = function() return vim.loop.cwd() end
 }
+-- ---------------------------------------------------------
+-- Zig:
+-- ---------------------------------------------------------
+-- require('lspconfig')['rust_analyzer'].setup {
+local configZig = {
+	capabilities = capabilities,
+	on_attach    = on_attach,
+	flags        = lsp_flags,
+	-- Server-specific settings...
+	settings = {
+		cmd = {
+			"zls"
+		}
+	},
+	root_dir = function() return vim.loop.cwd() end
+}
 --------------------------------------------------------------------------------
 local configServeri = {
 	{ aktivanC,      nazivServeraC,      configC      },
@@ -298,6 +318,7 @@ local configServeri = {
 	{ aktivanPHP,    nazivServeraPHP,    configPHP    },
 	{ aktivanPython, nazivServeraPython, configPython },
 	{ aktivanRust,   nazivServeraRust,   configRust   },
+	{ aktivanZig,    nazivServeraZig,    configZig    },
 }
 --------------------------------------------------------------------------------
 if autoStartLSP == true then

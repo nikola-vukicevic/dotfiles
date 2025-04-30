@@ -6,7 +6,7 @@ local M = {}
 -- -----------------------------------------------------------------------------
 local cmp            = require("cmp")
 local timer          = vim.loop.new_timer()
-local DEBOUNCE_DELAY = 400
+local DEBOUNCE_DELAY = 500
 -- -----------------------------------------------------------------------------
 function M.debounce()
 	timer:stop()
@@ -14,6 +14,9 @@ function M.debounce()
 		DEBOUNCE_DELAY,
 		0,
 		vim.schedule_wrap(function()
+			-- Izgleda da radi, ali - da li
+			-- je "complete" prava opcija?!
+			-- cmp.complete( { reason = cmp.ContextReason.complete } )
 			cmp.complete( { reason = cmp.ContextReason.Auto } )
 		end
 	)

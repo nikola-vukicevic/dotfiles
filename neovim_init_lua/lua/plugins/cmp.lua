@@ -50,9 +50,9 @@ cmp.setup({
 		}),
 	},
 	mapping = cmp.mapping.preset.insert({
-		['<C-k>'] = cmp.mapping.select_prev_item(),
+		['<M-k>'] = cmp.mapping.select_prev_item(),
 		-- ----------------------------------
-		['<C-j>'] = cmp.mapping.select_next_item(),
+		['<M-j>'] = cmp.mapping.select_next_item(),
 		-- ----------------------------------
 		-- ['<Esc>'] = cmp.mapping(function(fallback)
 		-- 	if cmp.visible() then
@@ -146,8 +146,8 @@ cmp.setup.cmdline('/', {
 cmp.setup.cmdline(':', {
 	completion = { autocomplete = { require('cmp.types').cmp.TriggerEvent.TextChanged } },
 	mapping    = cmp.mapping.preset.cmdline({
-		['<C-k>'] = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
-		['<C-j>'] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
+		['<M-k>'] = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
+		['<M-j>'] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
 		-- ['ESC'  ] = { c = cmp.mapping.abort() }
 	}),
 	sources    = cmp.config.sources({

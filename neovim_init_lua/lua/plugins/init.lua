@@ -39,43 +39,27 @@ treesitter.setup {
 -- Plugin - Illuminate:
 -- -------------------------------------------------------------------------- -
 require('illuminate').configure({
+	-- providers = {
+	-- 	'lsp',
+	-- 	'treesitter',
+	-- 	'regex',
+	-- },
      -- delay: delay in milliseconds
-     delay = 40,
+     delay = 10,
 })
 -- -------------------------------------------------------------------------- -
 -- Plugin - Telescope:
 -- -------------------------------------------------------------------------- -
-require("telescope").load_extension("ui-select")
 local telescope_actions = require('telescope.actions')
 vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
 --
--- This is your opts table
 require("telescope").setup({
-	extensions = {
-		--
-		["ui-select"] = {
-			require("telescope.themes").get_dropdown {
-
-			}
-		},
-		--
-		['fzf'] = {
-			fuzzy                   = true,          -- false will only do exact matching
-			override_generic_sorter = true,          -- override the generic sorter
-			override_file_sorter    = true,          -- override the file sorter
-			case_mode               = "smart_case",  -- or "ignore_case" or "respect_case"
-		                                             -- the default case_mode is "smart_case"
-		},
-	},
-	pickers = {
-		ignore_current_buffer = true,
-		sort_mru              = true,
-	},
 	defaults = {
+		initial_mode = "normal",
 		-- borderchars    = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
 		layout_config  = {
 			horizontal = {
-				width         = 0.75,
+				width         = 0.70,
 				height        = 0.85,
 				preview_width = 0.52,
 			},
@@ -86,11 +70,47 @@ require("telescope").setup({
 				-- ["<F1"]   = telescope_actions.close,
 			},
 			n = {
-				["<esc>"] = telescope_actions.close,
+				["q"] = telescope_actions.close,
+				-- ["<esc>"] = telescope_actions.close,
 			},
 		},
-	}
+	},
+	pickers = {
+		ignore_current_buffer = true,
+		sort_mru              = true,
+
+		live_grep = {
+			initial_mode = 'insert'
+		},
+
+		buffers = {
+			sort_mru = true
+		}
+	},
+	extensions = {
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown({
+				layout_strategy = "cursor",
+				layout_config = {
+					width  = 54,
+					height = 9,
+					-- TODO: funkcija koja prebrojava
+					-- stavke u meniju
+				}
+			})
+		},
+		--
+		['fzf'] = {
+			fuzzy                   = true,          -- false will only do exact matching
+			override_generic_sorter = true,          -- override the generic sorter
+			override_file_sorter    = true,          -- override the file sorter
+			case_mode               = "smart_case",  -- or "ignore_case" or "respect_case"
+		                                             -- the default case_mode is "smart_case"
+		},
+	},
 })
+--
+require("telescope").load_extension("ui-select")
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
 -- -------------------------------------------------------------------------- -
@@ -116,18 +136,45 @@ ft.set("imd" , "!!%s")
 -- 	input_buffer_type = "dressing",
 -- })
 -- -----------------------------------------------------------------------------
-require('dressing').setup({
-	input = {
-		win_options = {
-			winblend = 0,
-			wrap     = true,
+-- require('dressing').setup({
+-- 	input = {
+-- 		win_options = {
+-- 			winblend = 0,
+-- 			wrap     = true,
+-- 		}
+-- 	}
+-- })
+-- -----------------------------------------------------------------------------
+require('nvim-highlight-colors').setup({
+	render                  = 'virtual',
+	enable_var_usage        = true,
+	virtual_symbol_position = 'eol',
+})
+-- -----------------------------------------------------------------------------
+require('dapui').setup()
+-- -----------------------------------------------------------------------------
+require("ibl").setup({
+	scope = {
+		include = {
+			node_type = {
+				python = {
+					"while_statement",
+				},
+				css = {
+					"rule_set",
+				},
+				["*"] = {
+					"switch_statement",
+					"array",
+					"object",
+					"enum_declaration",
+					"class_declaration",
+					"interface_declaration",
+					"import_statement",
+					"initializer_list",
+				}
+			},
 		}
 	}
 })
--- -----------------------------------------------------------------------------
--- require('colorizer').setup()
--- -----------------------------------------------------------------------------
--- vim.g.Hexonicase_highlighters = "sign_column"
--- vim.g.Hexonicase_highlighters = "backgroundfull"
--- -----------------------------------------------------------------------------
 
