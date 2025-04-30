@@ -16,9 +16,11 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(
 	{
 		-- ---------------------------------------------
-		"folke/neodev.nvim",
+		-- "folke/neodev.nvim",
+		"folke/lazydev.nvim",
 		"nvim-tree/nvim-web-devicons",
 		"kyazdani42/nvim-tree.lua",
+		-- "nvim-tree/nvim-tree.lua",
 		"dstein64/vim-startuptime",
 		-- ---------------------------------------------
 		-- LSP (i pomoćni)
@@ -49,16 +51,44 @@ require("lazy").setup(
 		},
 		"nvim-treesitter/playground",
 		-- ---------------------------------------------
+		-- Git:
+		-- ---------------------------------------------
+		-- nvim v0.8.0
+		{
+			"kdheepak/lazygit.nvim",
+			lazy = true,
+			cmd = {
+				"LazyGit",
+				"LazyGitConfig",
+				"LazyGitCurrentFile",
+				"LazyGitFilter",
+				"LazyGitFilterCurrentFile",
+			},
+			-- optional for floating window border decoration
+			dependencies = {
+				"nvim-lua/plenary.nvim",
+			},
+			-- setting the keybinding for LazyGit with 'keys' is recommended in
+			-- order to load the plugin when the command is run for the first time
+			keys = {
+				{ "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+			}
+		},
+		-- ---------------------------------------------
 		-- Lualine:
 		-- ---------------------------------------------
 		"nvim-lualine/lualine.nvim",
 		-- ---------------------------------------------
 		-- Telescope:
 		-- ---------------------------------------------
+		-- "ibhagwan/fzf-lua",
 		{
-			'nvim-telescope/telescope.nvim', tag = '0.1.4',
-			-- or                              , branch = '0.1.1',
-			dependencies = { { 'nvim-lua/plenary.nvim' } }
+			'nvim-telescope/telescope.nvim',
+			-- branch = '0.1.x',
+			tag = '0.1.8',
+			-- branch = 'master',
+			-- branch = 'feat/unwritten-buffer-previewer',
+			dependencies = { 'nvim-lua/plenary.nvim' }
 		},
 		{
 			'nvim-telescope/telescope-fzf-native.nvim',
@@ -79,14 +109,15 @@ require("lazy").setup(
 				local alpha = require'alpha'
 				local startify = require'alpha.themes.startify'
 				startify.section.header.val = CowSay
-	   --              -- "                                                     ",
-				--     "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
-				--     "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
-				--     "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
-				--     "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
-				--     "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
-				--     "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
-				--     -- "                                                     ",
+				-- startify.section.header.val = {
+				-- 	"                                                     ",
+				-- 	-- "                                                     ",
+				-- 	"  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+				-- 	"  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+				-- 	"  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+				-- 	"  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+				-- 	"  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+				-- 	"  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
 				-- }
 				startify.section.bottom_buttons.val = {
 					startify.button( "q", "  Quit" , ":lua AlphaQuit()<cr>"),
@@ -113,10 +144,13 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		-- Color themes:
 		-- ---------------------------------------------
-		"drewtempelmeyer/palenight.vim",
-		"JoosepAlviste/palenightfall.nvim",
+		-- "drewtempelmeyer/palenight.vim",
+		-- "JoosepAlviste/palenightfall.nvim",
 		"catppuccin/nvim",
-		"folke/tokyonight.nvim",
+		-- "folke/tokyonight.nvim",
+		-- "projekt0n/github-nvim-theme",
+		-- "rmehri01/onenord.nvim",
+		-- "olimorris/onedarkpro.nvim",
 		-- "sainnhe/sonokai",
 		-- "flazz/vim-colorschemes",
 		-- "chriskempson/base16-vim",
@@ -125,22 +159,58 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		-- Ostalo:
 		-- ---------------------------------------------
+		"brenoprata10/nvim-highlight-colors",
 		-- "ap/vim-css-color",
 		-- "norcalli/nvim-colorizer.lua",
-		{
+		-- {
 			-- "rrethy/vim-hexokinase",
 			-- run = 'make hexokinase'
-		},
+		-- },
 		"windwp/nvim-autopairs",
 		"RRethy/vim-illuminate",
 		"mfussenegger/nvim-dap",
+		{
+			"rcarriga/nvim-dap-ui",
+			dependencies = {
+				"mfussenegger/nvim-dap",
+				"nvim-neotest/nvim-nio"
+			}
+		},
 		-- "jiangmiao/auto-pairs",
 		-- "LunarWatcher/auto-pairs",
 		-- "cohama/lexima.vim",
 		-- "godlygeek/tabular",
-		"stevearc/dressing.nvim",
+		-- "stevearc/dressing.nvim",
+		-- "liangxianzhe/floating-input.nvim",
+		{
+			"rcarriga/nvim-notify",
+			config = function()
+				vim.notify = require('notify')
+			end
+		},
 		"kevinhwang91/nvim-bqf",
+		-- {
+		-- 	"nvimdev/indentmini.nvim",
+		-- 	config = function()
+		-- 		require("indentmini").setup({
+		-- 			-- char = "⁞"
+		-- 			exclude = {
+		-- 				"if_statement",
+		-- 				"ternary_expression",
+		-- 				"binary_expression"
+		-- 			}
+		-- 		}) -- use default config
+		-- 	end
+		-- },
+		{
+			"lukas-reineke/indent-blankline.nvim",
+			main = "ibl",
+			---@module "ibl"
+			---@type ibl.config
+			opts = {},
+		},
 		-- "nikola-vukicevic/breadcrumbs-nvim",
+		-- "nikola-vukicevic/util-input-window.nvim",
 		-- ---------------------------------------------
 	}, -- END OF Plugins
 	-- -------------------------------------------------

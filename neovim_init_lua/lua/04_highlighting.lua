@@ -1,7 +1,7 @@
 -- -------------------------------------------------------------------------- --
 local mainHL       = true
 local basicHL      = mainHL and true
-local cmpHL        = mainHL and false
+local cmpHL        = mainHL and true
 local treesitterHL = mainHL and true
 local LspHL        = mainHL and true
 local TelescopeHL  = mainHL and true
@@ -76,11 +76,15 @@ if basicHL == true then
 	vim.cmd("hi Comment                gui=NONE guifg=#656a70")
 	vim.cmd("hi DiagnosticUnnecessary  guifg=#775533")
 	vim.cmd("hi StartifyFile           guifg=#ee5599")
+	vim.cmd("hi IlluminatedWordText    guibg=#334444 guifg=#ffeedd")
 	-- Float:
 	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                 --"#2c303d",                } )
+	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#cc8833' } )   --"#2c303d",                } )
 	-- vim.cmd("hi NormalFloat    guibg=boja_03")
-	vim.cmd("hi FloatBorder    guifg=#cc8833")
+	-- vim.cmd("hi FloatBorder    guifg=#cc8833")
 	vim.cmd("hi FloatermBorder guibg=None guifg=#cc8833")
+	-- Mini notify:
+	vim.api.nvim_set_hl(0, "NotifyBackground", { bg = boja_202 } )
 	-- Lazy border:
 	vim.cmd("hi LazyNormal  guifg=#cccccc")
 	-- LSP Saga border:
@@ -90,6 +94,15 @@ if basicHL == true then
 	vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", {  } )
 	-- Spell checker:
 	vim.api.nvim_set_hl(0, "SpellBad", { fg = "#ff3355", underline = true, bold = true } )
+	-- Better Quick Fix:
+	vim.api.nvim_set_hl(0, "BqfPreviewFloat", { bg = '#292b39' } )
+	vim.api.nvim_set_hl(0, "BqfPreviewBorder", { bg = '#292b39' } )
+	vim.api.nvim_set_hl(0, "BqfPreviewTitle", { bg = '#292b39' } )
+	-- Scope highlighting(indent-blankline):
+	vim.api.nvim_set_hl(0, "IblScope", { fg = '#505050' } )
+	-- Scope highlighting(indentmini):
+	-- vim.api.nvim_set_hl(0, "IndentLine",        { fg = '#323d37' } )
+	-- vim.api.nvim_set_hl(0, "IndentLineCurrent", { fg = '#505050' } )
 end
 -- -----------------------------------------------------------------------------
 -- nvim-cmp
@@ -129,7 +142,8 @@ if treesitterHL == true then
 	vim.api.nvim_set_hl ( 0 , "@keyword" ,                { fg = boja_111 , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@keyword.function" ,       { fg = boja_111 , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@keyword.operator" ,       { fg = boja_111 , bold = bold  } )
-	vim.api.nvim_set_hl ( 0 , "@conditional" ,            { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@keyword.conditional" ,    { italic = false               } )
+	vim.api.nvim_set_hl ( 0 , "@conditional" ,            { fg = boja_111 , bold = bold , italic = false } )
 	vim.api.nvim_set_hl ( 0 , "@repeat" ,                 { fg = boja_111 , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@operator" ,               { fg = boja_116 , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@punctuation" ,            { fg = boja_114 , bold = bold  } )
@@ -195,7 +209,8 @@ end
 -- -------------------------------------------------------------------------- --
 if TelescopeHL == true then
 	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,         { } )                 --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#b0b0b0" } ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#909090" } ) --"#2c303d", fg = "#d0d0d0" } )
+	-- vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#b0b0b0" } ) --"#2c303d", fg = "#d0d0d0" } )
 	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#f09080" } ) --"#2c303d", fg = "#d0d0d0" } )
 end
 -- -------------------------------------------------------------------------- --

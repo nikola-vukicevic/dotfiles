@@ -7,12 +7,12 @@ function SpelovanjeToggle()
 		vim.cmd("set spell!")
 		vim.cmd("set spelllang=sr_RS")
 		vim.cmd("set syntax=OFF")
-		print("Spell checker uključen")
+		vim.notify("Spell checker uključen")
 	else
 		vim.g.spell_check = false
 		vim.cmd("set spell!")
 		vim.cmd("set syntax=ON")
-		print("Spell checker isključen")
+		vim.notify("Spell checker isključen")
 	end
 end
 -- -----------------------------------------------------------------------------
@@ -316,6 +316,10 @@ end
 --           definisana je ispod
 
 function ObradaMenija(ulaz, mode)
+	if ulaz == nil then
+		return
+	end
+
 	local koord
 
 	if mode == "n" then
@@ -381,8 +385,8 @@ function FancyRenamePripremaQuickFixa(promena, bufnr)
 		text  = linija,
 	}
 
-	print(vim.inspect(promena))
-	print(vim.inspect(quickFix))
+	-- print(vim.inspect(promena))
+	-- print(vim.inspect(quickFix))
 
 	return quickFix
 end
@@ -429,22 +433,23 @@ end
 function FancyRenameHandler(err, result, context, config)
 	if not result then return end
 	--
-	print(vim.inspect(context))
-	print(vim.inspect(result))
+	-- print(vim.inspect(context))
+	-- print(vim.inspect(result))
 	--
 	local client = vim.lsp.get_client_by_id(context.client_id)
 	vim.lsp.util.apply_workspace_edit(result, client.offset_encoding)
 	--
 	local lista = FancyRenameKreiranjeQFListe(result, context)
 	--
-	print(vim.inspect(lista))
+	-- print(vim.inspect(lista))
 	vim.fn.setqflist(lista, "r")
 	vim.cmd("copen")
 	-- require('telescope.builtin').quickfix()
 end
 -- -----------------------------------------------------------------------------
 function FancyRename(ime)
-	local position_params   = vim.lsp.util.make_position_params()
+	local clients = vim.lsp.get_clients({ bufnr = buf }) -- TODO - dobro proveriti
+	local position_params   = vim.lsp.util.make_position_params(win, clients[1].offset_encoding or 'utf-16') -- TODO - Dobro proveriti argumente u zagradi
 	local novoIme           = ime
 	position_params.newName = novoIme
 	-- print(vim.inspect(position_params))
@@ -456,15 +461,18 @@ function FancyRenamePoziv()
 	vim.lsp.buf.document_highlight()
 
 	vim.ui.input({
-		prompt  = "Novo ime:",
-		default = vim.fn.expand('<cword>')
-	},
+			prompt  = "Novo ime: ",
+			default = vim.fn.expand('<cword>')
+		},
 		function(input)
-			print(string.format("Input=%s", input))
+			-- print(string.format("Input=%s", input))
 			if input ~= nil and input ~= "" then
 				FancyRename(input)
+				vim.notify(" Novo ime: " .. input, "info", { title = "Uspešno preimenovanje." })
+				-- vim.notify(input)
 			else
-				print("Rename otkazan ....")
+				vim.notify(" Rename otkazan ....", "warn", { title = "INFO" })
+				-- print("Rename otkazan ....")
 				vim.lsp.buf.clear_references()
 			end
 		end
