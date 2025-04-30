@@ -23,12 +23,21 @@ local opts_nrexp = {
 	remap = false,
 }
 -- ------ -----------------------------------------------------------------------
+vim.keymap.set( "" , "gg" ,        "gg0" ,                                 opts_nr )
+vim.keymap.set( "" , "G" ,         "G0" ,                                  opts_nr )
 vim.keymap.set( "" , "<M-o>" ,     "<C-o>" ,                               opts_nr )
 vim.keymap.set( "" , "<M-i>" ,     "<C-i>" ,                               opts_nr )
 vim.keymap.set( "" , "<M-z>" ,     "<C-r>" ,                               opts_nr )
 vim.keymap.set( "" , "<M-n>" ,     ":cprev<cr>" ,                          opts_nr )
 vim.keymap.set( "" , "<M-m>" ,     ":cnext<cr>" ,                          opts_nr )
 vim.keymap.set( "" , "<M-a>" ,     ":lua vim.diagnostic.setqflist()<cr>" , opts_nr )
+vim.keymap.set( "" , "<M-q>" ,  function()
+	if vim.fn.winnr("$") > 1 then
+		vim.cmd(":q")
+	else
+		vim.cmd(":bd")
+	end
+end, opts_nr )
 -- ------ -----------------------------------------------------------------------
 vim.keymap.set( "n" , "<leader><F3>" , ":lua require('prozor_proba').make_window()<cr>" ,                                                   opts_nr )
 -- ------ -----------------------------------------------------------------------
@@ -158,8 +167,8 @@ vim.keymap.set( "i" , "<M-q>" , "<C-o>d^" , opts_nr )
 -- Dupliranje reda:
 vim.keymap.set( "i" , "<C-j>" , "<C-o>:lua PomeranjeLinijeNaDole()<cr>" ,  opts_nr )
 vim.keymap.set( "i" , "<C-k>" , "<C-o>:lua PomeranjeLinijeNaGore()<cr>" ,  opts_nr )
-vim.keymap.set( "i" , "<M-h>" , "<C-o>:lua DupliranjeLinijeNaDole()<cr>" , opts_nr )
-vim.keymap.set( "i" , "<M-l>" , "<C-o>:lua DupliranjeLinijeNaGore()<cr>" , opts_nr )
+vim.keymap.set( "i" , "<C-h>" , "<C-o>:lua DupliranjeLinijeNaDole()<cr>" , opts_nr )
+vim.keymap.set( "i" , "<C-l>" , "<C-o>:lua DupliranjeLinijeNaGore()<cr>" , opts_nr )
 -- -----
 -- Malo olakšanje za rad sa splitovanom
 -- radnom površinom
