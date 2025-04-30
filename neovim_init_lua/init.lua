@@ -82,6 +82,7 @@ if vim.g.barebones_CFG ~= true then
 	-- vim.cmd("colorscheme tokyonight-moon")
 	-- vim.cmd("colorscheme tokyonight")
 	vim.cmd("colorscheme catppuccin-macchiato")
+	-- vim.cmd("colorscheme onedark")
 	-- vim.cmd("colorscheme catppuccin-latte")
 	-- vim.cmd("colorscheme catppuccin-frappe")
 	-- vim.cmd("colorscheme catppuccin-mocha")
@@ -98,7 +99,8 @@ vim.opt.wildmenu        = true
 -- (ne bukvalno), whitespace znakove specijalnim znakovima
 -- (ispod je definisano koji se tačno znaci koriste)
 -- ◦ • ⋅ ‣  ↲ ⁞ ▸ → ~ ⟩ ⟨
-vim.opt.listchars = "space:.,multispace:◦⋅⋅⋅,eol:↲,tab:⁞-,trail:~,extends:⟩,precedes:⟨"
+-- vim.opt.listchars = "space:.,multispace:◦⋅⋅⋅,eol:↲,tab:⁞-,trail:~,extends:⟩,precedes:⟨"
+vim.opt.listchars = "space:.,multispace:◦⋅⋅⋅,eol:↲,tab:│-,trail:~,extends:⟩,precedes:⟨"
 vim.opt.fillchars:append("vert:╵")             -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 vim.opt.fillchars:append("stl: ")
 vim.opt.fillchars:append("stlnc: ")
@@ -139,18 +141,44 @@ vim.api.nvim_create_autocmd("BufEnter" , {
 	command = "setlocal formatoptions=crqn2l1j"
 })
 --
+-- close quickfix menu after selecting choice
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "qf" },
+	command = [[nnoremap <buffer> <CR> <CR>:cclose<CR>]]})
+--
 vim.opt.updatetime = 500
 -- -----------------------------------------------------------------------------
 -- Save *.imd pokreće parsiranje članka:
 -- -----------------------------------------------------------------------------
 vim.api.nvim_create_autocmd("BufWritePost" , {
 	pattern = "*.imd",
-	command = ":w !python /home/korisnik/git/python/markdown/idiosync_parser.py"
+	command = ":w !node /home/korisnik/git/node/markdown/idiosync_parser.js"
+	-- command = ":w !python /home/korisnik/git/python/markdown/idiosync_parser.py"
+})
+--
+vim.api.nvim_create_autocmd("BufWritePost" , {
+	pattern = "*.ts",
+	command = ":w !tsc"
+	-- command = ":w !python /home/korisnik/git/python/markdown/idiosync_parser.py"
+})
+--
+vim.api.nvim_create_autocmd("InsertLeave", {
+	pattern  = "*",
+	callback = function()
+		vim.g.insert_okidac = ""
+	end
 })
 -- -----------------------------------------------------------------------------
 if vim.g.barebones_CFG ~= true then
 	require ('plugins')
 end
 -- -----------------------------------------------------------------------------
-require('breadcrumbs')
+vim.ui.input = function(opts, on_confirm)
+	require('util-input-window').input(opts, on_confirm, {
+		-- border = "single",
+	})
+end
+-- -----------------------------------------------------------------------------
+-- require('breadcrumbs')
+-- require('prozor_proba')
 
