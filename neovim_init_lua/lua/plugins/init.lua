@@ -163,6 +163,11 @@ require("ibl").setup({
 				css = {
 					"rule_set",
 				},
+				lua = {
+					"arguments",
+					"while_statement",
+					"if_statement",
+				},
 				["*"] = {
 					"switch_statement",
 					"array",
