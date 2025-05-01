@@ -157,7 +157,7 @@ end
 -- 		if u then
 -- 			b = b + 1
 -- 		end
--- 		
+--
 -- 		i = i + 1
 -- 	until u and i <= d
 --
@@ -187,7 +187,7 @@ end
 -- -----------------------------------------------------------------------------
 -- Za normal mode - posebna funkcija za automatsko proširivanje selekcije
 -- (selekcija iz normal moda je obavezno jedan znak)
--- NAPOMENA: Korekcija za kolonu (-1), je vrlo čudna, ali, izgleda da 
+-- NAPOMENA: Korekcija za kolonu (-1), je vrlo čudna, ali, izgleda da
 --           Telescope pomera kursor
 
 function CitanjeKoordinataNormalMode(mode)
@@ -459,21 +459,22 @@ end
 -- -----------------------------------------------------------------------------
 function FancyRenamePoziv()
 	vim.lsp.buf.document_highlight()
+	local staro_ime = vim.fn.expand("<cword>")
 
 	vim.ui.input({
 			prompt  = "Novo ime: ",
-			default = vim.fn.expand('<cword>')
+			default = staro_ime
 		},
 		function(input)
 			-- print(string.format("Input=%s", input))
-			if input ~= nil and input ~= "" then
+			if input ~= nil and input ~= "" and staro_ime ~= input then
 				FancyRename(input)
-				vim.notify(" Novo ime: " .. input, "info", { title = "Uspešno preimenovanje." })
+				vim.notify(" Novo ime: " .. input, "info", { title = "[LSP rename]" })
 				-- vim.notify(input)
 			else
-				vim.notify(" Rename otkazan ....", "warn", { title = "INFO" })
+				vim.notify(" LSP rename otkazan ....", "warn", { title = "INFO" })
 				-- print("Rename otkazan ....")
-				vim.lsp.buf.clear_references()
+				-- vim.lsp.buf.clear_references()
 			end
 		end
 	)
@@ -483,6 +484,40 @@ end
 -- -----------------------------------------------------------------------------
 -- END OF FANCY RENAME
 -- -----------------------------------------------------------------------------
+
+function renameQuickFix()
+	-- TODO: zašto ne radi document_highlight?!
+	vim.lsp.buf.document_highlight()
+	-- print("Biće nešto od ovoga! :)")
+	local ime = vim.fn.expand("<cword>")
+	-- vim.notify(ime)
+
+	vim.ui.input({
+			prompt  = "Novo ime: ",
+			default = ime -- vim.fn.expand("<cword>")
+		},
+		function(input)
+			if input ~= nil and input ~= "" and ime ~= input then
+				-- vim.lsp.buf.references()
+				local cur = vim.fn.getpos(".")
+				vim.cmd("silent grep " .. ime)
+				vim.notify(" Novo ime: " .. input, "info", { title = "[Grep rename]" })
+				vim.cmd("silent cdo s/\\<" .. ime .. "\\>/" .. input .. "/e")
+				vim.fn.setpos(".", cur)
+				vim.lsp.buf.references()
+				-- vim.cmd("cdo update")
+			else
+				vim.notify(" Grep rename otkazan ....", "warn", { title = "INFO" })
+			end
+		end
+	)
+
+	vim.lsp.buf.clear_references()
+end
+
+
+
+
 
 -- -----------------------------------------------------------------------------
 -- Cowsay za Alpha
@@ -593,7 +628,7 @@ function CowSay()
 	local quotes      = require("cowsay").quotes
 	local index       = cowsay_get_index(quotes)
 	local quote       = quotes[index][1]
-	local author      = quotes[index][2] 
+	local author      = quotes[index][2]
 	local quote_lines = cowsay_format_lines(quote)
 	local author_lines
 	if author == "" then

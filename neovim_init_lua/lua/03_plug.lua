@@ -189,19 +189,7 @@ require("lazy").setup(
 			end
 		},
 		"kevinhwang91/nvim-bqf",
-		-- {
-		-- 	"nvimdev/indentmini.nvim",
-		-- 	config = function()
-		-- 		require("indentmini").setup({
-		-- 			-- char = "⁞"
-		-- 			exclude = {
-		-- 				"if_statement",
-		-- 				"ternary_expression",
-		-- 				"binary_expression"
-		-- 			}
-		-- 		}) -- use default config
-		-- 	end
-		-- },
+		-- "nvimdev/indentmini.nvim",
 		{
 			"lukas-reineke/indent-blankline.nvim",
 			main = "ibl",
@@ -224,7 +212,7 @@ require("lazy").setup(
 				width  = 0.5,
 				height = 0.7
 			}
-		},	
+		},
 	} -- END OF Lazy options
 ) -- END OF require("lazy").setup()
 -- -----------------------------------------------------------------------------

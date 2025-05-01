@@ -38,6 +38,7 @@ vim.keymap.set( "" , "<M-q>" ,  function()
 		vim.cmd(":bd")
 	end
 end, opts_nr )
+vim.keymap.set( "" , "<M-r>" , ":lua renameQuickFix()<cr>" , opts_nr )
 -- ------ -----------------------------------------------------------------------
 vim.keymap.set( "n" , "<leader><F3>" , ":lua require('prozor_proba').make_window()<cr>" ,                                                   opts_nr )
 -- ------ -----------------------------------------------------------------------
@@ -72,7 +73,7 @@ vim.keymap.set( "v" , ">" ,         ">gv" ,                        opts_nr )
 -- --------------------------------------------------------
 vim.keymap.set( "" , "<F9>" ,      ":set number!<cr>"         , opts_nr )
 vim.keymap.set( "" , "<F10>" ,     ":set relativenumber!<cr>" , opts_nr )
-vim.keymap.set( "" , "<leader>y" , ":set wrap!<cr>" ,           opts_nr )
+-- vim.keymap.set( "" , "<leader>y" , ":set wrap!<cr>" ,           opts_nr )
 vim.keymap.set( "" , "<M-p>" ,     ":set wrap!<cr>" ,           opts_nr )
 vim.keymap.set( "" , "<F11>" ,     ":VimadeToggle<cr>" ,        opts_nr )
 vim.keymap.set( "" , "<F11>" ,     ":bd<cr>" ,                  opts_nr )
@@ -172,9 +173,9 @@ vim.keymap.set( "i" , "<C-l>" , "<C-o>:lua DupliranjeLinijeNaGore()<cr>" , opts_
 -- -----
 -- Malo olakšanje za rad sa splitovanom
 -- radnom površinom
-vim.keymap.set( "n" , "<leader>v" , ":vsp<cr>" ,  opts_nr )
+-- vim.keymap.set( "n" , "<leader>v" , ":vsp<cr>" ,  opts_nr )
 vim.keymap.set( "n" , "<M-v>" ,     ":vsp<cr>" ,  opts_nr )
-vim.keymap.set( "n" , "<leader>w" , "<C-w>w" ,    opts_nr )
+-- vim.keymap.set( "n" , "<leader>w" , "<C-w>w" ,    opts_nr )
 vim.keymap.set( "n" , "<M-w>" ,     "<C-w>w" ,    opts_nr )
 -- -----
 -- Tabove zapravo ne koristim često, ali,
@@ -241,7 +242,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		--
 		-- vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
 		-- vim.keymap.set('n', '<space>r', ":IncRename <cword>", opts)
-		vim.keymap.set('n', '<M-r>', ":lua FancyRenamePoziv()<cr>", opts)
+		vim.keymap.set('n', '<leader>r', ":lua FancyRenamePoziv()<cr>", opts)
 		-- vim.keymap.set('n', '<leader>r', ":lua FancyRenamePoziv()<cr>", opts)
 		-- vim.keymap.set("n", "<leader>r", function()
 		-- 	vim.lsp.buf.document_highlight()
