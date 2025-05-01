@@ -113,7 +113,7 @@ vim.opt.fillchars:append("stlnc: ")
 -- endif
 -- ---------------------------------------------------------
 vim.opt.termguicolors = true
--- --------------------------------------------------------- 
+-- ---------------------------------------------------------
 -- Automatsko (ili bolje rečeno poluatomatsko) učitavanje
 -- sadržaja otvorenog dokumenta, kada neki drugi program
 -- sačuva dati dokument sa novim sadržajem
@@ -159,7 +159,6 @@ vim.api.nvim_create_autocmd("BufWritePost" , {
 vim.api.nvim_create_autocmd("BufWritePost" , {
 	pattern = "*.ts",
 	command = ":w !tsc"
-	-- command = ":w !python /home/korisnik/git/python/markdown/idiosync_parser.py"
 })
 --
 vim.api.nvim_create_autocmd("InsertLeave", {
@@ -168,7 +167,16 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 		vim.g.insert_okidac = ""
 	end
 })
--- -----------------------------------------------------------------------------
+--
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+	pattern = {"*"},
+	callback = function()
+		local cursor_pos = vim.fn.getpos(".")
+		vim.cmd [[%s/\s\+$//e]]
+		vim.cmd [[%s/\n\{2,}\%$/\r/e]]
+		vim.fn.setpos(".", cursor_pos)
+	end,
+})-- -----------------------------------------------------------------------------
 if vim.g.barebones_CFG ~= true then
 	require ('plugins')
 end
