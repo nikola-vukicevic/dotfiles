@@ -372,9 +372,9 @@ function RenameHandler()
 	print("LSP rocx!")
 end
 -- -----------------------------------------------------------------------------
--- FANCY RENAME:
+-- LSP RENAME:
 -- -----------------------------------------------------------------------------
-function FancyRenamePripremaQuickFixa(promena, bufnr)
+function LSPRenamePripremaQuickFixa(promena, bufnr)
 	local linija_start = promena.range.start.line + 1
 	local linija       = vim.api.nvim_buf_get_lines(bufnr, linija_start - 1, linija_start, false)[1]
 
@@ -391,14 +391,14 @@ function FancyRenamePripremaQuickFixa(promena, bufnr)
 	return quickFix
 end
 -- -----------------------------------------------------------------------------
-function FancyRenameCitanjeChanges(JSON_lista, ctx)
+function LSPRenameCitanjeChanges(JSON_lista, ctx)
 	local lista = { }
 
 	for uri, izmene in pairs(JSON_lista) do
 		local bufnr = vim.uri_to_bufnr(uri)
 
 		for _, izmena in ipairs(izmene) do
-			local quickFix = FancyRenamePripremaQuickFixa(izmena, bufnr)
+			local quickFix = LSPRenamePripremaQuickFixa(izmena, bufnr)
 			table.insert(lista, quickFix)
 		end
 	end
@@ -406,13 +406,13 @@ function FancyRenameCitanjeChanges(JSON_lista, ctx)
 	return lista
 end
 -- -----------------------------------------------------------------------------
-function FancyRenameCitanjeDocumentChanges(JSON_lista, ctx)
+function LSPRenameCitanjeDocumentChanges(JSON_lista, ctx)
 	local lista = { }
 
 	for _, izmene in ipairs(JSON_lista) do
 		local bufnr = vim.uri_to_bufnr(izmene.textDocument.uri)
 		for _, izmena in ipairs(izmene.edits) do
-			local quickFix = FancyRenamePripremaQuickFixa(izmena, bufnr)
+			local quickFix = LSPRenamePripremaQuickFixa(izmena, bufnr)
 			table.insert(lista, quickFix)
 		end
 	end
@@ -420,17 +420,17 @@ function FancyRenameCitanjeDocumentChanges(JSON_lista, ctx)
 	return lista
 end
 -- -----------------------------------------------------------------------------
-function FancyRenameKreiranjeQFListe(result, ctx)
+function LSPRenameKreiranjeQFListe(result, ctx)
 	if result.changes then
-		return FancyRenameCitanjeChanges(result.changes, ctx)
+		return LSPRenameCitanjeChanges(result.changes, ctx)
 	elseif result.documentChanges then
-		return FancyRenameCitanjeDocumentChanges(result.documentChanges, ctx)
+		return LSPRenameCitanjeDocumentChanges(result.documentChanges, ctx)
 	else
 		return { }
 	end
 end
 -- -----------------------------------------------------------------------------
-function FancyRenameHandler(err, result, context, config)
+function LSPRenameHandler(err, result, context, config)
 	if not result then return end
 	--
 	-- print(vim.inspect(context))
@@ -439,7 +439,7 @@ function FancyRenameHandler(err, result, context, config)
 	local client = vim.lsp.get_client_by_id(context.client_id)
 	vim.lsp.util.apply_workspace_edit(result, client.offset_encoding)
 	--
-	local lista = FancyRenameKreiranjeQFListe(result, context)
+	local lista = LSPRenameKreiranjeQFListe(result, context)
 	--
 	-- print(vim.inspect(lista))
 	vim.fn.setqflist(lista, "r")
@@ -447,17 +447,17 @@ function FancyRenameHandler(err, result, context, config)
 	-- require('telescope.builtin').quickfix()
 end
 -- -----------------------------------------------------------------------------
-function FancyRename(ime)
+function LSPRename(ime)
 	local clients = vim.lsp.get_clients({ bufnr = buf }) -- TODO - dobro proveriti
 	local position_params   = vim.lsp.util.make_position_params(win, clients[1].offset_encoding or 'utf-16') -- TODO - Dobro proveriti argumente u zagradi
 	local novoIme           = ime
 	position_params.newName = novoIme
 	-- print(vim.inspect(position_params))
 
-	vim.lsp.buf_request(0, "textDocument/rename", position_params, FancyRenameHandler)
+	vim.lsp.buf_request(0, "textDocument/rename", position_params, LSPRenameHandler)
 end
 -- -----------------------------------------------------------------------------
-function FancyRenamePoziv()
+function LSPRenamePoziv()
 	vim.lsp.buf.document_highlight()
 	local staro_ime = vim.fn.expand("<cword>")
 
@@ -468,7 +468,7 @@ function FancyRenamePoziv()
 		function(input)
 			-- print(string.format("Input=%s", input))
 			if input ~= nil and input ~= "" and staro_ime ~= input then
-				FancyRename(input)
+				LSPRename(input)
 				vim.notify(" Novo ime: " .. input, "info", { title = "[LSP rename]" })
 				-- vim.notify(input)
 			else
@@ -482,9 +482,17 @@ function FancyRenamePoziv()
 	vim.lsp.buf.clear_references()
 end
 -- -----------------------------------------------------------------------------
--- END OF FANCY RENAME
+-- END OF LSP RENAME
 -- -----------------------------------------------------------------------------
-
+-- QUICK FIX RENAME ....
+-- -----------------------------------------------------------------------------
+function pronalazenjeUDatoteci(input)
+	local cur = vim.fn.getpos(".")
+	local p   = vim.fn.search(input)
+	vim.fn.setpos(".", cur)
+	return p ~= 0
+end
+-- -----------------------------------------------------------------------------
 function renameQuickFix()
 	-- TODO: zašto ne radi document_highlight?!
 	vim.lsp.buf.document_highlight()
@@ -497,7 +505,12 @@ function renameQuickFix()
 			default = ime -- vim.fn.expand("<cword>")
 		},
 		function(input)
-			if input ~= nil and input ~= "" and ime ~= input then
+			if pronalazenjeUDatoteci(input) then
+				vim.notify("GREŠKA - Identifikator već postoji!", "warn", { title = "[Grep rename]"})
+				-- return
+			-- end
+
+			elseif input ~= nil and input ~= "" and ime ~= input then
 				-- vim.lsp.buf.references()
 				local cur = vim.fn.getpos(".")
 				vim.cmd("silent grep " .. ime)
@@ -514,11 +527,8 @@ function renameQuickFix()
 
 	vim.lsp.buf.clear_references()
 end
-
-
-
-
-
+-- -----------------------------------------------------------------------------
+-- END OF QUICK FIX RENAME
 -- -----------------------------------------------------------------------------
 -- Cowsay za Alpha
 -- -----------------------------------------------------------------------------

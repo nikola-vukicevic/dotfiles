@@ -242,8 +242,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		--
 		-- vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
 		-- vim.keymap.set('n', '<space>r', ":IncRename <cword>", opts)
-		vim.keymap.set('n', '<leader>r', ":lua FancyRenamePoziv()<cr>", opts)
-		-- vim.keymap.set('n', '<leader>r', ":lua FancyRenamePoziv()<cr>", opts)
+		vim.keymap.set('n', '<leader>r', ":lua LSPRenamePoziv()<cr>", opts)
+		-- vim.keymap.set('n', '<leader>r', ":lua LSPRenamePoziv()<cr>", opts)
 		-- vim.keymap.set("n", "<leader>r", function()
 		-- 	vim.lsp.buf.document_highlight()
 		-- 	vim.lsp.buf.rename()
