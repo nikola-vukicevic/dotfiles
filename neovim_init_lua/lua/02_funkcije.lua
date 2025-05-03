@@ -530,6 +530,36 @@ end
 -- -----------------------------------------------------------------------------
 -- END OF QUICK FIX RENAME
 -- -----------------------------------------------------------------------------
+function prebrojavanjeBafera()
+	local baferi = vim.fn.getbufinfo()
+	local n = 0
+
+	for _,bafer in ipairs(baferi) do
+		if bafer.listed > 0 and bafer.name ~= "" then
+			n = n + 1
+		end
+	end
+
+	return n
+end
+-- --------------------
+function boljiQuit()
+	local n_w = vim.fn.winnr("$")     -- broj prozora
+	local n_b = prebrojavanjeBafera() -- broj bafera
+
+	-- print("#win: " .. n_w .. " #baf: " .. n_b)
+
+	if n_w > 1 then
+		if n_b > 1 then
+			vim.cmd("bp|bd#")
+		else
+			vim.cmd("q")
+		end
+	else
+		vim.cmd("bd")
+	end
+end
+-- -----------------------------------------------------------------------------
 -- Cowsay za Alpha
 -- -----------------------------------------------------------------------------
 function cowsay_padding(s, w)

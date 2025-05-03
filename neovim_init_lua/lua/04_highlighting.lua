@@ -137,6 +137,7 @@ if treesitterHL == true then
 	vim.api.nvim_set_hl ( 0 , "Type" ,          { fg = boja_121 , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@type.builtin" , { fg = boja_121 , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "Include" ,       { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "PreProc" ,       { fg = boja_111 , bold = bold  } )
 	--
 	vim.api.nvim_set_hl ( 0 , "DiagnosticUnderlineHint" ,   { fg = boja_201, underline = true, bold = true } )
 	vim.api.nvim_set_hl ( 0 , "DiagnosticUnderlineWarn" ,   { fg = boja_202, underline = true, bold = true } )
