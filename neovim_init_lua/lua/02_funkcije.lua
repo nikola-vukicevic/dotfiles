@@ -542,21 +542,60 @@ function prebrojavanjeBafera()
 
 	return n
 end
+-- -----
+function prebrojavanjeElemenataTabele(t)
+	local n = 0
+
+	for _, v in pairs(t) do
+		n = n + 1
+	end
+
+	return n
+end
+-- -----
+function izlistavanjeProzora()
+	local prozori = vim.fn.getwininfo()
+	local n_win   = prebrojavanjeElemenataTabele(prozori)
+	local buf     = vim.api.nvim_get_current_buf()
+	local n_curr  = 0
+	local t = { }
+	-- local n_w = vim.fn.winnr("$")     -- broj prozora
+
+	for _,prozor in ipairs(prozori) do
+		if prozor.bufnr == buf then
+			n_curr = n_curr + 1
+		end
+		-- print(prozor.bufnr)
+		t[prozor.bufnr] = 1 -- može (skoro) bilo šta umesto 1
+	end
+
+	local n_buf = prebrojavanjeBafera()
+	print("#win: " .. n_win .. " #buf: " .. n_buf .. " #curr: " .. n_curr)
+	-- return {
+	-- 	n_win = n_win,
+	-- 	n_buf = n_buf,
+	-- 	n_curr = n_curr
+	-- }
+	return { n_win, n_buf, n_curr }
+end
 -- --------------------
 function boljiQuit()
-	local n_w = vim.fn.winnr("$")     -- broj prozora
-	local n_b = prebrojavanjeBafera() -- broj bafera
+	local n_win, n_buf, n_curr = unpack(izlistavanjeProzora())
 
-	-- print("#win: " .. n_w .. " #baf: " .. n_b)
-
-	if n_w > 1 then
-		if n_b > 1 then
-			vim.cmd("bp|bd#")
-		else
+	if n_buf > 1 then
+		if n_curr > 1 then
 			vim.cmd("q")
+		else
+			-- vim.cmd("set bufhidden=delete | bprevious")
+			-- vim.cmd("bp|bd#")
+			vim.cmd("bprevious|bdelete#")
 		end
 	else
-		vim.cmd("bd")
+		if n_win > 1 then
+			vim.cmd("q")
+		else
+			vim.cmd("bd")
+		end
 	end
 end
 -- -----------------------------------------------------------------------------
@@ -692,4 +731,3 @@ function AlphaQuit()
 	end
 end
 -- -----------------------------------------------------------------------------
-
