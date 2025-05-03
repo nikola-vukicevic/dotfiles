@@ -197,8 +197,8 @@ require("lazy").setup(
 			---@type ibl.config
 			opts = {},
 		},
-		-- "nikola-vukicevic/breadcrumbs-nvim",
-		-- "nikola-vukicevic/util-input-window.nvim",
+		"nikola-vukicevic/breadcrumbs-nvim",
+		"nikola-vukicevic/util-input-window.nvim",
 		-- ---------------------------------------------
 	}, -- END OF Plugins
 	-- -------------------------------------------------
