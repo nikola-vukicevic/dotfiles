@@ -158,6 +158,7 @@ require("ibl").setup({
 			node_type = {
 				python = {
 					"while_statement",
+					"if_statement",
 				},
 				css = {
 					"rule_set",
