@@ -1,8 +1,8 @@
 -- -----------------------------------------------------------------------------
 vim.opt.mouse         = "a"
 vim.g.floaterm_opener = "edit"
+vim.g.jezik           = "SR"
 vim.g.spell_check     = false
--- " let g:prvi_dir = getcwd() -- Ovo je kanda bio pokušaj da "odobrovoljim" LSP
 -- -----------------------------------------------------------------------------
 if vim.fn.argv(0) == "barebones" then
 	vim.g.barebones_CFG = true
@@ -49,7 +49,7 @@ vim.opt.incsearch   = true
 -- " set completeopt=menu
 vim.opt.completeopt = "menu,menuone,noselect"
 vim.opt.cursorline  = true
-vim.opt.wrap        = true
+vim.opt.wrap        = false
 vim.opt.linebreak   = true
 vim.opt.breakindent = true
 vim.opt.list        = true
@@ -147,6 +147,20 @@ vim.api.nvim_create_autocmd("FileType", {
 	command = [[nnoremap <buffer> <CR> <CR>:cclose<CR>]]})
 --
 vim.opt.updatetime = 500
+--
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = {
+		"*.imd",
+		"*.html",
+		"*.txt",
+	},
+	callback = function()
+		vim.cmd("set wrap")
+		vim.cmd("set spelllang=sr")
+		vim.cmd("set spell")
+		vim.g.spell_check = true
+	end
+})
 -- -----------------------------------------------------------------------------
 -- Save *.imd pokreće parsiranje članka:
 -- -----------------------------------------------------------------------------
@@ -176,7 +190,8 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 		vim.cmd [[%s/\n\{2,}\%$/\r/e]]
 		vim.fn.setpos(".", cursor_pos)
 	end,
-})-- -----------------------------------------------------------------------------
+})
+-- -----------------------------------------------------------------------------
 if vim.g.barebones_CFG ~= true then
 	require ('plugins')
 end
