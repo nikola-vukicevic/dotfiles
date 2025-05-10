@@ -17,7 +17,16 @@ require("lazy").setup(
 	{
 		-- ---------------------------------------------
 		-- "folke/neodev.nvim",
-		"folke/lazydev.nvim",
+		{
+			"folke/lazydev.nvim",
+			opts = {
+				library = {
+					-- See the configuration section for more details
+					-- Load luvit types when the `vim.uv` word is found
+					{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+				},
+			},
+		},
 		"nvim-tree/nvim-web-devicons",
 		"kyazdani42/nvim-tree.lua",
 		-- "nvim-tree/nvim-tree.lua",
@@ -25,7 +34,7 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		-- LSP (i pomoćni)
 		-- ---------------------------------------------
-		"neovim/nvim-lspconfig",
+		-- "neovim/nvim-lspconfig",
 		"onsails/lspkind.nvim",
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-buffer",
@@ -34,7 +43,8 @@ require("lazy").setup(
 		"hrsh7th/cmp-calc",
 		"hrsh7th/cmp-nvim-lsp-signature-help",
 		"hrsh7th/nvim-cmp",
-		-- "hrsh7th/cmp-nvim-lua",
+		-- "hrsh7th/cmp-nvim-lua", -- lazydev ga poništava?
+		                           -- Da.
 		-- ---------------------------------------------
 		-- Snipeti:
 		-- ---------------------------------------------
@@ -84,10 +94,10 @@ require("lazy").setup(
 		-- "ibhagwan/fzf-lua",
 		{
 			'nvim-telescope/telescope.nvim',
-			-- branch = '0.1.x',
 			tag = '0.1.8',
-			-- branch = 'master',
 			-- branch = 'feat/unwritten-buffer-previewer',
+			-- branch = '0.1.x',
+			-- branch = 'master',
 			dependencies = { 'nvim-lua/plenary.nvim' }
 		},
 		{
@@ -138,7 +148,16 @@ require("lazy").setup(
 		{
 			"numToStr/Comment.nvim",
 			config = function()
-				require('Comment').setup()
+				require('Comment').setup({
+					toggler = {
+						line  = '<M-g>',
+						block = '<M-c>',
+					},
+					opleader = {
+						line  = '<M-g>',
+						block = '<M-c>',
+					}
+				})
 			end
 		},
 		-- ---------------------------------------------
@@ -147,6 +166,7 @@ require("lazy").setup(
 		-- "drewtempelmeyer/palenight.vim",
 		-- "JoosepAlviste/palenightfall.nvim",
 		"catppuccin/nvim",
+		"projekt0n/github-nvim-theme",
 		-- "folke/tokyonight.nvim",
 		-- "projekt0n/github-nvim-theme",
 		-- "rmehri01/onenord.nvim",
@@ -176,6 +196,7 @@ require("lazy").setup(
 				"nvim-neotest/nvim-nio"
 			}
 		},
+		"theHamsta/nvim-dap-virtual-text",
 		-- "jiangmiao/auto-pairs",
 		-- "LunarWatcher/auto-pairs",
 		-- "cohama/lexima.vim",
@@ -197,8 +218,8 @@ require("lazy").setup(
 			---@type ibl.config
 			opts = {},
 		},
-		"nikola-vukicevic/breadcrumbs-nvim",
-		"nikola-vukicevic/util-input-window.nvim",
+		-- "nikola-vukicevic/breadcrumbs-nvim",
+		-- "nikola-vukicevic/util-input-window.nvim",
 		-- ---------------------------------------------
 	}, -- END OF Plugins
 	-- -------------------------------------------------

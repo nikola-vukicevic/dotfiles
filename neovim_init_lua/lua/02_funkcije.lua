@@ -4,15 +4,27 @@
 function SpelovanjeToggle()
 	if vim.g.spell_check == false then
 		vim.g.spell_check = true
-		vim.cmd("set spell!")
-		vim.cmd("set spelllang=sr_RS")
-		vim.cmd("set syntax=OFF")
-		vim.notify("Spell checker uključen")
+		-- vim.cmd("set spelllang=sr_RS")
+		vim.cmd("set spell")
+		-- vim.cmd("set syntax=OFF")
+		vim.notify("Spell checker uključen [" .. vim.g.jezik .. "]", "info", { title = "Spell check" })
 	else
 		vim.g.spell_check = false
-		vim.cmd("set spell!")
-		vim.cmd("set syntax=ON")
-		vim.notify("Spell checker isključen")
+		vim.cmd("set nospell")
+		-- vim.cmd("set syntax=ON")
+		vim.notify("Spell checker isključen", "info", { title = "Spell check" })
+	end
+end
+-- -----------------------------------------------------------------------------
+function JezikToggle()
+	if vim.g.jezik == "SR" then
+		vim.cmd("set spelllang=en")
+		vim.g.jezik="EN"
+		vim.notify("Jezik za proveru pravopisa: EN", "info", { title = "Izbor jezika" })
+	elseif vim.g.jezik == "EN" then
+		vim.cmd("set spelllang=sr")
+		vim.g.jezik="SR"
+		vim.notify("Jezik za proveru pravopisa: SR", "info", { title = "Izbor jezika" })
 	end
 end
 -- -----------------------------------------------------------------------------
@@ -530,6 +542,14 @@ end
 -- -----------------------------------------------------------------------------
 -- END OF QUICK FIX RENAME
 -- -----------------------------------------------------------------------------
+-- DAP STUFF:
+-- -----------------------------------------------------------------------------
+function ToggleDapUi()
+	require("dapui").toggle()
+end
+-- -----------------------------------------------------------------------------
+-- Bolji quit:
+-- -----------------------------------------------------------------------------
 function prebrojavanjeBafera()
 	local baferi = vim.fn.getbufinfo()
 	local n = 0
@@ -597,6 +617,17 @@ function boljiQuit()
 			vim.cmd("bd")
 		end
 	end
+
+
+	-- if n_win > 1 then
+	-- 	if n_curr > 1 then
+	-- 		vim.cmd("q")
+	-- 	else
+	-- 		vim.cmd("bp|bd#")
+	-- 	end
+	-- else
+	-- 	vim.cmd("bd")
+	-- end
 end
 -- -----------------------------------------------------------------------------
 -- Cowsay za Alpha
@@ -731,3 +762,4 @@ function AlphaQuit()
 	end
 end
 -- -----------------------------------------------------------------------------
+

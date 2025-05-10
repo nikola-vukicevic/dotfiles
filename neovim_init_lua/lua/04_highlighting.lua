@@ -14,8 +14,8 @@ vim.cmd("hi BreadcrumbsColor  gui=None guibg=#2c323c guifg=Red")
 local boja_01 = "#e7e7e7" -- osnovna
 local boja_02 = "#d4d4d4" -- osnovna (pozivi funkcija)
 local boja_03 = "#d0d3d4" -- osnovna (konstante)
-local boja_04 = "#a0a0a0" -- promenljive, parametri funkcija
-local boja_05 = "#e0e0e0" -- property
+local boja_04 = "#e4e4e4" -- promenljive, parametri funkcija
+local boja_05 = "#c0c0c0" -- property
 -- local boja_04 = "#cc99ff" -- komentari
 -- local boja_05 = "#2e313e" -- pozadina float
 --
@@ -83,7 +83,8 @@ if basicHL == true then
 	vim.cmd("hi Comment                gui=NONE guifg=#656a70")
 	vim.cmd("hi DiagnosticUnnecessary  guifg=#665550") -- 66554
 	vim.cmd("hi StartifyFile           guifg=#ee5599")
-	vim.cmd("hi IlluminatedWordText    guibg=#334444 guifg=#ffeedd")
+	vim.cmd("hi IlluminatedWordText    guibg=none guifg=#ffeedd")
+	-- vim.cmd("hi IlluminatedWordText    guibg=#334444 guifg=#ffeedd")
 	-- Float:
 	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                 --"#2c303d",                } )
 	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#cc8833' } )   --"#2c303d",                } )
@@ -114,10 +115,11 @@ end
 -- -----------------------------------------------------------------------------
 -- nvim-cmp
 -- -----------------------------------------------------------------------------
-vim.api.nvim_set_hl ( 0 , "CMPGhostText" ,  { fg = "#808284" , bold = bold } )
+vim.api.nvim_set_hl ( 0 , "CMPGhostText" , { fg = "#5a5b64" , bg = "#333541", bold = false } )
+-- vim.api.nvim_set_hl ( 0 , "BlinkCmpGhostText" ,  { fg = "#5a5b64" , bg = None , bold = false } )
 --
 if cmpHL == true then
-	vim.cmd("hi CmpItemMenuDefault        guifg=#999999")
+	vim.api.nvim_set_hl ( 0 , "CmpItemMenuDefault" , { fg = "#999999" , bg = "#333541", bold = false } )
 	vim.cmd("hi CmpItemKind               guifg=#77aaff")
 	vim.cmd("hi CmpItemAbbrMatch          guibg=NONE guifg=#eedd77")
 	vim.cmd("hi CmpItemKindSnippetDefault guibg=NONE guifg=#cc8833")
@@ -144,7 +146,7 @@ if treesitterHL == true then
 	vim.api.nvim_set_hl ( 0 , "DiagnosticUnderlineError" ,  { fg = boja_203, underline = true, bold = true } )
 	--
 	vim.api.nvim_set_hl ( 0 , "@variable" ,               { fg = boja_01  , bold = false } )
-	vim.api.nvim_set_hl ( 0 , "@variable.builtin" ,       { fg = boja_118 , bold = false } )
+	vim.api.nvim_set_hl ( 0 , "@variable.builtin" ,       { fg = boja_01  , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@field" ,                  { fg = boja_01  , bold = false } )
 	vim.api.nvim_set_hl ( 0 , "@constant" ,               { fg = boja_03  , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@property" ,               { fg = boja_01  , bold = false } )
@@ -166,7 +168,8 @@ if treesitterHL == true then
 	vim.api.nvim_set_hl ( 0 , "@string" ,                 { fg = boja_112 , bold = false } )
 	vim.api.nvim_set_hl ( 0 , "@function" ,               { fg = boja_01  , bold = false } )
 	vim.api.nvim_set_hl ( 0 , "@function.call" ,          { fg = boja_02  , bold = bold  } )
-	vim.api.nvim_set_hl ( 0 , "@function.builtin" ,       { fg = boja_118 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@function.builtin" ,       { fg = boja_01  , bold = bold  } ) -- boja_118
+	vim.api.nvim_set_hl ( 0 , "@module" ,                 { fg = boja_01  , bold = bold  } ) -- boja_118
 	vim.api.nvim_set_hl ( 0 , "@method.call" ,            { fg = boja_02  , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@string.regex" ,           { fg = boja_02  , bold = bold  } )
 	-- CSS:
@@ -189,6 +192,8 @@ if treesitterHL == true then
 	vim.api.nvim_set_hl ( 0 , "@type.builtin.c" ,         { fg = boja_111 , bold = bold  } )
 	-- vim.api.nvim_set_hl ( 0 , "@keyword.return.c" ,       { fg = boja_111 , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@type.c" ,                 { fg = boja_02  , bold = bold  } )
+	--
+	vim.api.nvim_set_hl ( 0 , "@constructor.typescript" , { fg = boja_121 , bold = bold  } )
 end
 -- -------------------------------------------------------------------------- --
 -- LSP:
@@ -197,8 +202,8 @@ if LspHL == true then
 	vim.api.nvim_set_hl ( 0 , "LspReferenceText" ,     { bg = "#f0a080", fg = "#000000" } )
 	vim.api.nvim_set_hl ( 0 , "LspReferenceRead" ,     { bg = "#a0f080", fg = "#000000" } )
 	vim.api.nvim_set_hl ( 0 , "LspReferenceWrite" ,    { bg = "#f08000", fg = "#000000" } )
-	vim.api.nvim_set_hl ( 0 , "@lsp.type.variable" ,   { fg = boja_04 ,  bold = bold  } ) -- boja_01
-	vim.api.nvim_set_hl ( 0 , "@lsp.type.parameter" ,  { fg = boja_04 ,  bold = bold  } ) -- boja_01
+	vim.api.nvim_set_hl ( 0 , "@lsp.type.variable" ,   { fg = boja_04 ,  bold = false } ) -- boja_01
+	vim.api.nvim_set_hl ( 0 , "@lsp.type.parameter" ,  { fg = boja_04 ,  bold = false } ) -- boja_01
 	vim.api.nvim_set_hl ( 0 , "@lsp.type.property" ,   { fg = boja_05 ,  bold = false } ) -- boja_02
 	vim.api.nvim_set_hl ( 0 , "@lsp.type.function" ,   { fg = boja_01 ,  bold = false } )
 	vim.api.nvim_set_hl ( 0 , "@constant.builtin" ,    { fg = boja_119 , bold = true } )
@@ -217,6 +222,19 @@ if LspHL == true then
 	vim.api.nvim_set_hl ( 0 , "@lsp.mod.defaultLibrary.lua" ,  { fg = boja_118 , bold = bold  } )
 	-- vim.api.nvim_set_hl ( 0 , "@keyword.return.lua" ,          { fg = boja_120 , bold = bold  } )
 end
+-- -------------------------------------------------------------------------- --
+-- DAP:
+-- -------------------------------------------------------------------------- --
+vim.api.nvim_set_hl ( 0 , "DapBreakpoint" ,             { fg = "#5599e0" } )
+vim.api.nvim_set_hl ( 0 , "DapStopped" ,                { fg = "#e05555" } )
+vim.api.nvim_set_hl ( 0 , "NvimDapVirtualText" ,        { fg = "#e05555", bg="#373945", bold = bold } )
+vim.api.nvim_set_hl ( 0 , "NvimDapVirtualTextChanged" , { fg = "#e05555", bg="#373945", bold = bold } )
+vim.api.nvim_set_hl ( 0 , "NvimDapVirtualTextChanged" , { fg = "#e05555", bg="#373945", bold = bold } )
+vim.api.nvim_set_hl ( 0 , "DapUIDecoration" ,           { fg = "#707070"                            } )
+vim.api.nvim_set_hl ( 0 , "DapUIValue" ,                { fg = "#8090e0"                            } )
+vim.api.nvim_set_hl ( 0 , "DapUIScope" ,                { fg = "#5070c0",               bold = bold } )
+vim.api.nvim_set_hl ( 0 , "DapUIBreakpointsPath" ,      { fg = "#5070c0",               bold = bold } )
+vim.api.nvim_set_hl ( 0 , "DapUIStoppedThread" ,        { fg = "#5070c0",               bold = bold } )
 -- -------------------------------------------------------------------------- --
 -- Telescope:
 -- -------------------------------------------------------------------------- --
