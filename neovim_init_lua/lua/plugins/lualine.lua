@@ -133,7 +133,7 @@ require('lualine').setup {
 	options = {
 		theme = '00_tema_1',
 		-- theme = 'onedark',
-		--                         
+		--       
 		section_separators = { left = '', right = '' }
 		-- section_separators = { left = '', right = '' }
 	},
@@ -172,7 +172,7 @@ require('lualine').setup {
 			{ '%3l:%2v (%2c)[%L] %3b/0x%3B', color = { gui = '' } },
 			{ format_modified,               color = { fg  = '#dddddd' } }
 			-- { '%3l:%2v (%2c)[%L] ', color = { gui = '' } } ,
-			-- { '%3b/0x%3B%m', color = { gui = '' } } 
+			-- { '%3b/0x%3B%m', color = { gui = '' } }
 		}
 	},
 }

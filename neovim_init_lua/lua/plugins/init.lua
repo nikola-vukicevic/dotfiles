@@ -6,6 +6,7 @@ require('plugins/nvimtree')
 require('plugins/lsp')
 require('plugins/luasnip')
 require('plugins/cmp')
+require('plugins/dap')
 -- -------------------------------------------------------------------------- --
 vim.api.nvim_create_autocmd("TextChangedI", {
 	pattern = "*",
@@ -151,8 +152,6 @@ require('nvim-highlight-colors').setup({
 	virtual_symbol_position = 'eol',
 })
 -- -----------------------------------------------------------------------------
-require('dapui').setup()
--- -----------------------------------------------------------------------------
 require("ibl").setup({
 	scope = {
 		include = {
@@ -182,4 +181,5 @@ require("ibl").setup({
 		}
 	}
 })
+-- -----------------------------------------------------------------------------
 

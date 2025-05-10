@@ -26,7 +26,7 @@ cmp.setup({
 		end
 	},
 	experimental = {
-		native_menu = false,
+		-- native_menu = false, -- ostaviti (iako je to meni bez boja i highlightinga)
 		ghost_text  = {
 			hl_group = 'CMPGhostText',
 		},
@@ -39,6 +39,7 @@ cmp.setup({
 		format   = lspkind.cmp_format({
 			mode     = "symbol_text",
 			maxwidth = 25,
+			maxheight = 5,
 			menu     = ({
 				buffer        = "[Buf]",
 				nvim_lsp      = "[LSP]",
@@ -53,6 +54,8 @@ cmp.setup({
 		['<M-k>'] = cmp.mapping.select_prev_item(),
 		-- ----------------------------------
 		['<M-j>'] = cmp.mapping.select_next_item(),
+		-- ----------------------------------
+		['<M-l>'] = cmp.mapping.close(),
 		-- ----------------------------------
 		-- ['<Esc>'] = cmp.mapping(function(fallback)
 		-- 	if cmp.visible() then
@@ -80,38 +83,49 @@ cmp.setup({
 			elseif not cmp.visible() and luasnip.expand_or_jumpable() then
 				print("CMP [Tab]: Snipet jump")
 				luasnip.expand_or_jump()
-			elseif cmp.visible() and has_words_before() then
-				print("CMP [Tab]: sledeća stavka u meniju")
-				cmp.select_next_item()
 			else
-				print("CMP [Tab]: Tab fallback")
 				fallback()
+			-- elseif cmp.visible() and has_words_before() then
+			-- 	print("CMP [Tab]: sledeća stavka u meniju")
+			-- 	cmp.select_next_item()
+			-- else
+			-- 	print("CMP [Tab]: Tab fallback")
+			-- 	fallback()
 			end
 		end, { "i", "s" }),
-		-- ----------------------------------
-		["<S-Tab>"] = cmp.mapping(function(fallback)
-			if cmp.visible() then
-				print("CMP [Tab]: prethodna stavka u meniju")
-				cmp.select_prev_item()
-			elseif luasnip.jumpable(-1) then
-				luasnip.jump(-1)
-			else
-				print("CMP [Tab]: S-Tab fallback")
-				fallback()
-			end
-		end, { "i", "s" }),
+		-- -- ----------------------------------
+		-- ["<S-Tab>"] = cmp.mapping(function(fallback)
+		-- 	if cmp.visible() then
+		-- 		print("CMP [Tab]: prethodna stavka u meniju")
+		-- 		cmp.select_prev_item()
+		-- 	elseif luasnip.jumpable(-1) then
+		-- 		luasnip.jump(-1)
+		-- 	else
+		-- 		print("CMP [Tab]: S-Tab fallback")
+		-- 		fallback()
+		-- 	end
+		-- end, { "i", "s" }),
 		-- ----------------------------------
 	}),
 	sources = cmp.config.sources({
 		{ name = 'luasnip' }, -- For luasnip users.
 		-- { name = 'nvim_lua' }, -- Kanda neodev.vim
 		                          -- radi sve što treba
+		{
+			name = 'lazydev',
+			group_index = 0,
+		},
 		{ name = 'path' },
 		{ name = 'calc' },
 		{ name = 'nvim_lsp' },
 		{
 			name           = 'buffer',
 			keyword_length = 3,
+			option = {
+				get_bufnrs = function()
+					return vim.api.nvim_list_bufs()
+				end
+			}
 		},
 		{ name = 'nvim_lsp_signature_help' },
 	})
@@ -129,14 +143,14 @@ cmp.setup.filetype('gitcommit', {
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline('/', {
-	-- completion = { autocomplete = true },
+	completion = { autocomplete = { require('cmp.types').cmp.TriggerEvent.TextChanged } },
 	mapping    = cmp.mapping.preset.cmdline({
-		['<Down>'] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
-        ['<Up>'  ] = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
-		['<ESC>' ] = cmp.mapping.abort(),
+		['<M-j>'] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
+        ['<M-k>'] = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
+		['<M-l>'] = { c = cmp.mapping.close() }
 	}),
 	sources    = {
-		{ name = 'buffer'   },
+		{ name = 'buffer', 	},
 		{ name = 'cmdline'  },
 		{ name = 'nvim.lsp' },
 	}
@@ -148,9 +162,10 @@ cmp.setup.cmdline(':', {
 	mapping    = cmp.mapping.preset.cmdline({
 		['<M-k>'] = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
 		['<M-j>'] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
-		-- ['ESC'  ] = { c = cmp.mapping.abort() }
+		['<M-l>'] = { c = cmp.mapping.close() }
 	}),
 	sources    = cmp.config.sources({
+		{ name = 'buffer'                  },
 		{ name = 'path'                    },
 		{ name = 'cmdline'                 },
 		{ name = 'nvim_lsp'                },

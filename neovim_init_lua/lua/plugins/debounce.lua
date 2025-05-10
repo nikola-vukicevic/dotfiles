@@ -16,8 +16,8 @@ function M.debounce()
 		vim.schedule_wrap(function()
 			-- Izgleda da radi, ali - da li
 			-- je "complete" prava opcija?!
-			-- cmp.complete( { reason = cmp.ContextReason.complete } )
-			cmp.complete( { reason = cmp.ContextReason.Auto } )
+			cmp.complete( { reason = cmp.ContextReason.complete } )
+			-- cmp.complete( { reason = cmp.ContextReason.Auto } )
 		end
 	)
 )
