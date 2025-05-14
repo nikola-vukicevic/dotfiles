@@ -1,5 +1,8 @@
 -- -----------------------------------------------------------------------------
-require('dapui').setup()
+local path_dap_pwa_node = "/home/korisnik/git/js-debug/src/dapDebugServer.js"
+local path_dap_python   = "/home/korisnik/git/python_debugger/debugpy/bin/python"
+local path_dap_lua      = "/home/korisnik/git/local-lua-debugger-vscode"
+-- -----------------------------------------------------------------------------
 require('nvim-dap-virtual-text').setup({
 	-- commented = true,
 	-- virt_text_position = "eol", -- 'inline'/'eol' - izgleda da ne radi
@@ -8,7 +11,9 @@ require("lazydev").setup({
 	library = { "nvim-dap-ui" },
 })
 -- ------------------------------
-local dap = require('dap')
+local dap   = require('dap')
+local dapui = require('dapui')
+local util  = require('dap.utils')
 -- -----------------------------------------------------------------------------
 -- C/C++:
 -- -----------------------------------------------------------------------------
@@ -45,7 +50,8 @@ dap.adapters["pwa-node"] = {
 	executable = {
 		command = "node",
 		args = {
-			"/home/korisnik/git/js-debug/src/dapDebugServer.js",
+			-- "--inspect",
+			path_dap_pwa_node,
 			"${port}"
 		},
 	}
@@ -58,37 +64,33 @@ dap.configurations.javascript = {
 		name = "Launch file",
 		program = "${file}",
 		cwd = "${workspaceFolder}",
+		-- outDir = "${workspaceFolder}/bin",
+		outFiles = {
+			"${workspaceFolder}/bin/*.(m|c|)js",
+			"!**/node_modules/**"
+		}
+
 	},
 }
 -- ------------------------------
 dap.configurations.typescript = {
 	{
-		type = "pwa-node",
-		request = "launch",
-		name = "Launch file",
-		program = "${file}",
-		runtimeExecutable = "node",
-		cwd = "${workspaceFolder}",
+		type = 'pwa-node',
+		request = 'attach',
+		name = 'Attach to Node app',
+		address = 'localhost',
+		-- port = 9229,
 		protocol = "inspector",
-		sourceMaps = true,
-		outDir = "${workspaceFolder}/bin",
-		-- skipFiles = {
-		-- 	"${workspaceFolder}/node_modules/**/*.js",
-		-- 	"<node_internals>/**",
-		-- },
-		-- outFiles = { "${workspaceFolder}/bin/**/*.js" },
+		console = "integratedTerminal",
+		-- processId = util.pick_process,
+		cwd = '${workspaceFolder}',
+		-- restart = true,
+		outFiles = {
+			"${workspaceFolder}/bin/*.(m|c|)js",
+			"!**/node_modules/**"
+		}
 	},
 }
--- dap.configurations.typescript = dap.configurations.javascript
--- dap.configurations.typescript = {
--- 	{
--- 		type = "pwa-node",
--- 		request = "attach",
--- 		name = "Attach",
--- 		processId = require("dap.utils").pick_process,
--- 		cwd = "${workspaceFolder}",
--- 	},
--- }
 -- -----------------------------------------------------------------------------
 -- Python:
 -- -----------------------------------------------------------------------------
@@ -109,7 +111,7 @@ dap.adapters.python = function(cb, config)
 	else
 		cb({
 			type = 'executable',
-			command = '/home/korisnik/git/python_debugger/debugpy/bin/python',
+			command = path_dap_python,
 			args = { '-m', 'debugpy.adapter' },
 			options = {
 				source_filetype = 'python',
@@ -143,14 +145,12 @@ dap.adapters["local-lua"] = {
 	type = "executable",
 	command = "node",
 	args = {
-		"/home/korisnik/git/local-lua-debugger-vscode/extension/debugAdapter.js"
+		path_dap_lua .. "/extension/debugAdapter.js"
 	},
 	enrich_config = function(config, on_config)
 		if not config["extensionPath"] then
 			local c = vim.deepcopy(config)
-			-- 💀 If this is missing or wrong you'll see
-			-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
-			c.extensionPath = "/home/korisnik/git/local-lua-debugger-vscode"
+			c.extensionPath = path_dap_lua
 			on_config(c)
 		else
 			on_config(config)
@@ -175,10 +175,72 @@ dap.configurations.lua = {
 -- -----------------------------------------------------------------------------
 -- Fenseraj :)
 -- -----------------------------------------------------------------------------
+dapui.setup({
+	icons = {
+		expanded = "▾",
+		collapsed = "▸",
+		current_frame = "●"
+	},
+	controls = {
+		icons = {
+			pause = "⏸",
+			play = "▶",
+			step_into = "⏎",
+			step_over = ">", -- "⏭",
+			step_out = "<",  -- "⏮",
+			step_back = "b",
+			run_last = "⏭",  -- "▶▶",
+			terminate = "⏹",
+			disconnect = "⏏",
+		},
+	},
+	layouts = {
+		{
+			elements = {
+				{
+					id = "scopes",
+					size = 0.45
+				}, {
+					id = "watches",
+					size = 0.55
+				}
+			},
+			position = "left",
+			size = 32
+		},
+		{
+			elements = {
+				{
+					id = "repl",
+					size = 0.5
+				}, {
+					id = "console",
+					size = 0.5
+				}
+			},
+			position = "bottom",
+			size = 12
+		},
+		{
+			elements = {
+				{
+					id = "breakpoints",
+					size = 0.5
+				}, {
+					id = "stacks",
+					size = 0.5
+				}
+			},
+			position = "right",
+			size = 32
+		},
+	},
+})
+-- ------------------------------
 vim.fn.sign_define("DapBreakpoint",          { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = ""})
 vim.fn.sign_define("DapBreakpointCondition", { text = "●", texthl = "DapBreakpointCondition", linehl = "", numhl = ""})
 vim.fn.sign_define("DapLogPoint",            { text = "◆", texthl = "DapLogPoint", linehl = "", numhl = ""})
-vim.fn.sign_define('DapStopped',             { text = "►", texthl = "DapStopped", linehl='DapStopped', numhl= 'DapStopped' })
+vim.fn.sign_define('DapStopped',             { text = "►", texthl = "DapStopped", linehl='DapStoppedLinija', numhl= 'DapStopped' })
 -- sign('DapStopped', { text='', texthl='DapStopped', linehl='DapStopped', numhl= 'DapStopped' })
 -- -----------------------------------------------------------------------------
 
