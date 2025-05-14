@@ -3,6 +3,7 @@ vim.opt.mouse         = "a"
 vim.g.floaterm_opener = "edit"
 vim.g.jezik           = "SR"
 vim.g.spell_check     = false
+vim.g.auto_lsp_float  = false
 -- -----------------------------------------------------------------------------
 if vim.fn.argv(0) == "barebones" then
 	vim.g.barebones_CFG = true
@@ -190,6 +191,29 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 		vim.cmd [[%s/\n\{2,}\%$/\r/e]]
 		vim.fn.setpos(".", cursor_pos)
 	end,
+})
+--
+vim.api.nvim_create_autocmd({ "Cursormoved"	}, {
+	pattern = {
+		"*.c", "*.cpp", "*.h", "*.hpp",
+		"*.js", "*.ts",
+		"*.lua",
+		"*.py",
+	},
+	callback = function()
+		if vim.g.auto_lsp_float == true then
+			vim.diagnostic.open_float({
+				border = 'rounded',
+				width  = 60
+			})
+		end
+		if vim.g.auto_lsp_hover == true then
+			vim.lsp.buf.hover({
+				border = 'rounded',
+				width  = 60
+			})
+		end
+	end
 })
 -- -----------------------------------------------------------------------------
 if vim.g.barebones_CFG ~= true then
