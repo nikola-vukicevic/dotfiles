@@ -28,9 +28,11 @@ vim.keymap.set( "" , "G" ,     "G0" ,                                  opts_nr  
 vim.keymap.set( "" , "<M-o>" , "<C-o>" ,                               opts_nr  )
 vim.keymap.set( "" , "<M-i>" , "<C-i>" ,                               opts_nr  )
 vim.keymap.set( "" , "<M-z>" , "<C-r>" ,                               opts_nr  )
--- vim.keymap.set( "" , "<M-n>" , ":cprev<cr>" ,                          opts_snr )
--- vim.keymap.set( "" , "<M-m>" , ":cnext<cr>" ,                          opts_snr )
+-- vim.keymap.set( "" , "<M-k>" , "cprev" ,                          opts_snr )
+-- vim.keymap.set( "" , "<M-j>" , "cnext" ,                          opts_snr )
 vim.keymap.set( "" , "<M-a>" , ":lua vim.diagnostic.setqflist()<cr>" , opts_snr )
+vim.keymap.set( "" , "<C-a>" , ":lua AutoLSPFloatToggle()<cr>" ,       opts_snr )
+vim.keymap.set( "" , "<C-s>" , ":lua AutoLSPHoverToggle()<cr>" ,       opts_snr )
 vim.keymap.set( "" , "<M-q>" , ":lua boljiQuit()<cr>",                 opts_snr )
 vim.keymap.set( "" , "<M-r>" , ":lua renameQuickFix()<cr>" ,           opts_snr )
 -- ------ -----------------------------------------------------------------------
@@ -172,6 +174,8 @@ vim.keymap.set( "n" , "<leader>v" , ":vsp<cr>" ,  opts_nr )
 vim.keymap.set( "n" , "<M-v>" ,     ":vsp<cr>" ,  opts_snr )
 -- vim.keymap.set( "n" , "<leader>w" , "<C-w>w" ,    opts_nr )
 vim.keymap.set( "n" , "<M-w>" ,     "<C-w>w" ,    opts_snr )
+vim.keymap.set( "n" , "<Tab>" ,     "<C-w>w" ,    opts_snr )
+vim.keymap.set( "n" , "<M-Tab>" ,   "<C-w>w" ,    opts_snr )
 -- -----
 -- Tabove zapravo ne koristim često, ali,
 -- neka bude ovako

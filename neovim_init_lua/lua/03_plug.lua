@@ -45,6 +45,7 @@ require("lazy").setup(
 		"hrsh7th/nvim-cmp",
 		-- "hrsh7th/cmp-nvim-lua", -- lazydev ga poništava?
 		                           -- Da.
+		"mfussenegger/nvim-lint",
 		-- ---------------------------------------------
 		-- Snipeti:
 		-- ---------------------------------------------

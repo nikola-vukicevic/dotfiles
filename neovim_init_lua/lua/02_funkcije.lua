@@ -28,6 +28,26 @@ function JezikToggle()
 	end
 end
 -- -----------------------------------------------------------------------------
+function AutoLSPFloatToggle()
+	if vim.g.auto_lsp_float == true then
+		vim.g.auto_lsp_float = false
+		vim.notify("Isključeno automatsko prikazivanje LSP hintova")
+	else
+		vim.g.auto_lsp_float = true
+		vim.notify("Uključeno automatsko prikazivanje LSP hintova")
+	end
+end
+-- -----------------------------------------------------------------------------
+function AutoLSPHoverToggle()
+	if vim.g.auto_lsp_hover == true then
+		vim.g.auto_lsp_hover = false
+		vim.notify("Isključeno automatsko prikazivanje LSP hovera")
+	else
+		vim.g.auto_lsp_hover = true
+		vim.notify("Uključeno automatsko prikazivanje LSP hovera")
+	end
+end
+-- -----------------------------------------------------------------------------
 function OpcijeZaFormatiranje()
 	-- vim.opt.formatoptions:remove("c")
 	-- vim.opt.formatoptions:remove("r")
@@ -49,7 +69,15 @@ function DupliranjeLinijeNaGore()
 	vim.fn.setcursorcharpos(k2[2], k1[3])
 end
 -- -----------------------------------------------------------------------------
+function DaLiJeBaferQF()
+	return vim.bo.filetype == 'qf'
+end
+-- -----------------------------------------------------------------------------
 function PomeranjeLinijeNaDole()
+	-- if DaLiJeBaferQF() then
+	-- 	vim.cmd("cnext")
+	-- 	return
+	-- end
 	local r = vim.fn.getcursorcharpos(".")[2]
 	if r < vim.api.nvim_buf_line_count(0) then
 		vim.cmd(":m .+1<cr>")
@@ -57,10 +85,20 @@ function PomeranjeLinijeNaDole()
 end
 -- -----------------------------------------------------------------------------
 function PomeranjeLinijeNaGore()
+	-- if DaLiJeBaferQF() then
+	-- 	vim.cmd("cprev")
+	-- 	return
+	-- end
 	local r = vim.fn.getcursorcharpos(".")[2]
 	if r > 1 then
 		vim.cmd(":m .-2<cr>")
 	end
+end
+-- -----------------------------------------------------------------------------
+function PronalazenjeNaslova()
+	vim.cmd("vimgrep /^#\\{1,6} \\k/ %")
+	-- require('telescope.builtin').quickfix()
+	vim.cmd("copen")
 end
 -- -----------------------------------------------------------------------------
 -- UokviravanjeSelekcije:

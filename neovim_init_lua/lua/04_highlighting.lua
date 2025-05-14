@@ -227,6 +227,7 @@ end
 -- -------------------------------------------------------------------------- --
 vim.api.nvim_set_hl ( 0 , "DapBreakpoint" ,             { fg = "#5599e0" } )
 vim.api.nvim_set_hl ( 0 , "DapStopped" ,                { fg = "#e05555" } )
+vim.api.nvim_set_hl ( 0 , "DapStoppedLinija",           { bg = "#905555", fg = "#d0d0d0"})
 vim.api.nvim_set_hl ( 0 , "NvimDapVirtualText" ,        { fg = "#e05555", bg="#373945", bold = bold } )
 vim.api.nvim_set_hl ( 0 , "NvimDapVirtualTextChanged" , { fg = "#e05555", bg="#373945", bold = bold } )
 vim.api.nvim_set_hl ( 0 , "NvimDapVirtualTextChanged" , { fg = "#e05555", bg="#373945", bold = bold } )
@@ -240,9 +241,10 @@ vim.api.nvim_set_hl ( 0 , "DapUIStoppedThread" ,        { fg = "#5070c0",       
 -- -------------------------------------------------------------------------- --
 if TelescopeHL == true then
 	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,         { } )                 --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#909090" } ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#909090" }                 ) --"#2c303d", fg = "#d0d0d0" } )
 	-- vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#b0b0b0" } ) --"#2c303d", fg = "#d0d0d0" } )
-	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#f09080" } ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#f09080" }                 ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeSelection" ,      {  fg = "#e0e0e0", bg = "#464a5f" } ) --"#cad3f5", fg = "#363a4f" } )
 end
 -- -------------------------------------------------------------------------- --
 -- Breadcrumbs plugin:
