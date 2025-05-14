@@ -157,8 +157,12 @@ require("ibl").setup({
 		include = {
 			node_type = {
 				python = {
-					"while_statement",
 					"if_statement",
+					"while_statement",
+					"for_statement",
+					"list",
+					"string_content",
+					"interpolation"
 				},
 				css = {
 					"rule_set",
