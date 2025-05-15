@@ -1,6 +1,12 @@
 -- -----------------------------------------------------------------------------
 -- print("[" .. k1[2] .. ", " .. k1[3] .. "]")
 -- -----------------------------------------------------------------------------
+function PronalazenjeImenaFunkcije()
+	local ts_util = require('nvim-treesitter.ts_utils')
+	local node = ts_util.get_node_at_cursor()
+	print(node)
+end
+-- -----------------------------------------------------------------------------
 function SpelovanjeToggle()
 	if vim.g.spell_check == false then
 		vim.g.spell_check = true
@@ -46,6 +52,22 @@ function AutoLSPHoverToggle()
 		vim.g.auto_lsp_hover = true
 		vim.notify("Uključeno automatsko prikazivanje LSP hovera")
 	end
+end
+-- -----------------------------------------------------------------------------
+function FormatiranjeClang(mode)
+	local command = "clang-format -style=file:"
+	local config_file = "/home/korisnik/.config/clangd/clang_format"
+	local red    = vim.fn.line(".")
+	local kolona = vim.fn.col(".")
+
+	if mode == "n" then
+		-- vim.cmd("%!" .. command .. config_file)
+		vim.notify("Tekst mora biti selektovan!")
+	elseif mode == "v" then
+		vim.cmd("'<,'>!" .. command .. config_file)
+	end
+
+	vim.api.nvim_win_set_cursor( 0, { red, kolona - 1} )
 end
 -- -----------------------------------------------------------------------------
 function OpcijeZaFormatiranje()

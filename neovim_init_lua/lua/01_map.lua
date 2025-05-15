@@ -38,7 +38,9 @@ vim.keymap.set( "" , "<M-r>" , ":lua renameQuickFix()<cr>" ,           opts_snr 
 -- ------ -----------------------------------------------------------------------
 vim.keymap.set( "n" , "<leader><F3>" , ":lua require('prozor_proba').make_window()<cr>" ,                                                   opts_nr )
 -- ------ -----------------------------------------------------------------------
-vim.keymap.set( "" , "<leader>p" , ":!clang-format -style=file:/home/korisnik/.config/clangd/clang_format<cr>" , opts_nr )
+vim.keymap.set( "n" , "<leader>p" , ":lua FormatiranjeClang('n')<cr>" , opts_nr )
+vim.keymap.set( "v" , "<leader>p" , ":lua FormatiranjeClang('v')<cr>" , opts_nr )
+-- vim.keymap.set( "" , "<leader>p" , ":%!clang-format -style=file:/home/korisnik/.config/clangd/clang_format<cr>" , opts_nr )
 -- " ---------------------------------------------------------------------------- "
 vim.keymap.set( "n" , "<F2>" ,         ":NvimTreeToggle<cr>" ,                                                         opts_nr )
 vim.keymap.set( "n" , "<M-t>" ,        ":NvimTreeToggle<cr>" ,                                                         opts_nr )

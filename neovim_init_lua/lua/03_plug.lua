@@ -60,6 +60,7 @@ require("lazy").setup(
 			build  = ":TSUpdate",
 			-- commit = "64d1696"
 		},
+		"nvim-treesitter/nvim-treesitter-textobjects",
 		"nvim-treesitter/playground",
 		-- ---------------------------------------------
 		-- Git:
