@@ -33,8 +33,50 @@ treesitter.setup {
 			-- "php" ,
 			-- "rust"
 		},
-    additional_vim_regex_highlighting = false,
-  },
+		additional_vim_regex_highlighting = false,
+	},
+	textobjects = {
+		select = {
+			enable = true,
+			lookahead = true,
+			keymaps = {
+				["af"] = "@function.outer",
+				["if"] = "@function.inner",
+				["ac"] = "@class.outer",
+				["ic"] = "@class.inner",
+				["al"] = "@loop.outer",
+				["il"] = "@loop.inner",
+				["in"] = "@number.inner",
+				["ai"] = "@conditional.outer",
+				["ii"] = "@conditional.inner",
+				["ak"] = "@comment.outer",
+				["ik"] = "@comment.inner",
+				["aa"] = "@assignment.outer",
+				["ia"] = "@assignment.rhs",
+			}
+		},
+		move = {
+			enable = true,
+			goto_next_start = {
+				["gf"] = "@function.outer",
+				["gl"] = "@loop.outer",
+				["gc"] = "@class.outer",
+				["gi"] = "@conditional.outer",
+				["gk"] = "@comment.outer",
+				["gn"] = "@number.inner",
+				-- ["ga"] = "@assignment.rhs",
+			},
+			goto_previous_start = {
+				["gF"] = "@function.outer",
+				["gL"] = "@loop.outer",
+				["gC"] = "@class.outer",
+				["gI"] = "@conditional.outer",
+				["gK"] = "@comment.outer",
+				["gN"] = "@number.inner",
+				-- ["gA"] = "@assignment.rhs",
+			}
+		}
+	}
 }
 -- -------------------------------------------------------------------------- -
 -- Plugin - Illuminate:
