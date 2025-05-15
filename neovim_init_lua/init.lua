@@ -196,7 +196,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 vim.api.nvim_create_autocmd({ "Cursormoved"	}, {
 	pattern = {
 		"*.c", "*.cpp", "*.h", "*.hpp",
-		"*.js", "*.ts",
+		"*.js", "*.ts", "*.mjs", "*.mts", "*.cjs", "*.cts",
 		"*.lua",
 		"*.py",
 	},
