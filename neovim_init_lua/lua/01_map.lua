@@ -37,7 +37,7 @@ vim.keymap.set( "" , "<C-f>" , ":lua vim.diagnostic.jump({ count = 1  })<cr>" , 
 vim.keymap.set( "" , "<C-d>" , ":lua vim.diagnostic.jump({ count = -1 })<cr>" , opts_snr )
 vim.keymap.set( "" , "<M-q>" , ":lua boljiQuit()<cr>",                          opts_snr )
 vim.keymap.set( "" , "<M-r>" , ":lua renameQuickFix()<cr>" ,                    opts_snr )
-vim.keymap.set( "" , "<C-r>" , ":lua ToggleDiffMode()<cr>" ,                    opts_snr )
+vim.keymap.set( "" , "<C-t>" , ":lua ToggleDiffMode()<cr>" ,                    opts_snr )
 -- ------ -----------------------------------------------------------------------
 vim.keymap.set( "n" , "<leader><F3>" , ":lua require('prozor_proba').make_window()<cr>" ,                                                   opts_nr )
 -- ------ -----------------------------------------------------------------------
