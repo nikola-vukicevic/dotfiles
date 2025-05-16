@@ -54,20 +54,91 @@ function AutoLSPHoverToggle()
 	end
 end
 -- -----------------------------------------------------------------------------
-function FormatiranjeClang(mode)
-	local command = "clang-format -style=file:"
-	local config_file = "/home/korisnik/.config/clangd/clang_format"
-	local red    = vim.fn.line(".")
-	local kolona = vim.fn.col(".")
-
+function FormatiranjeClang()
+	local command         = "clang-format -style=file:"
+	local config_file_c   = "/home/korisnik/.config/clangd/clang_format_c"
+	local config_file_cpp = "/home/korisnik/.config/clangd/clang_format_cpp"
+	-- local red    = vim.fn.line(".")
+	-- local kolona = vim.fn.col(".")
+	if vim.bo.filetype == "c" then
+		vim.cmd("'<,'>!" .. command .. config_file_c)
+	elseif vim.bo.filetype == "cpp" then
+		vim.cmd("'<,'>!" .. command .. config_file_cpp)
+	end
+	-- vim.api.nvim_win_set_cursor( 0, { red, kolona - 1} )
+end
+-- -----------------------------------------------------------------------------
+function FormatiranjePython()
+	local command     = "ruff format --config "
+	local config_file = "/home/korisnik/sajtovi/.ruff.toml"
+	vim.cmd("'<,'>!" .. command .. config_file .. " -")
+end
+-- -----------------------------------------------------------------------------
+function FormatiranjeTsJsStari()
+	local command     = "prettier --parser typescript --config "
+	local config_file = "/home/korisnik/sajtovi/.prettierrc"
+	vim.cmd("'<,'>!" .. command .. config_file)
+end
+-- -----------------------------------------------------------------------------
+function FormatiranjeTsJs()
+	local command     = "deno fmt - --config "
+	local config_file = "/home/korisnik/sajtovi/deno.json"
+	vim.cmd("'<,'>!" .. command .. config_file)
+end
+-- -----------------------------------------------------------------------------
+function FormatiranjeJson()
+	local command     = "deno fmt - --ext json --config "
+	local config_file = "/home/korisnik/sajtovi/deno.json"
+	vim.cmd("'<,'>!" .. command .. config_file)
+end
+-- -----------------------------------------------------------------------------
+function FormatiranjeYaml()
+	local command     = "deno fmt - --ext yaml --config "
+	local config_file = "/home/korisnik/sajtovi/deno_yaml.json"
+	vim.cmd("'<,'>!" .. command .. config_file)
+end
+-- -----------------------------------------------------------------------------
+function FormatiranjeCss()
+	local command     = "deno fmt - --ext css --config "
+	local config_file = "/home/korisnik/sajtovi/deno.json"
+	vim.cmd("'<,'>!" .. command .. config_file)
+end
+-- -----------------------------------------------------------------------------
+function FormatiranjeIzvornogKoda(mode)
 	if mode == "n" then
-		-- vim.cmd("%!" .. command .. config_file)
 		vim.notify("Tekst mora biti selektovan!")
-	elseif mode == "v" then
-		vim.cmd("'<,'>!" .. command .. config_file)
+		return
 	end
 
-	vim.api.nvim_win_set_cursor( 0, { red, kolona - 1} )
+	if mode ~= "v" then return end
+
+	local tip = vim.bo.filetype
+
+	if tip == "c" or tip == "cpp" then
+		FormatiranjeClang()
+	elseif tip == "javascript" or tip == "typescript" then
+		FormatiranjeTsJs()
+	elseif tip == "json" then
+		FormatiranjeJson()
+	elseif tip == "yaml" then
+		FormatiranjeYaml()
+	elseif tip == "css" then
+		FormatiranjeCss()
+	elseif tip == "python" then
+		FormatiranjePython()
+	end
+end
+-- -----------------------------------------------------------------------------
+function ToggleDiffMode()
+	if vim.g.diff_mode == true then
+		vim.g.diff_mode = false
+		vim.cmd("diffoff")
+		vim.notify("Diff režim isključen")
+	else
+		vim.g.diff_mode = true
+		vim.cmd("windo diffthis")
+		vim.notify("Diff režim aktiviran")
+	end
 end
 -- -----------------------------------------------------------------------------
 function OpcijeZaFormatiranje()
