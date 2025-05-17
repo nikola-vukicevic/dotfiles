@@ -65,7 +65,8 @@ vim.keymap.set( "v" , "<F5>" ,         ":lua UokviravanjeSelekcije('v')<cr>" ,  
 -- nnoremap <F7> :w !python /home/korisnik/git/python/markdown/idiosync_parser.py<cr>
 vim.keymap.set( "" , "<F7>" ,         ":lua SpelovanjeToggle()<cr>" , opts_nr )
 vim.keymap.set( "" , "<leader><F7>" , ":lua JezikToggle()<cr>" ,      opts_nr )
--- vim.keymap.set( "" , "<leader>g" , ":AerialToggle<cr>"           , opts_nr )
+-- vim.keymap.set( "" , "<leader>g" ,    ":AerialToggle<cr>"           , opts_nr )
+vim.keymap.set( "" , "<leader>g" ,    ":Outline<cr>"           ,      opts_nr )
 --
 vim.keymap.set( "v" , "<" ,         "<gv" ,                        opts_nr )
 vim.keymap.set( "v" , ">" ,         ">gv" ,                        opts_nr )

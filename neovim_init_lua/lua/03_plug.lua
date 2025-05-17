@@ -220,6 +220,25 @@ require("lazy").setup(
 			---@type ibl.config
 			opts = {},
 		},
+		{
+			"hedyhli/outline.nvim",
+			config = function()
+				require("outline").setup {
+					outline_window = {
+						width = 36,
+						relative_width = false,
+					},
+					keymaps = {
+						toggle_preview = "h",
+					},
+					symbols = {
+						icons = {
+							Function = { icon = 'f', hl = 'OutlineFunction' },
+						}
+					}
+				}
+			end,
+		},
 		-- "nikola-vukicevic/breadcrumbs-nvim",
 		-- "nikola-vukicevic/util-input-window.nvim",
 		-- ---------------------------------------------

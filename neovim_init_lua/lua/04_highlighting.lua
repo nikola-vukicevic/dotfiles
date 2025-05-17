@@ -111,6 +111,9 @@ if basicHL == true then
 	-- Scope highlighting(indentmini):
 	-- vim.api.nvim_set_hl(0, "IndentLine",        { fg = '#323d37' } )
 	-- vim.api.nvim_set_hl(0, "IndentLineCurrent", { fg = '#505050' } )
+	-- Outline:
+	vim.api.nvim_set_hl(0, "OutlineGuides",   { fg = '#505050' } )
+	vim.api.nvim_set_hl(0, "OutlineFunction", { fg = boja_111, bold = bold } )
 end
 -- -----------------------------------------------------------------------------
 -- nvim-cmp
