@@ -59,6 +59,7 @@ vim.keymap.set( "n" , "<leader><F4>" , ":Telescope live_grep<cr>" , opts_nr )
 vim.keymap.set( "n" , "<M-s>" ,        ":Telescope live_grep<cr>" , opts_nr )
 vim.keymap.set( "n" , "<F5>" ,         ":lua UokviravanjeSelekcije('n')<cr>" ,                                         opts_nr )
 vim.keymap.set( "v" , "<F5>" ,         ":lua UokviravanjeSelekcije('v')<cr>" ,                                         opts_nr )
+vim.keymap.set( "n" , "<leader><F9>" , ":lua UklanjanjeNepotrebnihWhitespaceova('n')<cr>" ,                            opts_nr )
 -- ---------------------------------------------------------
 --
 -- map      <F6> :Tabularize /

@@ -141,6 +141,14 @@ function ToggleDiffMode()
 	end
 end
 -- -----------------------------------------------------------------------------
+function UklanjanjeNepotrebnihWhitespaceova()
+	local cursor_pos = vim.fn.getpos(".")
+	vim.cmd [[%s/\s\+$//e]]
+	vim.cmd [[%s/\n\{2,}\%$/\r/e]]
+	vim.fn.setpos(".", cursor_pos)
+	vim.notify("Uklonjen višak whitespace znakova sa krajeva redova.")
+end
+-- -----------------------------------------------------------------------------
 function OpcijeZaFormatiranje()
 	-- vim.opt.formatoptions:remove("c")
 	-- vim.opt.formatoptions:remove("r")

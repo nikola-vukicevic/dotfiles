@@ -24,6 +24,7 @@ require("lazy").setup(
 					-- See the configuration section for more details
 					-- Load luvit types when the `vim.uv` word is found
 					{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+					"nvim-dap-ui"
 				},
 			},
 		},
@@ -63,9 +64,20 @@ require("lazy").setup(
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		"nvim-treesitter/playground",
 		-- ---------------------------------------------
+		-- DAP:
+		-- ---------------------------------------------
+		"mfussenegger/nvim-dap",
+		{
+			"rcarriga/nvim-dap-ui",
+			dependencies = {
+				-- "mfussenegger/nvim-dap",
+				"nvim-neotest/nvim-nio"
+			}
+		},
+		"theHamsta/nvim-dap-virtual-text",
+		-- ---------------------------------------------
 		-- Git:
 		-- ---------------------------------------------
-		-- nvim v0.8.0
 		{
 			"kdheepak/lazygit.nvim",
 			lazy = true,
@@ -163,6 +175,28 @@ require("lazy").setup(
 			end
 		},
 		-- ---------------------------------------------
+		-- LSP symbols side window:
+		-- ---------------------------------------------
+		{
+			"hedyhli/outline.nvim",
+			config = function()
+				require("outline").setup {
+					outline_window = {
+						width = 36,
+						relative_width = false,
+					},
+					keymaps = {
+						toggle_preview = "h",
+					},
+					symbols = {
+						icons = {
+							Function = { icon = 'f', hl = 'OutlineFunction' },
+						}
+					}
+				}
+			end,
+		},
+		-- ---------------------------------------------
 		-- Color themes:
 		-- ---------------------------------------------
 		-- "drewtempelmeyer/palenight.vim",
@@ -190,15 +224,6 @@ require("lazy").setup(
 		-- },
 		"windwp/nvim-autopairs",
 		"RRethy/vim-illuminate",
-		"mfussenegger/nvim-dap",
-		{
-			"rcarriga/nvim-dap-ui",
-			dependencies = {
-				"mfussenegger/nvim-dap",
-				"nvim-neotest/nvim-nio"
-			}
-		},
-		"theHamsta/nvim-dap-virtual-text",
 		-- "jiangmiao/auto-pairs",
 		-- "LunarWatcher/auto-pairs",
 		-- "cohama/lexima.vim",
@@ -219,25 +244,6 @@ require("lazy").setup(
 			---@module "ibl"
 			---@type ibl.config
 			opts = {},
-		},
-		{
-			"hedyhli/outline.nvim",
-			config = function()
-				require("outline").setup {
-					outline_window = {
-						width = 36,
-						relative_width = false,
-					},
-					keymaps = {
-						toggle_preview = "h",
-					},
-					symbols = {
-						icons = {
-							Function = { icon = 'f', hl = 'OutlineFunction' },
-						}
-					}
-				}
-			end,
 		},
 		-- "nikola-vukicevic/breadcrumbs-nvim",
 		-- "nikola-vukicevic/util-input-window.nvim",

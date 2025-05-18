@@ -84,6 +84,9 @@ if basicHL == true then
 	vim.cmd("hi DiagnosticUnnecessary  guifg=#665550") -- 66554
 	vim.cmd("hi StartifyFile           guifg=#ee5599")
 	vim.cmd("hi IlluminatedWordText    guibg=none guifg=#ffeedd")
+	-- CMP MENU:
+	vim.cmd("hi CMPWindow  guibg=#303240")
+	vim.cmd("hi CMPLine    guibg=#404150")
 	-- vim.cmd("hi IlluminatedWordText    guibg=#334444 guifg=#ffeedd")
 	-- Float:
 	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                 --"#2c303d",                } )
@@ -122,13 +125,19 @@ vim.api.nvim_set_hl ( 0 , "CMPGhostText" , { fg = "#5a5b64" , bg = "#333541", bo
 -- vim.api.nvim_set_hl ( 0 , "BlinkCmpGhostText" ,  { fg = "#5a5b64" , bg = None , bold = false } )
 --
 if cmpHL == true then
-	vim.api.nvim_set_hl ( 0 , "CmpItemMenuDefault" , { fg = "#999999" , bg = "#333541", bold = false } )
-	vim.cmd("hi CmpItemKind               guifg=#77aaff")
-	vim.cmd("hi CmpItemAbbrMatch          guibg=NONE guifg=#eedd77")
-	vim.cmd("hi CmpItemKindSnippetDefault guibg=NONE guifg=#cc8833")
-	vim.cmd("hi CmpItemKindTextDefault    guibg=NONE guifg=#dddddd")
-	vim.cmd("hi CmpItemKindFolderDefault  guibg=NONE guifg=#cc3388")
-	vim.cmd("hi CmpItemKindFileDefault    guibg=NONE guifg=#cc3388")
+	-- vim.api.nvim_set_hl ( 0 , "CmpItemMenuDefault" ,        { fg = "#999999" , bg = "#333541", bold = false } )
+	-- vim.api.nvim_set_hl ( 0 , "CmpItemKind" ,               { fg = "#77aaff" , bold = false } )
+	-- vim.api.nvim_set_hl ( 0 , "CmpItemAbbrMatch" ,          { fg = "#77aaff" , bold = false } )
+	-- vim.api.nvim_set_hl ( 0 , "CmpItemKindSnippetDefault" , { fg = "#77aaff" , bold = false } )
+	-- vim.api.nvim_set_hl ( 0 , "CmpItemKindTextDefault" ,    { fg = "#77aaff" , bold = false } )
+	-- vim.api.nvim_set_hl ( 0 , "CmpItemKindFolderDefault" ,  { fg = "#77aaff" , bold = false } )
+	-- vim.api.nvim_set_hl ( 0 , "CmpItemKindFileDefault" ,    { fg = "#77aaff" , bold = false } )
+	-- vim.cmd("hi CmpItemKind               guifg=#77aaff")
+	-- vim.cmd("hi CmpItemAbbrMatch          guibg=NONE guifg=#eedd77")
+	-- vim.cmd("hi CmpItemKindSnippetDefault guibg=NONE guifg=#cc8833")
+	-- vim.cmd("hi CmpItemKindTextDefault    guibg=NONE guifg=#dddddd")
+	-- vim.cmd("hi CmpItemKindFolderDefault  guibg=NONE guifg=#cc3388")
+	-- vim.cmd("hi CmpItemKindFileDefault    guibg=NONE guifg=#cc3388")
 end
 -- -----------------------------------------------------------------------------
 -- Treesitter:
