@@ -7,9 +7,6 @@ require('nvim-dap-virtual-text').setup({
 	-- commented = true,
 	-- virt_text_position = "eol", -- 'inline'/'eol' - izgleda da ne radi
 })
-require("lazydev").setup({
-	library = { "nvim-dap-ui" },
-})
 -- ------------------------------
 local dap   = require('dap')
 local dapui = require('dapui')

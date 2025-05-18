@@ -32,6 +32,9 @@ cmp.setup({
 		},
 	},
 	window = {
+		completion = {
+			winhighlight = "Normal:CMPWindow,CursorLine:CMPLine"
+		},
 		-- completion    = cmp.config.window.bordered(),
 		documentation = cmp.config.window.bordered(),
 	},
@@ -51,11 +54,17 @@ cmp.setup({
 		}),
 	},
 	mapping = cmp.mapping.preset.insert({
-		['<M-k>'] = cmp.mapping.select_prev_item(),
+		['<M-k>'] = cmp.mapping.select_prev_item({
+			behavior = cmp.SelectBehavior.Select 
+		}),
 		-- ----------------------------------
-		['<M-j>'] = cmp.mapping.select_next_item(),
+		['<M-j>'] = cmp.mapping.select_next_item({
+			behavior = cmp.SelectBehavior.Select 
+		}),
 		-- ----------------------------------
-		['<M-l>'] = cmp.mapping.close(),
+		['<M-h>'] = cmp.mapping.close(),
+		-- ----------------------------------
+		['<M-l>'] = cmp.mapping.confirm(),
 		-- ----------------------------------
 		-- ['<Esc>'] = cmp.mapping(function(fallback)
 		-- 	if cmp.visible() then
