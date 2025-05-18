@@ -184,15 +184,15 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 	end
 })
 --
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-	pattern = {"*"},
-	callback = function()
-		local cursor_pos = vim.fn.getpos(".")
-		vim.cmd [[%s/\s\+$//e]]
-		vim.cmd [[%s/\n\{2,}\%$/\r/e]]
-		vim.fn.setpos(".", cursor_pos)
-	end,
-})
+-- vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+-- 	pattern = {"*"},
+-- 	callback = function()
+-- 		local cursor_pos = vim.fn.getpos(".")
+-- 		vim.cmd [[%s/\s\+$//e]]
+-- 		vim.cmd [[%s/\n\{2,}\%$/\r/e]]
+-- 		vim.fn.setpos(".", cursor_pos)
+-- 	end,
+-- })
 --
 vim.api.nvim_create_autocmd({ "Cursormoved"	}, {
 	pattern = {
