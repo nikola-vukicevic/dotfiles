@@ -1,67 +1,67 @@
 -- -----------------------------------------------------------------------------
 local path_lua_ls = "/home/korisnik/git/lua-language-server/bin/lua-language-server"
 -- -----------------------------------------------------------------------------
-vim.api.nvim_create_autocmd("LspAttach", {
-	callback = function(ev)
-		-- client.server_capabilities.semanticTokensProvider = nil
-		local client = vim.lsp.get_client_by_id(ev.data.client_id)
-		local bufnr  = ev.buf
-		if client.server_capabilities.documentSymbolProvider then
-			vim.api.nvim_create_autocmd(
-				{
-					"InsertLeave",
-					"BufEnter",
-					"CursorHold"
-				} , {
-				command = "lua require('breadcrumbs').Load()",
-				buffer  = bufnr,
-			})
-			--
-			vim.api.nvim_create_autocmd("CursorMoved" , {
-				command = "lua require('breadcrumbs').Update()",
-				buffer  = bufnr,
-			})
-			--
-			vim.api.nvim_create_autocmd("BufDelete" , {
-				command = "lua require('breadcrumbs').Reset()",
-				buffer  = bufnr,
-			})
-			--
-			require('breadcrumbs').Load()
-			--
-		end
-		--
-		vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-		vim.api.nvim_buf_set_option(0, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-	end
-})
+local autoStartLSP  = true
+--
+local aktivanC      = true
+local aktivanCss    = true
+local aktivanHtml   = true
+local aktivanTsJs   = true
+local aktivanLua    = true
+local aktivanPython = true
+local aktivanPhp    = true
+local aktivanRust   = true
+local aktivanZig    = true
+--
+local listaServera = { }
 -- -----------------------------------------------------------------------------
-vim.lsp.config["clangd"] = {
+-- C/C++:
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanC == true then
+--
+local nazivServeraC = "clangd"
+--
+vim.lsp.config[nazivServeraC] = {
 	cmd = {
 		"clangd",
 		"--clang-tidy",
 		"--background-index",
+		"-j=2", -- # of async workers
 		"--log=verbose",
-		"--suggest-missing-includes",
-		"--cross-file-rename",
-		--
-		"-j=12",
-		"--query-driver=/usr/bin/**/clang-*,/bin/clang,/bin/clang++,/usr/bin/gcc,/usr/bin/g++",
-		-- "--clang-tidy-checks=*",
-		"--all-scopes-completion",
+		"-pretty",
 		"--completion-style=detailed",
+		"--query-driver=/usr/bin/**/clang-*,/bin/clang,/bin/clang++,/usr/bin/gcc,/usr/bin/g++",
+		"--all-scopes-completion",
+		--
 		"--header-insertion-decorators",
 		"--header-insertion=iwyu",
 		"--pch-storage=memory",
+		--
+		-- "--suggest-missing-includes",
+		-- "--cross-file-rename",
+		-- "--clang-tidy-checks=*",
 	},
 	root_markers = {
-		'compile_commands.json',
-		'compile_flags.txt'
+		"compile_commands.json",
+		"compile_flags.txt"
 	},
-	filetypes = { 'c', 'cpp' },
+	filetypes = {
+		"c",
+		"cpp"
+	},
 }
+--
+table.insert(listaServera, nazivServeraC)
+--
+end
 -- -----------------------------------------------------------------------------
-vim.lsp.config["cssls"] = {
+-- CSS:
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanCss == true then
+--
+local nazivServeraCss = "cssls"
+--
+vim.lsp.config[nazivServeraCss] = {
 	cmd = {
 		"vscode-css-language-server",
 		"--stdio"
@@ -75,8 +75,18 @@ vim.lsp.config["cssls"] = {
 		}
 	},
 }
+--
+table.insert(listaServera, nazivServeraCss)
+--
+end
 -- -----------------------------------------------------------------------------
-vim.lsp.config["html"] = {
+-- HTML:
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanHtml == true then
+--
+local nazivServeraHtml = "html"
+--
+vim.lsp.config[nazivServeraHtml] = {
 	cmd = {
 		"vscode-html-language-server",
 		"--stdio"
@@ -84,9 +94,40 @@ vim.lsp.config["html"] = {
 	filetypes = {
 		"html",
 	},
+	root_markers = {
+		".git",
+		"package.json"
+	},
+	settings = { },
+	init_options = {
+		provideFormatter = true,
+		embeddedLanguages = {
+			css = true,
+			javascript = true
+		},
+		-- configurationSection = {
+		-- 	'html',
+		-- 	'css',
+		-- 	'javascript'
+		-- },
+		-- hover = {
+		-- 	documentation = true,
+		-- 	references = true
+		-- }
+	},
 }
+--
+table.insert(listaServera, nazivServeraHtml)
+--
+end
 -- -----------------------------------------------------------------------------
-vim.lsp.config["ts_ls"] = {
+-- TypeScript/JavaScript:
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanTsJs == true then
+--
+local nazivServeraTsJs = "ts_ls"
+--
+vim.lsp.config[nazivServeraTsJs] = {
 	cmd = {
 		"typescript-language-server",
 		"--stdio"
@@ -96,98 +137,151 @@ vim.lsp.config["ts_ls"] = {
 		"typescript",
 	},
 }
+--
+table.insert(listaServera, nazivServeraTsJs)
+--
+end
 -- -----------------------------------------------------------------------------
-vim.lsp.config["lua_ls"] = {
+-- Lua:
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanLua == true then
+--
+local nazivServeraLua = "lua_ls"
+--
+vim.lsp.config[nazivServeraLua] = {
 	cmd          = {
 		path_lua_ls
 	},
 	filetypes = { 'lua' },
-	root_markers = { '.luarc.json', '.luarc.jsonc' },
+	root_markers = {
+		".luarc.json",
+		".luarc.jsonc"
+	},
 	settings = {
 		Lua = {
 			runtime = {
-				version = 'LuaJIT',
+				version = "LuaJIT",
 			}
 		}
 	}
 }
+--
+table.insert(listaServera, nazivServeraLua)
+--
+end
 -- -----------------------------------------------------------------------------
-vim.lsp.config["pyright"] = {
-	cmd = { 'pyright-langserver', '--stdio' },
-	filetypes = { 'python' },
+-- Python:
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanPython == true then
+--
+local nazivServeraPython = "pyright"
+--
+vim.lsp.config[nazivServeraPython] = {
+	cmd = {
+		"pyright-langserver",
+		"--stdio"
+	},
+	filetypes = {
+		"python"
+	},
 	root_markers = {
-		'pyproject.toml',
-		'setup.py',
-		'setup.cfg',
-		'requirements.txt',
-		'Pipfile',
-		'pyrightconfig.json',
-		'.git',
+		"pyproject.toml",
+		"setup.py",
+		"setup.cfg",
+		"requirements.txt",
+		"Pipfile",
+		"pyrightconfig.json",
+		".git",
 	},
 	settings = {
 		python = {
 			analysis = {
 				autoSearchPaths = true,
 				useLibraryCodeForTypes = true,
-				diagnosticMode = 'openFilesOnly',
+				diagnosticMode = "openFilesOnly",
 			},
 		},
 	},
 }
+--
+table.insert(listaServera, nazivServeraPython)
+--
+end
+-- -----------------------------------------------------------------------------
+-- PHP:
 -- -----------------------------------------------------------------------------
 -- Intelephense nema rename u besplatnoj verziji, a phpactor je
 -- generalno 'ispran' po pitanju opcija. :(
--- vim.lsp.config["intelephense"] = {
--- 	cmd = {
--- 		'intelephense',
--- 		'--stdio'
--- 	},
--- 	filetypes = {
--- 		'php'
--- 	},
--- 	root_dir = function(bufnr, on_dir)
--- 		local fname = vim.api.nvim_buf_get_name(bufnr)
--- 		local cwd = assert(vim.uv.cwd())
--- 		local root = vim.fs.root(fname, { 'composer.json', '.git' })
--- 		-- prefer cwd if root is a descendant
--- 		on_dir(root and vim.fs.relpath(cwd, root) and cwd)
--- 	end,
--- }
--- -----------------------------------------------------------------------------
-vim.lsp.enable({
-	"clangd",
-	"cssls",
-	"html",
-	"ts_ls",
-	"lua_ls",
-	"pyright",
-	-- "intelephense",
-})
--- -----------------------------------------------------------------------------
---    
-vim.diagnostic.config({
-	signs = {
-		text = {
-			[vim.diagnostic.severity.ERROR] = "",
-			[vim.diagnostic.severity.WARN]  = "",
-			[vim.diagnostic.severity.INFO]  = "",
-			[vim.diagnostic.severity.HINT]  = "",
-		},
-		texthl = {
-			[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
-			[vim.diagnostic.severity.WARN]  = "DiagnosticSignWarn",
-			[vim.diagnostic.severity.INFO]  = "DiagnosticSignInfo",
-			[vim.diagnostic.severity.HINT]  = "DiagnosticSignHint",
-		},
+if autoStartLSP == true and aktivanPhp == true then
+--
+local nazivServeraPhp = "intelephense"
+--
+vim.lsp.config[nazivServeraPhp] = {
+	cmd = {
+		"intelephense",
+		"--stdio"
 	},
-	severity_sort = true,
-	-- underline = true,
-	-- virtual_text = {
-		-- severity = {
-		-- 	min = vim.diagnostic.severity.WARN,
-		-- 	max = vim.diagnostic.severity.WARN,
-		-- },
-	-- }
-})
+	filetypes = {
+		"php"
+	},
+	root_dir = function(bufnr, on_dir)
+		local fname = vim.api.nvim_buf_get_name(bufnr)
+		local cwd = assert(vim.uv.cwd())
+		local root = vim.fs.root(fname, { "composer.json", ".git" })
+		-- prefer cwd if root is a descendant
+		on_dir(root and vim.fs.relpath(cwd, root) and cwd)
+	end,
+}
+--
+table.insert(listaServera, nazivServeraPhp)
+--
+end
+-- -----------------------------------------------------------------------------
+-- Rust:
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanRust == true then
+--
+local nazivServeraRust = "rust_analyzer"
+--
+vim.lsp.config[nazivServeraRust] = {
+	cmd = {
+		"rust-analyzer"
+	},
+	filetypes = {
+		"rust"
+	},
+}
+--
+table.insert(listaServera, nazivServeraRust)
+--
+end
+-- -----------------------------------------------------------------------------
+-- Zig:
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanZig == true then
+--
+local nazivServeraZig = "zls"
+--
+vim.lsp.config[nazivServeraZig] = {
+	cmd = {
+		"zls"
+	},
+	filetypes = {
+		"zig",
+		"zir"
+	},
+	root_markers = {
+		"zls.json",
+		"build.zig",
+		".git",
+	},
+	workspace_required = false
+}
+--
+table.insert(listaServera, nazivServeraZig)
+--
+end
+-- -----------------------------------------------------------------------------
+vim.lsp.enable(listaServera)
 -- -----------------------------------------------------------------------------
 
