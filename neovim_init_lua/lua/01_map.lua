@@ -235,8 +235,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		local opts_sexp = { buffer = ev.buf, expr = true, silent = true }
 		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-		vim.keymap.set('n', 'gh', function() vim.lsp.buf.hover({ border = 'single' }) end, opts)
-		vim.keymap.set('n', 'ga', ":lua vim.diagnostic.open_float({ border='single', width=60 })<cr>", opts_nr )
+		vim.keymap.set('n', 'gh', function() LSPHover() end, opts)
+		-- vim.keymap.set('n', 'gh', function() vim.lsp.buf.hover({ border = 'rounded' }) end, opts)
+		vim.keymap.set('n', 'ga', ":lua vim.diagnostic.open_float({ border='rounded', width=60 })<cr>", opts_nr )
 		-- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
 		-- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
 		-- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)

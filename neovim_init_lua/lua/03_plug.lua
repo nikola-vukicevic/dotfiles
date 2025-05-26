@@ -33,7 +33,7 @@ require("lazy").setup(
 		-- "nvim-tree/nvim-tree.lua",
 		"dstein64/vim-startuptime",
 		-- ---------------------------------------------
-		-- LSP (i pomoćni)
+		-- LSP (i pomoćni):
 		-- ---------------------------------------------
 		-- "neovim/nvim-lspconfig",
 		"onsails/lspkind.nvim",
@@ -42,17 +42,86 @@ require("lazy").setup(
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-cmdline",
 		"hrsh7th/cmp-calc",
-		"hrsh7th/cmp-nvim-lsp-signature-help",
+		-- "hrsh7th/cmp-nvim-lsp-signature-help",
 		"hrsh7th/nvim-cmp",
 		-- "hrsh7th/cmp-nvim-lua", -- lazydev ga poništava?
 		                           -- Da.
-		"mfussenegger/nvim-lint",
+		{
+			"Fildo7525/pretty_hover",
+			event = "LspAttach",
+			opts = {}
+		},
+		{
+			"ray-x/lsp_signature.nvim",
+			event = "InsertEnter",
+			opts = {
+				-- cfg options
+				max_width = 20;
+				hint_prefix = ">> ";
+				hint_scheme = "LspSignatureHint";
+			},
+		},
+-- {
+-- 	'saghen/blink.cmp',
+-- 	dependencies = { 'rafamadriz/friendly-snippets' },
+--
+-- 	version = '1.*',
+--
+-- 	---@module 'blink.cmp'
+-- 	---@type blink.cmp.Config
+-- 	opts = {
+-- 		keymap = {
+-- 			preset = 'enter';
+-- 			["<M-k>"] = { "select_prev" , "fallback" };
+-- 			["<M-j>"] = { "select_next" , "fallback" };
+-- 		};
+-- 		appearance = {
+-- 			nerd_font_variant = 'mono'
+-- 		};
+-- 		completion = {
+-- 			menu = {
+-- 				auto_show = true;
+-- 				auto_show_delay_ms = 400;
+-- 			};
+-- 			documentation = {
+-- 				window = {
+-- 					border = "rounded";
+-- 				};
+-- 				auto_show = true;
+-- 				auto_show_delay_ms = 500;
+-- 			};
+-- 			ghost_text = {
+-- 				enabled = true;
+-- 			};
+-- 		};
+-- 		snippets = { preset = "luasnip" };
+-- 		signature = {
+-- 			enabled = true;
+-- 			trigger = {
+-- 				show_on_insert = true;
+-- 			};
+-- 			window = {
+-- 				border = "rounded";
+-- 				max_width = 60;
+-- 			};
+-- 		};
+-- 		sources = {
+-- 			default = { 'lsp', 'path', 'snippets', 'buffer' },
+-- 		};
+-- 		fuzzy = { implementation = "prefer_rust_with_warning" };
+-- 	},
+-- 	opts_extend = { "sources.default" }
+-- },
 		-- ---------------------------------------------
 		-- Snipeti:
 		-- ---------------------------------------------
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip",
 		"rafamadriz/friendly-snippets",
+		-- ---------------------------------------------
+		-- Linter:
+		-- ---------------------------------------------
+		"mfussenegger/nvim-lint",
 		-- ---------------------------------------------
 		-- Tree-sitter
 		-- ---------------------------------------------
@@ -107,16 +176,16 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		-- "ibhagwan/fzf-lua",
 		{
-			'nvim-telescope/telescope.nvim',
-			tag = '0.1.8',
+			"nvim-telescope/telescope.nvim",
+			tag = "0.1.8",
 			-- branch = 'feat/unwritten-buffer-previewer',
 			-- branch = '0.1.x',
 			-- branch = 'master',
-			dependencies = { 'nvim-lua/plenary.nvim' }
+			dependencies = { "nvim-lua/plenary.nvim" }
 		},
 		{
-			'nvim-telescope/telescope-fzf-native.nvim',
-			run = 'make'
+			"nvim-telescope/telescope-fzf-native.nvim",
+			run = "make"
 		},
 		"nvim-telescope/telescope-ui-select.nvim",
 		-- ---------------------------------------------
@@ -130,8 +199,8 @@ require("lazy").setup(
 		{
 			"goolord/alpha-nvim",
 			config = function()
-				local alpha = require'alpha'
-				local startify = require'alpha.themes.startify'
+				local alpha = require"alpha"
+				local startify = require"alpha.themes.startify"
 				startify.section.header.val = CowSay
 				-- startify.section.header.val = {
 				-- 	"                                                     ",
@@ -144,10 +213,23 @@ require("lazy").setup(
 				-- 	"  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
 				-- }
 				startify.section.bottom_buttons.val = {
-					startify.button( "q", "  Quit" , ":lua AlphaQuit()<cr>"),
+					startify.button( "s", "Select session" , ":lua require('persistence').select()<cr>"),
+					startify.button( "r", "Restore last session (cwd)" , ":lua require('persistence').load()<cr>"),
+					startify.button( "l", "Restore last session" , ":lua require('persistence').load({ last = true })<cr>"),
+					startify.button( "q", " Quit" , ":lua AlphaQuit()<cr>"),
 				}
 				alpha.setup(startify.config)
 			end
+		},
+		-- ---------------------------------------------
+		-- Session management:
+		-- ---------------------------------------------
+		{
+			"folke/persistence.nvim",
+			event = "BufReadPre", -- this will only start session saving when an actual file was opened
+			opts = {
+			-- add any custom options here
+			}
 		},
 		-- ---------------------------------------------
 		-- lf nvim:
@@ -162,14 +244,14 @@ require("lazy").setup(
 		{
 			"numToStr/Comment.nvim",
 			config = function()
-				require('Comment').setup({
+				require("Comment").setup({
 					toggler = {
-						line  = '<M-g>',
-						block = '<M-c>',
+						line  = "<M-g>",
+						block = "<M-c>",
 					},
 					opleader = {
-						line  = '<M-g>',
-						block = '<M-c>',
+						line  = "<M-g>",
+						block = "<M-c>",
 					}
 				})
 			end
@@ -190,7 +272,7 @@ require("lazy").setup(
 					},
 					symbols = {
 						icons = {
-							Function = { icon = 'f', hl = 'OutlineFunction' },
+							Function = { icon = "f", hl = "OutlineFunction" },
 						}
 					}
 				}
@@ -233,7 +315,7 @@ require("lazy").setup(
 		{
 			"rcarriga/nvim-notify",
 			config = function()
-				vim.notify = require('notify')
+				vim.notify = require("notify")
 			end
 		},
 		"kevinhwang91/nvim-bqf",

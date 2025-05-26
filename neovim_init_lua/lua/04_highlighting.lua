@@ -84,39 +84,61 @@ if basicHL == true then
 	vim.cmd("hi DiagnosticUnnecessary  guifg=#665550") -- 66554
 	vim.cmd("hi StartifyFile           guifg=#ee5599")
 	vim.cmd("hi IlluminatedWordText    guibg=none guifg=#ffeedd")
+	-- -----
 	-- CMP MENU:
-	vim.cmd("hi CMPWindow  guibg=#303240")
-	vim.cmd("hi CMPLine    guibg=#404150")
+	vim.cmd("hi CMPWindow  guibg=#30313a")
+	vim.cmd("hi CMPLine    guibg=#3c3e5a")
 	-- vim.cmd("hi IlluminatedWordText    guibg=#334444 guifg=#ffeedd")
+	-- Ovo ispod je zapravo lsp signature i veliko je pitanje da li
+	-- je ovakav 'hacky' način podešavanja highlighta korektan?!
+	-- vim.api.nvim_set_hl ( 0 , "MarkdownBoldItalic" ,  { fg = boja_111, italic = true, bold = true } )                 --"#2c303d",                } )
+	vim.api.nvim_set_hl ( 0 , "LspSignatureActiveParameter" ,  { bg = '#404150', fg = boja_111, bold = true } )                 --"#2c303d",                } )
+	vim.api.nvim_set_hl ( 0 , "LspSignatureHint" ,             { fg = '#e0a080', bold = true } )                 --"#2c303d",                } )
+	-- -----
 	-- Float:
 	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                 --"#2c303d",                } )
 	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#cc8833' } )   --"#2c303d",                } )
 	-- vim.cmd("hi NormalFloat    guibg=boja_03")
 	-- vim.cmd("hi FloatBorder    guifg=#cc8833")
 	vim.cmd("hi FloatermBorder guibg=None guifg=#cc8833")
+	-- -----
 	-- Mini notify:
 	vim.api.nvim_set_hl(0, "NotifyBackground", { bg = boja_202 } )
+	-- -----
 	-- Lazy border:
 	vim.cmd("hi LazyNormal  guifg=#cccccc")
+	-- -----
 	-- LSP Saga border:
 	-- vim.cmd("hi SagaBorder guifg=#cc8833")
+	-- -----
 	-- NvimTree:
 	vim.api.nvim_set_hl(0, "NvimTreeNormal",       {  } )
 	vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", {  } )
+	-- -----
 	-- Spell checker:
 	vim.api.nvim_set_hl(0, "SpellBad", { fg = "#ff3355", underline = true, bold = true } )
+	-- -----
 	-- Better Quick Fix:
 	vim.api.nvim_set_hl(0, "BqfPreviewFloat", { bg = '#292b39' } )
 	vim.api.nvim_set_hl(0, "BqfPreviewBorder", { bg = '#292b39' } )
 	vim.api.nvim_set_hl(0, "BqfPreviewTitle", { bg = '#292b39' } )
+	-- -----
 	-- Scope highlighting(indent-blankline):
 	vim.api.nvim_set_hl(0, "IblScope", { fg = '#505050' } )
+	-- -----
 	-- Scope highlighting(indentmini):
 	-- vim.api.nvim_set_hl(0, "IndentLine",        { fg = '#323d37' } )
 	-- vim.api.nvim_set_hl(0, "IndentLineCurrent", { fg = '#505050' } )
+	-- -----
 	-- Outline:
 	vim.api.nvim_set_hl(0, "OutlineGuides",   { fg = '#505050' } )
 	vim.api.nvim_set_hl(0, "OutlineFunction", { fg = boja_111, bold = bold } )
+	-- -----
+	-- Hover markup:
+	-- vim.api.nvim_set_hl(0, "@markup.strong", { fg = boja_111, bold = bold } )
+	vim.api.nvim_set_hl(0, "@markup.strong", { fg = '#d09050', bold = bold } )
+	vim.api.nvim_set_hl(0, "@markup.italic", { fg = '#a0b0d0', italic = true } )
+	-- -----
 end
 -- -----------------------------------------------------------------------------
 -- nvim-cmp
@@ -233,6 +255,9 @@ if LspHL == true then
 	-- Lua:
 	vim.api.nvim_set_hl ( 0 , "@lsp.mod.defaultLibrary.lua" ,  { fg = boja_118 , bold = bold  } )
 	-- vim.api.nvim_set_hl ( 0 , "@keyword.return.lua" ,          { fg = boja_120 , bold = bold  } )
+	-- Rust:
+	vim.api.nvim_set_hl ( 0 , "@lsp.type.macro.rust" ,            { fg = boja_111 , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@lsp.type.formatSpecifier.rust" ,  { fg = boja_121 , bold = bold  } )
 end
 -- -------------------------------------------------------------------------- --
 -- DAP:
@@ -243,11 +268,11 @@ vim.api.nvim_set_hl ( 0 , "DapStoppedLinija",           { bg = "#905555", fg = "
 vim.api.nvim_set_hl ( 0 , "NvimDapVirtualText" ,        { fg = "#e05555", bg="#373945", bold = bold } )
 vim.api.nvim_set_hl ( 0 , "NvimDapVirtualTextChanged" , { fg = "#e05555", bg="#373945", bold = bold } )
 vim.api.nvim_set_hl ( 0 , "NvimDapVirtualTextChanged" , { fg = "#e05555", bg="#373945", bold = bold } )
-vim.api.nvim_set_hl ( 0 , "DapUIDecoration" ,           { fg = "#707070"                            } )
-vim.api.nvim_set_hl ( 0 , "DapUIValue" ,                { fg = "#8090e0"                            } )
-vim.api.nvim_set_hl ( 0 , "DapUIScope" ,                { fg = "#5070c0",               bold = bold } )
-vim.api.nvim_set_hl ( 0 , "DapUIBreakpointsPath" ,      { fg = "#5070c0",               bold = bold } )
-vim.api.nvim_set_hl ( 0 , "DapUIStoppedThread" ,        { fg = "#5070c0",               bold = bold } )
+vim.api.nvim_set_hl ( 0 , "DapUIDecoration" ,           { fg = "#707070"  } )
+vim.api.nvim_set_hl ( 0 , "DapUIValue" ,                { fg = "#8090e0"  } )
+vim.api.nvim_set_hl ( 0 , "DapUIScope" ,                { fg = "#5070c0", bold = bold } )
+vim.api.nvim_set_hl ( 0 , "DapUIBreakpointsPath" ,      { fg = "#5070c0", bold = bold } )
+vim.api.nvim_set_hl ( 0 , "DapUIStoppedThread" ,        { fg = "#5070c0", bold = bold } )
 -- -------------------------------------------------------------------------- --
 -- Telescope:
 -- -------------------------------------------------------------------------- --
