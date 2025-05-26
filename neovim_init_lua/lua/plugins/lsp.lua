@@ -10,6 +10,7 @@ local aktivanTsJs   = true
 local aktivanLua    = true
 local aktivanPython = true
 local aktivanPhp    = true
+local aktivanGo     = true
 local aktivanRust   = true
 local aktivanZig    = true
 --
@@ -20,8 +21,9 @@ local listaServera = { }
 if autoStartLSP == true and aktivanC == true then
 --
 local nazivServeraC = "clangd"
+-- local nazivServeraC = "ccls"
 --
-vim.lsp.config[nazivServeraC] = {
+local configClang = {
 	cmd = {
 		"clangd",
 		"--clang-tidy",
@@ -50,6 +52,33 @@ vim.lsp.config[nazivServeraC] = {
 		"cpp"
 	},
 }
+--
+local configCcls = {
+	init_options = {
+		compilationDatabaseDirectory = "build";
+		index = {
+			threads = 0;
+		};
+		clang = {
+			excludeArgs = { "-frounding-math"} ;
+		};
+	};
+	cmd = {
+		"ccls"
+	};
+	filetypes = {
+		"c"
+	};
+	root_markers = {
+		 "compile_commands.json",
+		 ".ccls",
+		 ".git"
+	};
+	workspace_required = true;
+}
+--
+vim.lsp.config[nazivServeraC] = configClang
+-- vim.lsp.config[nazivServeraC] = configCcls
 --
 table.insert(listaServera, nazivServeraC)
 --
@@ -152,7 +181,7 @@ vim.lsp.config[nazivServeraLua] = {
 	cmd          = {
 		path_lua_ls
 	},
-	filetypes = { 'lua' },
+	filetypes = { "lua" },
 	root_markers = {
 		".luarc.json",
 		".luarc.jsonc"
@@ -234,6 +263,28 @@ vim.lsp.config[nazivServeraPhp] = {
 }
 --
 table.insert(listaServera, nazivServeraPhp)
+--
+end
+-- -----------------------------------------------------------------------------
+-- Go(lang):
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanGo == true then
+--
+local nazivServeraGo = "gopls"
+--
+vim.lsp.config[nazivServeraGo] = {
+	cmd = {
+		"/home/korisnik/git/gopath/bin/gopls"
+	},
+	filetypes = {
+		"go",
+		"gomod",
+		"gowork",
+		"gotmpl"
+	}
+}
+--
+table.insert(listaServera, nazivServeraGo)
 --
 end
 -- -----------------------------------------------------------------------------

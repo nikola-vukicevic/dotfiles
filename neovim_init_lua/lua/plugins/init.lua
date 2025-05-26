@@ -1,21 +1,97 @@
 -- -------------------------------------------------------------------------- -
 -- Moduli:
 -- -------------------------------------------------------------------------- -
-require('plugins/lualine')
-require('plugins/nvimtree')
-require('plugins/lsp')
-require('plugins/luasnip')
-require('plugins/cmp')
-require('plugins/dap')
+require("plugins/lualine")
+require("plugins/nvimtree")
+require("plugins/lsp")
+require("plugins/dap")
+require("plugins/luasnip")
+require("plugins/cmp")
 -- -------------------------------------------------------------------------- --
-vim.api.nvim_create_autocmd("TextChangedI", {
-	pattern = "*",
-	command = "lua require('plugins/debounce').debounce()"
+vim.g.rust_lsp_priprema = false
+-- -------------------------------------------------------------------------- --
+-- vim.api.nvim_create_autocmd("TextChangedI", {
+-- 	pattern = "*",
+-- 	command = "lua require('plugins/debounce').debounce()"
+-- })
+-- -------------------------------------------------------------------------- --
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(ev)
+		-- client.server_capabilities.semanticTokensProvider = nil
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		local bufnr  = ev.buf
+		if client.server_capabilities.documentSymbolProvider then
+			vim.api.nvim_create_autocmd(
+				{
+					"InsertLeave",
+					"BufEnter",
+					"CursorHold"
+				} , {
+				command = "lua require('breadcrumbs').Load()",
+				buffer  = bufnr,
+			})
+			--
+			vim.api.nvim_create_autocmd("CursorMoved" , {
+				command = "lua require('breadcrumbs').Update()",
+				buffer  = bufnr,
+			})
+			--
+			vim.api.nvim_create_autocmd("BufDelete" , {
+				command = "lua require('breadcrumbs').Reset()",
+				buffer  = bufnr,
+			})
+			--
+			require("breadcrumbs").Load()
+			--
+		end
+		--
+		vim.g.lsp_progres = 0
+		-- vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+		-- vim.api.nvim_buf_set_option(0, "formatexpr", "v:lua.vim.lsp.formatexpr()")
+	end
 })
--- -------------------------------------------------------------------------- --
+-- -----------------------------------------------------------------------------
+vim.api.nvim_create_autocmd("LspProgress", {
+	callback = function(ev)
+		if ev.data.params.value.title == "cargo check" and ev.data.params.value.kind == "end" then
+			vim.g.rust_lsp_priprema = true
+		end
+
+		if vim.g.rust_lsp_priprema == true and ev.data.params.token == "rustAnalyzer/cachePriming" and ev.data.params.value.kind == "end" then
+			vim.notify(" LSP server pokrenut")
+		end
+	end
+})
+-- -----------------------------------------------------------------------------
+--    
+vim.diagnostic.config({
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "",
+			[vim.diagnostic.severity.WARN]  = "",
+			[vim.diagnostic.severity.INFO]  = "",
+			[vim.diagnostic.severity.HINT]  = "",
+		},
+		texthl = {
+			[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+			[vim.diagnostic.severity.WARN]  = "DiagnosticSignWarn",
+			[vim.diagnostic.severity.INFO]  = "DiagnosticSignInfo",
+			[vim.diagnostic.severity.HINT]  = "DiagnosticSignHint",
+		},
+	},
+	severity_sort = true,
+	-- underline = true,
+	-- virtual_text = {
+		-- severity = {
+		-- 	min = vim.diagnostic.severity.WARN,
+		-- 	max = vim.diagnostic.severity.WARN,
+		-- },
+	-- }
+})
+-- -----------------------------------------------------------------------------
 -- Plugin - Tree-sitter:
 -- -------------------------------------------------------------------------- --
-local treesitter = require('nvim-treesitter.configs')
+local treesitter = require("nvim-treesitter.configs")
 --
 treesitter.setup {
 	ensure_installed = {  },
@@ -81,19 +157,19 @@ treesitter.setup {
 -- -------------------------------------------------------------------------- -
 -- Plugin - Illuminate:
 -- -------------------------------------------------------------------------- -
-require('illuminate').configure({
+require("illuminate").configure({
 	-- providers = {
 	-- 	'lsp',
 	-- 	'treesitter',
 	-- 	'regex',
 	-- },
-     -- delay: delay in milliseconds
-     delay = 10,
+	-- delay: delay in milliseconds
+	delay = 10,
 })
 -- -------------------------------------------------------------------------- -
 -- Plugin - Telescope:
 -- -------------------------------------------------------------------------- -
-local telescope_actions = require('telescope.actions')
+local telescope_actions = require("telescope.actions")
 vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
 --
 require("telescope").setup({
@@ -123,7 +199,7 @@ require("telescope").setup({
 		sort_mru              = true,
 
 		live_grep = {
-			initial_mode = 'insert'
+			initial_mode = "insert"
 		},
 
 		buffers = {
@@ -143,7 +219,7 @@ require("telescope").setup({
 			})
 		},
 		--
-		['fzf'] = {
+		["fzf"] = {
 			fuzzy                   = true,          -- false will only do exact matching
 			override_generic_sorter = true,          -- override the generic sorter
 			override_file_sorter    = true,          -- override the file sorter
@@ -157,41 +233,20 @@ require("telescope").load_extension("ui-select")
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
 -- -------------------------------------------------------------------------- -
-require('lf').setup({
+require("lf").setup({
 	winblend = 0,
 	width    = 102,
 	height   = 25,
 	border   = "rounded",
 })
--- vim.g.lf_replace_netrw     = false
--- vim.g.lf_command_override  = 'lfrun'
--- vim.g.floaterm_title       = "─ [lf] "
--- vim.g.floaterm_borderchars = "─│─│╭╮╯╰"
--- vim.g.lf_width             = 0.6
--- vim.g.lf_height            = 0.7
--- Auto-pairs:
--- vim.g.AutoPairs           = { ['['] = ']' , ['{'] = '}' }
 -- -----------------------------------------------------------------------------
-local ft = require('Comment.ft')
+local ft = require("Comment.ft")
 ft.set("imd" , "!!%s")
 -- -----------------------------------------------------------------------------
--- require("inc_rename").setup({
--- 	input_buffer_type = "dressing",
--- })
--- -----------------------------------------------------------------------------
--- require('dressing').setup({
--- 	input = {
--- 		win_options = {
--- 			winblend = 0,
--- 			wrap     = true,
--- 		}
--- 	}
--- })
--- -----------------------------------------------------------------------------
-require('nvim-highlight-colors').setup({
-	render                  = 'virtual',
+require("nvim-highlight-colors").setup({
+	render                  = "virtual",
 	enable_var_usage        = true,
-	virtual_symbol_position = 'eol',
+	virtual_symbol_position = "eol",
 })
 -- -----------------------------------------------------------------------------
 require("ibl").setup({
@@ -215,6 +270,14 @@ require("ibl").setup({
 					"if_statement",
 					"table_constructor",
 				},
+				zig = {
+					"labeled_statement";
+					"while_statement";
+					"for_statement";
+					"block";
+					"block_expression";
+					"function_declaration";
+				},
 				["*"] = {
 					"switch_statement",
 					"array",
@@ -231,10 +294,14 @@ require("ibl").setup({
 	}
 })
 -- -----------------------------------------------------------------------------
-require('lint').linters_by_ft = {
-	typescript = { 'eslint_d' },
-	javascript = { 'eslint_d' },
-	python     = { 'ruff' }
+-- Linter:
+-- -----------------------------------------------------------------------------
+require("lint").linters_by_ft = {
+	html       = { "eslint_d" },
+	css        = { "eslint_d" },
+	typescript = { "eslint_d" },
+	javascript = { "eslint_d" },
+	python     = { "ruff" }
 }
 -- --------------------------
 vim.api.nvim_create_autocmd({

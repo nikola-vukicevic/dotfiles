@@ -1,34 +1,28 @@
---------------------------------------------------------------------------------
--- Setup nvim-cmp.
-local cmp     = require'cmp'
-local lspkind = require'lspkind'
---------------------------------------------------------------------------------
-local has_words_before = function()
-	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-end
---------------------------------------------------------------------------------
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+-- -----------------------------------------------------------------------------
+local cmp     = require"cmp"
+local lspkind = require"lspkind"
+-- -----------------------------------------------------------------------------
+local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 require("nvim-autopairs").setup()
 -- ---------------------------
 cmp.event:on(
-	'confirm_done',
+	"confirm_done",
 	cmp_autopairs.on_confirm_done()
 )
---------------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------
 cmp.setup({
 	completion = {
-		autocomplete = false,
+		autocomplete = true,
 	},
 	snippet = {
 		expand = function(args)
-			luasnip.lsp_expand(args.body) -- For `luasnip` users.
+			luasnip.lsp_expand(args.body)
 		end
 	},
 	experimental = {
 		-- native_menu = false, -- ostaviti (iako je to meni bez boja i highlightinga)
 		ghost_text  = {
-			hl_group = 'CMPGhostText',
+			hl_group = "CMPGhostText",
 		},
 	},
 	window = {
@@ -47,38 +41,26 @@ cmp.setup({
 				buffer        = "[Buf]",
 				nvim_lsp      = "[LSP]",
 				luasnip       = "[Snip]",
-				nvim_lua      = "[API]",
+				-- nvim_lua      = "[API]",
 				calc          = "[Calc]",
 				latex_symbols = "[Latex]",
 			})
 		}),
 	},
 	mapping = cmp.mapping.preset.insert({
-		['<M-k>'] = cmp.mapping.select_prev_item({
+		["<M-k>"] = cmp.mapping.select_prev_item({
 			behavior = cmp.SelectBehavior.Select 
 		}),
 		-- ----------------------------------
-		['<M-j>'] = cmp.mapping.select_next_item({
+		["<M-j>"] = cmp.mapping.select_next_item({
 			behavior = cmp.SelectBehavior.Select 
 		}),
 		-- ----------------------------------
-		['<M-h>'] = cmp.mapping.close(),
+		["<M-h>"] = cmp.mapping.close(),
 		-- ----------------------------------
-		['<M-l>'] = cmp.mapping.confirm(),
+		["<M-l>"] = cmp.mapping.confirm(),
 		-- ----------------------------------
-		-- ['<Esc>'] = cmp.mapping(function(fallback)
-		-- 	if cmp.visible() then
-		-- 		if not cmp.get_selected_entry() then
-		-- 			cmp.close()
-		-- 		else
-		-- 			fallback()
-		-- 		end
-		-- 	else
-		-- 		fallback()
-		-- 	end
-		-- end),
-		-- ----------------------------------
-		['<CR>'] = cmp.mapping.confirm({
+		["<CR>"] = cmp.mapping.confirm({
 			behavior = cmp.ConfirmBehavior.Replace ,
 			select   = false }
 		), -- Accept currently selected item.
@@ -94,41 +76,23 @@ cmp.setup({
 				luasnip.expand_or_jump()
 			else
 				fallback()
-			-- elseif cmp.visible() and has_words_before() then
-			-- 	print("CMP [Tab]: sledeća stavka u meniju")
-			-- 	cmp.select_next_item()
-			-- else
-			-- 	print("CMP [Tab]: Tab fallback")
-			-- 	fallback()
 			end
 		end, { "i", "s" }),
 		-- -- ----------------------------------
-		-- ["<S-Tab>"] = cmp.mapping(function(fallback)
-		-- 	if cmp.visible() then
-		-- 		print("CMP [Tab]: prethodna stavka u meniju")
-		-- 		cmp.select_prev_item()
-		-- 	elseif luasnip.jumpable(-1) then
-		-- 		luasnip.jump(-1)
-		-- 	else
-		-- 		print("CMP [Tab]: S-Tab fallback")
-		-- 		fallback()
-		-- 	end
-		-- end, { "i", "s" }),
-		-- ----------------------------------
 	}),
 	sources = cmp.config.sources({
-		{ name = 'luasnip' }, -- For luasnip users.
-		-- { name = 'nvim_lua' }, -- Kanda neodev.vim
+		{ name = "nvim_lsp" },
+		{ name = "luasnip" },
+		-- { name = "nvim_lua" }, -- Kanda neodev.vim
 		                          -- radi sve što treba
 		{
-			name = 'lazydev',
+			name = "lazydev",
 			group_index = 0,
 		},
-		{ name = 'path' },
-		{ name = 'calc' },
-		{ name = 'nvim_lsp' },
+		{ name = "path" },
+		{ name = "calc" },
 		{
-			name           = 'buffer',
+			name           = "buffer",
 			keyword_length = 3,
 			option = {
 				get_bufnrs = function()
@@ -136,52 +100,49 @@ cmp.setup({
 				end
 			}
 		},
-		{ name = 'nvim_lsp_signature_help' },
+		-- { name = "nvim_lsp_signature_help" },
 	})
 })
-
--- Set configuration for specific filetype.
-cmp.setup.filetype('gitcommit', {
+-- -----------------------------------------------------------------------------
+cmp.setup.filetype("gitcommit", {
 	sources = cmp.config.sources({
-		{ name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+		{ name = "cmp_git" },
 	},
 	{
-		{ name = 'buffer' },
+		{ name = "buffer" },
 	})
 })
-
--- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline('/', {
-	completion = { autocomplete = { require('cmp.types').cmp.TriggerEvent.TextChanged } },
+-- -----------------------------------------------------------------------------
+cmp.setup.cmdline("/", {
+	completion = { autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged } },
 	mapping    = cmp.mapping.preset.cmdline({
-		['<M-j>'] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
-        ['<M-k>'] = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
-		['<M-l>'] = { c = cmp.mapping.close() }
+		["<M-j>"] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
+		["<M-k>"] = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
+		["<M-l>"] = { c = cmp.mapping.close() }
 	}),
 	sources    = {
-		{ name = 'buffer', 	},
-		{ name = 'cmdline'  },
-		{ name = 'nvim.lsp' },
+		{ name = "buffer", 	},
+		{ name = "cmdline"  },
+		{ name = "nvim.lsp" },
 	}
 })
-
--- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline(':', {
-	completion = { autocomplete = { require('cmp.types').cmp.TriggerEvent.TextChanged } },
+-- -----------------------------------------------------------------------------
+cmp.setup.cmdline(":", {
+	completion = { autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged } },
 	mapping    = cmp.mapping.preset.cmdline({
-		['<M-k>'] = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
-		['<M-j>'] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
-		['<M-l>'] = { c = cmp.mapping.close() }
+		["<M-k>"] = { c = cmp.mapping.select_prev_item( { behavior = cmp.SelectBehavior.Insert } ) },
+		["<M-j>"] = { c = cmp.mapping.select_next_item( { behavior = cmp.SelectBehavior.Insert } ) },
+		["<M-l>"] = { c = cmp.mapping.close() }
 	}),
 	sources    = cmp.config.sources({
-		{ name = 'buffer'                  },
-		{ name = 'path'                    },
-		{ name = 'cmdline'                 },
-		{ name = 'nvim_lsp'                },
-		{ name = 'nvim_lsp_signature_help' },
+		{ name = "buffer"                  },
+		{ name = "path"                    },
+		{ name = "cmdline"                 },
+		{ name = "nvim_lsp"                },
+		-- { name = "nvim_lsp_signature_help" },
 	},
 	{
-		name   = 'cmdline',
+		name   = "cmdline",
 		option = {
 			ignore_cmds = {
 
@@ -189,4 +150,5 @@ cmp.setup.cmdline(':', {
 		}
 	})
 })
+-- -----------------------------------------------------------------------------
 
