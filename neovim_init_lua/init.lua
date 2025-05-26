@@ -5,6 +5,7 @@ vim.g.jezik           = "SR"
 vim.g.spell_check     = false
 vim.g.auto_lsp_float  = false
 vim.g.diff_mode       = false
+-- vim.g.lsp_progres     = 0
 -- -----------------------------------------------------------------------------
 if vim.fn.argv(0) == "barebones" then
 	vim.g.barebones_CFG = true
@@ -14,6 +15,7 @@ end
 -- -----------------------------------------------------------------------------
 require('01_map')
 require('02_funkcije')
+require('pretty_hover_middleware')
 -- -----------------------------------------------------------------------------
 if vim.g.barebones_CFG ~= true then
 	require('03_plug')
@@ -197,9 +199,12 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 vim.api.nvim_create_autocmd({ "Cursormoved"	}, {
 	pattern = {
 		"*.c", "*.cpp", "*.h", "*.hpp",
+		"*.html", "*.css",
 		"*.js", "*.ts", "*.mjs", "*.mts", "*.cjs", "*.cts",
 		"*.lua",
 		"*.py",
+		"*.rs",
+		"*.zig"
 	},
 	callback = function()
 		if vim.g.auto_lsp_float == true then
@@ -209,10 +214,11 @@ vim.api.nvim_create_autocmd({ "Cursormoved"	}, {
 			})
 		end
 		if vim.g.auto_lsp_hover == true then
-			vim.lsp.buf.hover({
-				border = 'rounded',
-				width  = 60
-			})
+			LSPHover()
+			-- vim.lsp.buf.hover({
+			-- 	border = 'rounded',
+			-- 	width  = 60
+			-- })
 		end
 	end
 })
