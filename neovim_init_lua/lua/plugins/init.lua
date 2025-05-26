@@ -10,10 +10,10 @@ require("plugins/cmp")
 -- -------------------------------------------------------------------------- --
 vim.g.rust_lsp_priprema = false
 -- -------------------------------------------------------------------------- --
--- vim.api.nvim_create_autocmd("TextChangedI", {
--- 	pattern = "*",
--- 	command = "lua require('plugins/debounce').debounce()"
--- })
+vim.api.nvim_create_autocmd("TextChangedI", {
+	pattern = "*",
+	command = "lua require('plugins/debounce').debounce()"
+})
 -- -------------------------------------------------------------------------- --
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(ev)
