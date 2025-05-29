@@ -10,10 +10,10 @@ require("plugins/cmp")
 -- -------------------------------------------------------------------------- --
 vim.g.rust_lsp_priprema = false
 -- -------------------------------------------------------------------------- --
-vim.api.nvim_create_autocmd("TextChangedI", {
-	pattern = "*",
-	command = "lua require('plugins/debounce').debounce()"
-})
+-- vim.api.nvim_create_autocmd("TextChangedI", {
+-- 	pattern = "*",
+-- 	command = "lua require('plugins/debounce').debounce()"
+-- })
 -- -------------------------------------------------------------------------- --
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(ev)
@@ -250,17 +250,20 @@ require("nvim-highlight-colors").setup({
 })
 -- -----------------------------------------------------------------------------
 require("ibl").setup({
+	-- indent = {
+		-- char = "│"
+	-- };
 	scope = {
 		include = {
 			node_type = {
-				python = {
-					"if_statement",
-					"while_statement",
-					"for_statement",
-					"list",
-					"string_content",
-					"interpolation"
-				},
+				-- python = {
+				-- 	"if_statement",
+				-- 	"while_statement",
+				-- 	"for_statement",
+				-- 	"list",
+				-- 	"string_content",
+				-- 	"interpolation"
+				-- },
 				css = {
 					"rule_set",
 				},
@@ -270,14 +273,14 @@ require("ibl").setup({
 					"if_statement",
 					"table_constructor",
 				},
-				zig = {
-					"labeled_statement";
-					"while_statement";
-					"for_statement";
-					"block";
-					"block_expression";
-					"function_declaration";
-				},
+				-- zig = {
+				-- 	"labeled_statement";
+				-- 	"while_statement";
+				-- 	"for_statement";
+				-- 	"block";
+				-- 	"block_expression";
+				-- 	"function_declaration";
+				-- },
 				["*"] = {
 					"switch_statement",
 					"array",
