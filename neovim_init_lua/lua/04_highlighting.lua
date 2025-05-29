@@ -87,6 +87,7 @@ if basicHL == true then
 	-- -----
 	-- CMP MENU:
 	vim.cmd("hi CMPWindow  guibg=#30313a")
+	vim.cmd("hi CmpDocWin  guibg=None")
 	vim.cmd("hi CMPLine    guibg=#3c3e5a")
 	-- vim.cmd("hi IlluminatedWordText    guibg=#334444 guifg=#ffeedd")
 	-- Ovo ispod je zapravo lsp signature i veliko je pitanje da li
@@ -96,8 +97,8 @@ if basicHL == true then
 	vim.api.nvim_set_hl ( 0 , "LspSignatureHint" ,             { fg = '#e0a080', bold = true } )                 --"#2c303d",                } )
 	-- -----
 	-- Float:
-	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                 --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#cc8833' } )   --"#2c303d",                } )
+	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                --"#2c303d",                } )
+	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#e09050', bold = true } )  -- "#90a0ff" --"#cc8833",  --"#2c303d",  } )
 	-- vim.cmd("hi NormalFloat    guibg=boja_03")
 	-- vim.cmd("hi FloatBorder    guifg=#cc8833")
 	vim.cmd("hi FloatermBorder guibg=None guifg=#cc8833")
@@ -136,7 +137,7 @@ if basicHL == true then
 	-- -----
 	-- Hover markup:
 	-- vim.api.nvim_set_hl(0, "@markup.strong", { fg = boja_111, bold = bold } )
-	vim.api.nvim_set_hl(0, "@markup.strong", { fg = '#d09050', bold = bold } )
+	vim.api.nvim_set_hl(0, "@markup.strong", { fg = '#a080d0', bold = bold } ) -- #d09050
 	vim.api.nvim_set_hl(0, "@markup.italic", { fg = '#a0b0d0', italic = true } )
 	-- -----
 end

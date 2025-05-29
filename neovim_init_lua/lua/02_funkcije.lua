@@ -104,6 +104,12 @@ function FormatiranjeCss()
 	vim.cmd("'<,'>!" .. command .. config_file)
 end
 -- -----------------------------------------------------------------------------
+function FormatiranjeZig()
+	local command     = ""
+	local config_file = ""
+	vim.cmd("'<,'>! zig fmt --stdin")
+end
+-- -----------------------------------------------------------------------------
 function FormatiranjeIzvornogKoda(mode)
 	if mode == "n" then
 		vim.notify("Tekst mora biti selektovan!")
@@ -126,6 +132,8 @@ function FormatiranjeIzvornogKoda(mode)
 		FormatiranjeCss()
 	elseif tip == "python" then
 		FormatiranjePython()
+	elseif tip == "zig" then
+		FormatiranjeZig()
 	end
 end
 -- -----------------------------------------------------------------------------

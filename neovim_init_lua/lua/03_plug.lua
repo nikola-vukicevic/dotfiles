@@ -56,9 +56,13 @@ require("lazy").setup(
 			event = "InsertEnter",
 			opts = {
 				-- cfg options
-				max_width = 20;
+				-- max_width = 20;
+				max_width = function ()
+					return 80					
+				end;
 				hint_prefix = ">> ";
 				hint_scheme = "LspSignatureHint";
+				doc_lines = 0;
 			},
 		},
 		-- ---------------------------------------------

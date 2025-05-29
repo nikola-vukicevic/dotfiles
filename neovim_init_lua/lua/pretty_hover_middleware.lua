@@ -146,10 +146,11 @@ function HoverHandler(err, result, context, config)
 	-- for i = 1, G, 1 do
 	-- 	tekst  = f_obrada(result.contents.value, delim)
 	-- end
-	local tekst  = f_obrada(result.contents.value, delim)
-	local parsed = require("pretty_hover.parser").parse(tekst)
+	local tekst    = f_obrada(result.contents.value, delim)
+	local parsed   = require("pretty_hover.parser").parse(tekst)
+	local md_tekst = PrepravkaDocHover(parsed.text)
 
-	vim.lsp.util.open_floating_preview(parsed.text, "markdown", {
+	vim.lsp.util.open_floating_preview(md_tekst, "markdown", {
 		focus     = true;
 		focusable = true;
 		wrap      = true;
@@ -162,14 +163,15 @@ end
 -- --------------------
 function HoverHandlerDebug(err, result, context, config)
 	if not result then return end
-	local delim  = "\n"
-	local tekst  = f_obrada(result.contents.value, delim)
-	local parsed = require("pretty_hover.parser").parse(tekst)
+	local delim    = "\n"
+	local tekst    = f_obrada(result.contents.value, delim)
+	local parsed   = require("pretty_hover.parser").parse(tekst)
+	local md_tekst = PrepravkaDocHover(parsed.text)
 
 	probaObrada(result.contents.value)
 	probaObrada(tekst)
 
-	vim.lsp.util.open_floating_preview(parsed.text, "markdown", {
+	vim.lsp.util.open_floating_preview(md_tekst, "markdown", {
 		focus     = true;
 		focusable = true;
 		wrap      = true;
