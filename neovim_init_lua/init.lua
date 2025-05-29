@@ -165,6 +165,43 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		vim.g.spell_check = true
 	end
 })
+--
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern  = {
+		"*.zig",
+		"*.py"
+	},
+	callback = function ()
+		require("ibl").setup({
+			indent = {
+				char = "┆";
+			};
+			scope = {
+				include = {
+					node_type = {
+						python = {
+							"if_statement",
+							"while_statement",
+							"for_statement",
+							"list",
+							"string_content",
+							"interpolation"
+						},
+						zig = {
+							"labeled_statement";
+							"while_statement";
+							"for_statement";
+							"block";
+							"block_expression";
+							"function_declaration";
+							"anonymous_struct_initializer";
+						},
+					}
+				}
+			}
+		});
+	end
+})
 -- -----------------------------------------------------------------------------
 -- Save *.imd pokreće parsiranje članka:
 -- -----------------------------------------------------------------------------
@@ -183,6 +220,13 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 	pattern  = "*",
 	callback = function()
 		vim.g.insert_okidac = ""
+	end
+})
+--
+vim.api.nvim_create_autocmd("InsertEnter", {
+	pattern  = "*",
+	callback = function()
+		vim.g.last_edit_virtcol = vim.fn.virtcol(".")
 	end
 })
 --
