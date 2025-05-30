@@ -42,7 +42,7 @@ cmp.setup({
 		-- documentation = cmp.config.window.bordered(),
 		documentation = {
 			border = "rounded";
-			max_width = 72;
+			max_width = 68;
 			winhighlight = "Normal:CmpDocWin"
 		}
 	},
@@ -208,10 +208,11 @@ cmp_entry.get_documentation = function(self)
 	local doc    = self.completion_item.documentation and
 	               self.completion_item.documentation.value or ""
 
-	if detail ~= "" then detail = "\n---\n" .. detail end
+	label      = "```" .. vim.bo.filetype .. "\n" .. label .. "\n```\n"
+	if detail ~= "" then detail = "\n---\n```" .. vim.bo.filetype .. "\n" .. detail .. "\n```" end
 	if doc    ~= "" then doc    = "\n---\n" .. doc    end
 
-	local md_1 = "### " .. label .. detail .. doc
+	local md_1 = label .. detail .. doc
 
 	local md_2 = ObradaHover(md_1, "\n")
 	-- print(vim.inspect(md_2))

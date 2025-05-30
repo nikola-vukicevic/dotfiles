@@ -21,9 +21,8 @@ local listaServera = { }
 if autoStartLSP == true and aktivanC == true then
 --
 local nazivServeraC = "clangd"
--- local nazivServeraC = "ccls"
 --
-local configClang = {
+vim.lsp.config[nazivServeraC] = {
 	cmd = {
 		"clangd",
 		"--clang-tidy",
@@ -52,33 +51,6 @@ local configClang = {
 		"cpp"
 	},
 }
---
-local configCcls = {
-	init_options = {
-		compilationDatabaseDirectory = "build";
-		index = {
-			threads = 0;
-		};
-		clang = {
-			excludeArgs = { "-frounding-math"} ;
-		};
-	};
-	cmd = {
-		"ccls"
-	};
-	filetypes = {
-		"c"
-	};
-	root_markers = {
-		 "compile_commands.json",
-		 ".ccls",
-		 ".git"
-	};
-	workspace_required = true;
-}
---
-vim.lsp.config[nazivServeraC] = configClang
--- vim.lsp.config[nazivServeraC] = configCcls
 --
 table.insert(listaServera, nazivServeraC)
 --
