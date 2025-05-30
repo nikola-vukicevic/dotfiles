@@ -98,7 +98,11 @@ if basicHL == true then
 	-- -----
 	-- Float:
 	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#e09050', bold = true } )  -- "#90a0ff" --"#cc8833",  --"#2c303d",  } )
+	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#90a0f0', bold = true } )  -- "#8080a0"
+	                                                                                       -- "#e09050"
+	                                                                                       -- "#90a0ff"
+	                                                                                       -- "#cc8833",
+	                                                                                       -- "#2c303d",  } )
 	-- vim.cmd("hi NormalFloat    guibg=boja_03")
 	-- vim.cmd("hi FloatBorder    guifg=#cc8833")
 	vim.cmd("hi FloatermBorder guibg=None guifg=#cc8833")
@@ -137,8 +141,9 @@ if basicHL == true then
 	-- -----
 	-- Hover markup:
 	-- vim.api.nvim_set_hl(0, "@markup.strong", { fg = boja_111, bold = bold } )
-	vim.api.nvim_set_hl(0, "@markup.strong", { fg = '#a080d0', bold = bold } ) -- #d09050
+	vim.api.nvim_set_hl(0, "@markup.strong", { fg = '#d0a080', bold = bold } ) -- #d0d0a0 -- #d09050
 	vim.api.nvim_set_hl(0, "@markup.italic", { fg = '#a0b0d0', italic = true } )
+	vim.api.nvim_set_hl(0, "@markup.raw",    { fg = '#a0b0d0'                } )
 	-- -----
 end
 -- -----------------------------------------------------------------------------
@@ -182,6 +187,7 @@ if treesitterHL == true then
 	--
 	vim.api.nvim_set_hl ( 0 , "@variable" ,               { fg = boja_01  , bold = false } )
 	vim.api.nvim_set_hl ( 0 , "@variable.builtin" ,       { fg = boja_01  , bold = bold  } )
+	vim.api.nvim_set_hl ( 0 , "@variable.parameter" ,     { fg = boja_121 , bold = false } )
 	vim.api.nvim_set_hl ( 0 , "@field" ,                  { fg = boja_01  , bold = false } )
 	vim.api.nvim_set_hl ( 0 , "@constant" ,               { fg = boja_03  , bold = bold  } )
 	vim.api.nvim_set_hl ( 0 , "@property" ,               { fg = boja_01  , bold = false } )

@@ -149,6 +149,7 @@ function HoverHandler(err, result, context, config)
 	local tekst    = f_obrada(result.contents.value, delim)
 	local parsed   = require("pretty_hover.parser").parse(tekst)
 	local md_tekst = PrepravkaDocHover(parsed.text)
+	-- print(vim.inspect(md_tekst))
 
 	vim.lsp.util.open_floating_preview(md_tekst, "markdown", {
 		focus     = true;
