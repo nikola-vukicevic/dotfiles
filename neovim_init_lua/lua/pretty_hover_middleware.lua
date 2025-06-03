@@ -61,8 +61,15 @@ end
 -- ----------------------------------------------------------------------------
 function prepravkeC(token)
 	local l = vim.fn.split(token, "###")
-	if #l < 2 then return token end
-	return l[1] .. "\n" .. l[2]:trimStart()
+	local rez
+
+	if #l < 2 then
+		rez = token
+	else
+		rez = l[1] .. "\n" .. l[2]:trimStart()
+	end
+
+	return rez:gsub("\\_", "_")
 end
 -- ----------------------------------------------------------------------------
 function ObradaTokena(token, spec_prethodni, novi_red_prethodni, prelazak_prethodni)

@@ -141,9 +141,9 @@ if basicHL == true then
 	-- -----
 	-- Hover markup:
 	-- vim.api.nvim_set_hl(0, "@markup.strong", { fg = boja_111, bold = bold } )
-	vim.api.nvim_set_hl(0, "@markup.strong", { fg = '#d0a080', bold = bold } ) -- #d0d0a0 -- #d09050
-	vim.api.nvim_set_hl(0, "@markup.italic", { fg = '#a0b0d0', italic = true } )
-	vim.api.nvim_set_hl(0, "@markup.raw",    { fg = '#a0b0d0'                } )
+	vim.api.nvim_set_hl(0, "@markup.strong", { fg = '#f0f0f0', bold = bold   } ) -- #d0d0a0 -- #d09050
+	vim.api.nvim_set_hl(0, "@markup.italic", { fg = '#eaeafe', italic = true } ) -- #boboe0 -- #e0e0e0
+	vim.api.nvim_set_hl(0, "@markup.raw",    { fg = '#a0a4b0'                } )
 	-- -----
 end
 -- -----------------------------------------------------------------------------
