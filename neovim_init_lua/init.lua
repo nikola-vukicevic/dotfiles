@@ -148,7 +148,32 @@ vim.api.nvim_create_autocmd("BufEnter" , {
 -- close quickfix menu after selecting choice
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "qf" },
-	command = [[nnoremap <buffer> <CR> <CR>:cclose<CR>]]})
+	command = [[nnoremap <buffer> <CR> <CR>:cclose<CR>]]
+})
+--
+vim.api.nvim_create_user_command('GetLspReferences', function()
+	vim.api.nvim_create_autocmd('FileType', {
+		pattern = 'qf',
+		once = true,
+		desc = 'Close the next quickfix window',
+		callback = vim.schedule_wrap(function()
+			vim.cmd('quit')
+			Snacks.picker.qflist()
+		end)
+	})
+
+	vim.lsp.buf.references()
+end, {})
+--
+-- vim.api.nvim_create_autocmd('FileType', {
+-- 	pattern = 'qf',
+-- 	once = true,
+-- 	desc = 'Close the next quickfix window',
+-- 	callback = vim.schedule_wrap(function()
+-- 		vim.cmd('quit')
+-- 		Snacks.picker.qflist()
+-- 	end)
+-- })
 --
 vim.opt.updatetime = 500
 --
