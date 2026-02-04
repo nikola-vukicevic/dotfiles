@@ -169,67 +169,67 @@ require("illuminate").configure({
 -- -------------------------------------------------------------------------- -
 -- Plugin - Telescope:
 -- -------------------------------------------------------------------------- -
-local telescope_actions = require("telescope.actions")
-vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
+-- local telescope_actions = require("telescope.actions")
+-- vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
 --
-require("telescope").setup({
-	defaults = {
-		initial_mode = "normal",
-		-- borderchars    = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-		layout_config  = {
-			horizontal = {
-				width         = 0.70,
-				height        = 0.85,
-				preview_width = 0.52,
-			},
-		},
-		mappings = {
-			i = {
-				-- ["<esc>"] = telescope_actions.close,
-				-- ["<F1"]   = telescope_actions.close,
-			},
-			n = {
-				["q"] = telescope_actions.close,
-				-- ["<esc>"] = telescope_actions.close,
-			},
-		},
-	},
-	pickers = {
-		ignore_current_buffer = true,
-		sort_mru              = true,
-
-		live_grep = {
-			initial_mode = "insert"
-		},
-
-		buffers = {
-			sort_mru = true
-		}
-	},
-	extensions = {
-		["ui-select"] = {
-			require("telescope.themes").get_dropdown({
-				layout_strategy = "cursor",
-				layout_config = {
-					width  = 54,
-					height = 9,
-					-- TODO: funkcija koja prebrojava
-					-- stavke u meniju
-				}
-			})
-		},
-		--
-		["fzf"] = {
-			fuzzy                   = true,          -- false will only do exact matching
-			override_generic_sorter = true,          -- override the generic sorter
-			override_file_sorter    = true,          -- override the file sorter
-			case_mode               = "smart_case",  -- or "ignore_case" or "respect_case"
-		                                             -- the default case_mode is "smart_case"
-		},
-	},
-})
+-- require("telescope").setup({
+-- 	defaults = {
+-- 		initial_mode = "normal",
+-- 		-- borderchars    = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+-- 		layout_config  = {
+-- 			horizontal = {
+-- 				width         = 0.70,
+-- 				height        = 0.85,
+-- 				preview_width = 0.52,
+-- 			},
+-- 		},
+-- 		mappings = {
+-- 			i = {
+-- 				-- ["<esc>"] = telescope_actions.close,
+-- 				-- ["<F1"]   = telescope_actions.close,
+-- 			},
+-- 			n = {
+-- 				["q"] = telescope_actions.close,
+-- 				-- ["<esc>"] = telescope_actions.close,
+-- 			},
+-- 		},
+-- 	},
+-- 	pickers = {
+-- 		ignore_current_buffer = true,
+-- 		sort_mru              = true,
 --
-require("telescope").load_extension("ui-select")
+-- 		live_grep = {
+-- 			initial_mode = "insert"
+-- 		},
+--
+-- 		buffers = {
+-- 			sort_mru = true
+-- 		}
+-- 	},
+-- 	extensions = {
+-- 		["ui-select"] = {
+-- 			require("telescope.themes").get_dropdown({
+-- 				layout_strategy = "cursor",
+-- 				layout_config = {
+-- 					width  = 54,
+-- 					height = 9,
+-- 					-- TODO: funkcija koja prebrojava
+-- 					-- stavke u meniju
+-- 				}
+-- 			})
+-- 		},
+-- 		--
+-- 		["fzf"] = {
+-- 			fuzzy                   = true,          -- false will only do exact matching
+-- 			override_generic_sorter = true,          -- override the generic sorter
+-- 			override_file_sorter    = true,          -- override the file sorter
+-- 			case_mode               = "smart_case",  -- or "ignore_case" or "respect_case"
+-- 		                                             -- the default case_mode is "smart_case"
+-- 		},
+-- 	},
+-- })
+--
+-- require("telescope").load_extension("ui-select")
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
 -- -------------------------------------------------------------------------- -
