@@ -98,7 +98,10 @@ if basicHL == true then
 	-- -----
 	-- Float:
 	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#90a0f0', bold = true } )  -- "#8080a0"
+	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#80828a', bold = true } )  -- "#8080a0"
+	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#707484', bold = true } )  -- "#8080a0"
+	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#90949a', bold = true } )  -- "#8080a0"
+	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#90a0f0', bold = true } )  -- "#8080a0"
 	                                                                                       -- "#e09050"
 	                                                                                       -- "#90a0ff"
 	                                                                                       -- "#cc8833",
@@ -145,6 +148,17 @@ if basicHL == true then
 	vim.api.nvim_set_hl(0, "@markup.italic", { fg = '#eaeafe', italic = true } ) -- #boboe0 -- #e0e0e0
 	vim.api.nvim_set_hl(0, "@markup.raw",    { fg = '#a0a4b0'                } )
 	-- -----
+	-- Folke Snacks:
+	vim.api.nvim_set_hl(0, "SnacksPickerBorder",   { fg = '#60646a' } ) -- #d0d0a0 -- #d09050
+	vim.api.nvim_set_hl(0, "SnacksPickerBufFlags", { fg = '#80848a' } ) -- #d0d0a0 -- #d09050
+	vim.api.nvim_set_hl(0, "SnacksPickerTotals",   { fg = '#c0c4aa' } ) -- #d0d0a0 -- #d09050
+	vim.api.nvim_set_hl(0, "SnacksPickerDir",      { fg = '#d0d4d2' } ) -- #d0d0a0 -- #d09050
+	vim.api.nvim_set_hl(0, "SnacksPickerCol",      { fg = '#778084' } ) -- #d0d0a0 -- #d09050
+	vim.api.nvim_set_hl(0, "SnacksPickerInputTitle",    { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	vim.api.nvim_set_hl(0, "SnacksPickerPreviewTitle",  { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	vim.api.nvim_set_hl(0, "SnacksPickerListTitle",     { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	vim.api.nvim_set_hl(0, "SnacksPickerBoxTitle",      { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerTitle",         { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
 end
 -- -----------------------------------------------------------------------------
 -- nvim-cmp

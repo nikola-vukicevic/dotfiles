@@ -7,6 +7,14 @@ function PronalazenjeImenaFunkcije()
 	print(node)
 end
 -- -----------------------------------------------------------------------------
+function PressI()
+	vim.cmd.startinsert()
+end
+-- -----------------------------------------------------------------------------
+function UnpressI()
+	vim.cmd.stopinsert()
+end
+-- -----------------------------------------------------------------------------
 function SpelovanjeToggle()
 	if vim.g.spell_check == false then
 		vim.g.spell_check = true
@@ -207,7 +215,8 @@ end
 function PronalazenjeNaslova()
 	vim.cmd("vimgrep /^#\\{1,6} \\k/ %")
 	-- require('telescope.builtin').quickfix()
-	vim.cmd("copen")
+	-- vim.cmd("copen")
+	Snacks.picker.qflist()
 end
 -- -----------------------------------------------------------------------------
 -- UokviravanjeSelekcije:
@@ -602,7 +611,8 @@ function LSPRenameHandler(err, result, context, config)
 	--
 	-- print(vim.inspect(lista))
 	vim.fn.setqflist(lista, "r")
-	vim.cmd("copen")
+	-- vim.cmd("copen")
+	Snacks.picker.qflist()
 	-- require('telescope.builtin').quickfix()
 end
 -- -----------------------------------------------------------------------------
