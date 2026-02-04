@@ -1,0 +1,341 @@
+# ---------------------------------------------------------------------------- #
+set previewer ~/.config/lf/previewer
+set cleaner ~/.config/lf/cleaner
+set icons
+# set colors
+set period 2
+set ratios '1:2:3'
+set tabstop 4
+set info size
+# set dircounts
+set hidden true
+set cursorpreviewfmt "\033[7m"
+set sortby "natural"
+# set rulerfmt  "%a| %p| \033[7;31m %m \033[0m| \033[7;33m %c \033[0m| \033[7;35m %s \033[0m| \033[7;36m %v \033[0m|f=`%f',| %d|  %i/%t  %P"
+# ---------------------------------------------------------------------------- #
+
+# interpreter for shell commands
+set shell zsh
+
+# set '-eu' options for shell commands
+# These options are used to have safer shell commands. Option '-e' is used to
+# exit on error and option '-u' is used to give error for unset variables.
+# Option '-f' disables pathname expansion which can be useful when $f, $fs, and
+# $fx variables contain names with '*' or '?' characters. However, this option
+# is used selectively within individual commands as it can be limiting at
+# times.
+set shellopts '-euy'
+
+# set internal field separator (IFS) to "\n" for shell commands
+# This is useful to automatically split file names in $fs and $fx properly
+# since default file separator used in these variables (i.e. 'filesep' option)
+# is newline. You need to consider the values of these options and create your
+# commands accordingly.
+set ifs "\n"
+set filesep "\n"  # default already
+
+# leave some space at the top and the bottom of the screen
+set scrolloff 10
+
+# use enter for shell commands
+map <enter> shell
+
+# execute current file (must be executable)
+map x $$f
+map X !$f
+
+# dedicated keys for file opener actions
+map o &mimeopen $f
+map O $mimeopen --ask $f
+
+# define a custom 'open' command
+# This command is called when current file is not a directory. You may want to
+# use either file extensions and/or mime types here. Below uses an editor for
+# text files and a file opener for the rest.
+cmd open ${{
+    test -L $f && f=$(readlink -f $f)
+    case $(file --mime-type $f -b) in
+        text/*) $EDITOR $fx;;
+		image/*) /home/korisnik/.dwm/skripte/rifle_sxiv.sh $f;;
+        *) for f in $fx; do setsid $OPENER $f > /dev/null 2> /dev/null & done;;
+    esac
+}}
+# cmd open ${{
+#     case "$f" in
+#         *.tar.bz|*.tar.bz2|*.tbz|*.tbz2|*.tar.gz|*.tgz|*.tar.xz|*.txz|*.zip|*.rar|*.iso)
+#             mntdir="$f-archivemount"
+#             [ ! -d "$mntdir" ] && {
+#                 mkdir "$mntdir"
+#                 archivemount "$f" "$mntdir"
+#                 echo "$mntdir" >> "/tmp/__lf_archivemount_$id"
+#             }
+#             lf -remote "send $id cd \"$mntdir\""
+#             lf -remote "send $id reload"
+#             ;;
+#         *)
+#             for f in $fx; do
+#                 $OPENER $f > /dev/null 2> /dev/null &
+#             done;;
+#     esac
+# }}
+
+# define a custom 'rename' command without prompt for overwrite
+# cmd rename %[ -e $1 ] && printf "file exists" || mv $f $1
+# map r push :rename<space>
+
+# make sure trash folder exists
+# %mkdir -p ~/.trash
+
+# move current file or selected files to trash folder
+# (also see 'man mv' for backup/overwrite options)
+cmd trash %set -f; mv $fx ~/.trash
+
+
+# map am ${{
+#     mntdir="$f.mnt"
+#     mkdir -p -- "$mntdir"
+#     archivemount "$f" "$mntdir"
+#     lf -remote "send $id cd \"$(printf '%s' "$mntdir" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
+# }}
+
+
+cmd follow-link %{{
+	lf -remote "send $id select \"$(readlink -- "$f" | sed 's/\\/\\\\/g;s/"/\\"/g')\""
+}}
+
+cmd proba %{{
+	nvim "$fx"
+}}
+
+cmd usage %{{
+	lines=$(grep -c . <<<"$fx")
+
+	if (( lines < 2 )); then
+		#printf "Jedna linija"
+		usg=$(du -sh $fx)
+	else
+		#printf "Više linija"
+		usg=$(du -shc $fx | tail -n 1 | sed "s/\ttotal/ in $lines file(s)/g")
+	fi
+
+	printf "Size on disk: $usg"
+}}
+
+# define a custom 'delete' command
+cmd delete %{{
+	line_count=$(grep -c . <<<"$fx")
+	selection=$(tr '\n' ' ' <<<"$fx")
+	lf -remote "send $id toggle $selection"
+
+	if (( line_count < 2)); then
+		# selection=$(basename $fx)
+		selection=${f##*/}
+	else
+		selection="$line_count file(s)"
+	fi
+
+	set -f
+	printf " Delete $selection? [yy/n]: "
+	read ans
+	# printf "$fx\nDelete? \"$fx\" [yy/n]: "
+
+	if [ "$ans" = "yy" ]; then
+		if (( line_count < 2)); then
+			printf "File $selection deleted!"
+		else
+			printf "Deleted $selection."
+		fi
+	else
+		if [ "$ans" = "n" ]; then 
+			echo "Deletion of $selection canceled."
+		else
+			echo "Deletion of $selection failed."
+		fi
+
+	fi
+
+	[ "$ans" = "yy" ] && rm -rf $fx
+}}
+# cmd delete %{{
+#	set -f
+#	# read -ep "$fx\ndelete? [y/n]: " -i "y" ans
+#	printf "$fx\nDelete? [y/n]: "
+#	read ans
+#	if [ "$ans" != "n" ]; then
+#		echo "Bravo!"
+#		echo "Bravo!"
+#	else
+#		echo "Hmmm ...."
+#	fi
+#	[ "$ans" != "n" ] && rm -rf $fx
+#}}
+
+cmd paste_replace_confirm %{{
+	mode=$(head -1 ~/.local/share/lf/files)
+	list=$(sed 1d ~/.local/share/lf/files)
+
+	if [ $mode = 'copy' ]; then
+		cp -i -r $list .
+		print "File(s) copied."
+	elif [ $mode = 'move' ]; then
+		mv -i $list .
+		print "File(s) moved."
+	fi
+	
+	# lf -remote 'send load'
+	lf -remote 'send clear'
+}}
+
+cmd paste_replace %{{
+	mode=$(head -1 ~/.local/share/lf/files)
+	list=$(sed 1d ~/.local/share/lf/files)
+
+	if [ $mode = 'copy' ]; then
+		cp -r $list .
+		print "File(s) copied."
+	elif [ $mode = 'move' ]; then
+		mv $list .
+		print "File(s) moved."
+	fi
+	
+	# lf -remote 'send load'
+	lf -remote 'send clear'
+}}
+
+cmd paste_duplicate %{{
+	count=$(wc -l < ~/.local/share/lf/files)
+
+	lf -remote "send $id paste"
+	lf -remote "send clear"
+
+	if (( count < 3)); then
+		# select last created file
+		last=$(ls -Art | tail -n 1)
+		mv -i "${last}" "${last/%.~1~/_bkp}"
+		last=$(ls -Art | tail -n 1)
+		lf -remote "send $id select $last"
+		# TODO - rename odmah posle kopiranja
+		# Ne treba mi, ali, bitno je da znam
+		# zašto donja komanda nije htela da radi!
+		# lf -remote "send $id rename $last"
+	fi
+}}
+
+cmd create_new_directory %{{
+	printf "Directory name: "
+	read dirname
+	mkdir "$dirname" && echo "Directory $dirname created."
+}}
+
+cmd create_new_file %{{
+	printf "File name: "
+	read filename
+	touch "$filename" && echo "File $filename created"
+}}
+
+# use '<delete>' key for either 'trash' or 'delete' command
+# map <delete> trash
+# map <delete> delete
+
+# extract the current file with the right command
+# (xkcd link: https://xkcd.com/1168/)
+cmd extract ${{
+    set -f
+    case $f in
+        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf $f;;
+        *.tar.gz|*.tgz) tar xzvf $f;;
+        *.tar.xz|*.txz) tar xJvf $f;;
+        *.zip) unzip $f;;
+        *.rar) unrar x $f;;
+        *.7z) 7z x $f;;
+    esac
+}}
+
+# compress current file or selected files with tar and gunzip
+cmd tar ${{
+    set -f
+    mkdir $1
+    cp -r $fx $1
+    tar czf $1.tar.gz $1
+    rm -rf $1
+}}
+
+# compress current file or selected files with zip
+cmd zip ${{
+    set -f
+    mkdir $1
+    cp -r $fx $1
+    zip -r $1.zip $1
+    rm -rf $1
+}}
+
+cmd set_background_image ${{
+    set -f
+	/usr/bin/feh --no-fehbg --bg-fill $f
+}}
+
+cmd fancy_rename ${{
+	# get 'basename' of the selection
+	filename="${f##*/}"
+	# quote it so we won't deal with quotes in the lf -remote command
+	filename="$(printf '%q' "$filename")"
+	filename="${filename// /<space>}"
+	lf -remote "send $id push :rename<space>$filename<a-b><c-b>"
+}}
+
+# cmd rename_bkp %{{
+# 	mv "${f}" "${f/%.~1~/_bkp}"
+# 	# select last created file
+# 	last=$(ls -Art | tail -n 1)
+# 	lf -remote "send $id select $last"
+# }}
+
+cmd chmod_644 ${{
+	chmod 644 $fx
+	lf -remote "send reload"
+}}
+
+cmd chmod_755 ${{
+	chmod 755 $fx
+	lf -remote "send reload"
+}}
+
+# ----- My custom mapping ----- #
+# map d
+# map dd zip
+map y #
+map d #
+map p #
+map yy  copy
+map dd  cut
+map pp  paste_replace_confirm; clear
+map pP  paste_replace; clear
+map pd  paste_duplicate; clear
+# map pp  :paste; clear
+map ad  push :delete
+map aD  delete
+map an  create_new_directory
+map af  create_new_file
+map ab  set_background_image
+# map ar  rename 
+# map ae  fancy_rename
+map r   #
+map rr  :rename
+map rf  :rename; cmd-home
+map re  :rename; cmd-end
+# map rk  rename_bkp
+map ap  proba
+map au  usage
+map .   set hidden!
+map ac  chmod_644
+map ax  chmod_755
+map gl  follow-link
+map g.  cd /home/korisnik/.config
+map g1  cd /home/korisnik/git
+map g2  cd /home/korisnik/sajtovi
+map gb  cd /home/korisnik/docs/bekap
+map q   #
+map qq  quit
+map Q   quit
+# map gf  cd -
+map <enter> open
