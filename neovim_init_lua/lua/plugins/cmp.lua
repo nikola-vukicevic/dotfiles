@@ -1,6 +1,6 @@
 -- -----------------------------------------------------------------------------
-local cmp     = require"cmp"
-local lspkind = require"lspkind"
+local cmp     = require("cmp")
+local lspkind = require("lspkind")
 -- -----------------------------------------------------------------------------
 local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 require("nvim-autopairs").setup()

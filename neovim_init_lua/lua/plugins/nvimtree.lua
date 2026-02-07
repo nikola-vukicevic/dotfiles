@@ -42,10 +42,10 @@ require("nvim-tree").setup({
 		dotfiles = false,
 	},
 	modified = {
-      enable            = true,
-      show_on_dirs      = true,
-      show_on_open_dirs = true,
-      -- debounce_delay = 50,
-    },
+		enable            = true,
+		show_on_dirs      = true,
+		show_on_open_dirs = true,
+		-- debounce_delay = 50,
+	},
 })
 

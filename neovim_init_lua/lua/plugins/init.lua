@@ -169,67 +169,104 @@ require("illuminate").configure({
 -- -------------------------------------------------------------------------- -
 -- Plugin - Telescope:
 -- -------------------------------------------------------------------------- -
--- local telescope_actions = require("telescope.actions")
--- vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
+local telescope_actions       = require("telescope.actions")
+local telescope_action_layout = require("telescope.actions.layout")
+
+vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
+
+require("telescope").setup({
+	defaults = {
+		initial_mode  = "normal",
+		prompt_prefix = " ",
+		-- borderchars    = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+		layout_config  = {
+			horizontal = {
+				width         = 0.76,
+				height        = 0.88,
+				preview_width = 0.46,
+			},
+		},
+		mappings = {
+			i = {
+				["<M-p>"] = telescope_action_layout.toggle_preview,
+				-- ["<esc>"] = telescope_actions.close,
+				-- ["<F1"]   = telescope_actions.close,
+			},
+			n = {
+				["<M-p>"] = telescope_action_layout.toggle_preview,
+				["q"]     = telescope_actions.close,
+				-- ["<esc>"] = telescope_actions.close,
+			},
+		},
+	},
+	pickers = {
+		ignore_current_buffer = true,
+		sort_mru              = true,
+
+		live_grep = {
+			-- prompt_prefix = " ",
+			initial_mode = "insert",
+			mappings = {
+				i = {
+					["<m-d>"] = telescope_actions.to_fuzzy_refine,
+					-- ["<c-f>"] = actions.to_fuzzy_refine
+				},
+			}
+		},
+
+		-- find_files = {
+		-- 	initial_mode = "insert",
+		-- },
+
+		buffers = {
+			-- on_load = telescope_actions.send_to_qflist + telescope_actions.open_qflist,
+			sort_mru = true,
+			mappings = {
+				n = {
+					-- ["dd"] = telescope_actions.delete_buffer + telescope_actions.move_to_top,
+					["<M-q>"] = telescope_actions.send_to_qflist + telescope_actions.open_qflist
+					-- ["<c-f>"] = actions.to_fuzzy_refine
+				},
+			}
+		}
+	},
+	extensions = {
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown({
+				-- prompt_prefix = " ",
+				layout_strategy = "cursor",
+				layout_config = {
+					width  = 54,
+					height = 9,
+					-- TODO: funkcija koja prebrojava
+					-- stavke u meniju
+				}
+			})
+		},
+		--
+		-- ["fzf"] = {
+		-- 	fuzzy                   = true,          -- false will only do exact matching
+		-- 	override_generic_sorter = true,          -- override the generic sorter
+		-- 	override_file_sorter    = true,          -- override the file sorter
+		-- 	case_mode               = "smart_case",  -- or "ignore_case" or "respect_case"
+		-- 	                                         -- the default case_mode is "smart_case"
+		-- },
+	},
+})
 --
--- require("telescope").setup({
--- 	defaults = {
--- 		initial_mode = "normal",
--- 		-- borderchars    = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
--- 		layout_config  = {
--- 			horizontal = {
--- 				width         = 0.70,
--- 				height        = 0.85,
--- 				preview_width = 0.52,
--- 			},
--- 		},
--- 		mappings = {
--- 			i = {
--- 				-- ["<esc>"] = telescope_actions.close,
--- 				-- ["<F1"]   = telescope_actions.close,
--- 			},
--- 			n = {
--- 				["q"] = telescope_actions.close,
--- 				-- ["<esc>"] = telescope_actions.close,
--- 			},
--- 		},
--- 	},
--- 	pickers = {
--- 		ignore_current_buffer = true,
--- 		sort_mru              = true,
---
--- 		live_grep = {
--- 			initial_mode = "insert"
--- 		},
---
--- 		buffers = {
--- 			sort_mru = true
--- 		}
--- 	},
--- 	extensions = {
--- 		["ui-select"] = {
--- 			require("telescope.themes").get_dropdown({
--- 				layout_strategy = "cursor",
--- 				layout_config = {
--- 					width  = 54,
--- 					height = 9,
--- 					-- TODO: funkcija koja prebrojava
--- 					-- stavke u meniju
--- 				}
--- 			})
--- 		},
--- 		--
--- 		["fzf"] = {
--- 			fuzzy                   = true,          -- false will only do exact matching
--- 			override_generic_sorter = true,          -- override the generic sorter
--- 			override_file_sorter    = true,          -- override the file sorter
--- 			case_mode               = "smart_case",  -- or "ignore_case" or "respect_case"
--- 		                                             -- the default case_mode is "smart_case"
--- 		},
--- 	},
--- })
---
--- require("telescope").load_extension("ui-select")
+require("telescope").load_extension("ui-select")
+-- require('telescope').load_extension("fzf")
+-- -------------------------------------------------------------------------- -
+-- Better Quickfix (nvim-bqf)
+-- -------------------------------------------------------------------------- -
+require("bqf").setup({
+	preview = {
+		win_height  = 18,
+		win_vheight = 12,
+		winblend    = 0,
+	}
+})
+
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
 -- -------------------------------------------------------------------------- -
