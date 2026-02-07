@@ -28,25 +28,6 @@ require("lazy").setup(
 				},
 			},
 		},
-		{
-			"folke/snacks.nvim",
-			---@type snacks.Config
-			opts = {
-				picker = {
-					enabled = true,
-					layout = {
-						preset = "telescope",
-						width  = 0.2,
-						height = 0.8,
-						layout = {
-							-- width  = 48,
-							-- height = 36,
-						}
-					},
-					on_show = UnpressI -- custom mini funkcija
-				}
-			}
-		},
 		"nvim-tree/nvim-web-devicons",
 		"kyazdani42/nvim-tree.lua",
 		-- "nvim-tree/nvim-tree.lua",
@@ -146,20 +127,26 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		-- Telescope:
 		-- ---------------------------------------------
+		{
+			"nvim-telescope/telescope.nvim",
+			version = "*",
+			-- branch = 'master',
+			-- branch = 'feat/unwritten-buffer-previewer',
+			-- tag = "0.2.1",
+			-- branch = '0.1.x',
+			dependencies = {
+				"nvim-lua/plenary.nvim",
+				-- {
+				-- 	"nvim-telescope/telescope-fzf-native.nvim",
+				-- 	build = "make"
+				-- },
+				"nvim-telescope/telescope-ui-select.nvim"
+			}
+		},
 		-- "ibhagwan/fzf-lua",
 		-- {
-		-- 	"nvim-telescope/telescope.nvim",
-		-- 	tag = "0.1.8",
-		-- 	-- branch = 'feat/unwritten-buffer-previewer',
-		-- 	-- branch = '0.1.x',
-		-- 	-- branch = 'master',
-		-- 	dependencies = { "nvim-lua/plenary.nvim" }
+		-- 	"folke/snacks.nvim",
 		-- },
-		-- {
-		-- 	"nvim-telescope/telescope-fzf-native.nvim",
-		-- 	run = "make"
-		-- },
-		-- "nvim-telescope/telescope-ui-select.nvim",
 		-- ---------------------------------------------
 		-- Vim visual multi (multi cursor):
 		-- ---------------------------------------------
@@ -290,7 +277,7 @@ require("lazy").setup(
 				vim.notify = require("notify")
 			end
 		},
-		-- "kevinhwang91/nvim-bqf",
+		"kevinhwang91/nvim-bqf",
 		-- "nvimdev/indentmini.nvim",
 		{
 			"lukas-reineke/indent-blankline.nvim",

@@ -215,8 +215,8 @@ end
 function PronalazenjeNaslova()
 	vim.cmd("vimgrep /^#\\{1,6} \\k/ %")
 	-- require('telescope.builtin').quickfix()
-	-- vim.cmd("copen")
-	Snacks.picker.qflist()
+	vim.cmd("copen")
+	-- Snacks.picker.qflist()
 end
 -- -----------------------------------------------------------------------------
 -- UokviravanjeSelekcije:
@@ -446,7 +446,8 @@ end
 -- realnu nisku iz teksta, koja se uokviruje)
 
 function CitanjeParovaIzStringa(s)
-	local p1 = string.sub(s, string.find(s, " ") + 1, string.find(s, "%%s<") - 1)
+	local p1 = string.sub(s, 0, string.find(s, "%%s") - 1)
+	-- local p1 = string.sub(s, string.find(s, " ") + 1, string.find(s, "%%s<") - 1)
 	local p2 = string.sub(s, string.find(s, "%%s.*") + 2)
 
 	return { p1 , p2 }
@@ -510,6 +511,155 @@ function ObradaMenija(ulaz, mode)
 	-- end
 end
 -- -----------------------------------------------------------------------------
+function PodesavanjeUiSelectProzora(tip, sirina, visina)
+	require("telescope").setup({
+		extensions = {
+			["ui-select"] = {
+				require("telescope.themes").get_dropdown({
+					layout_strategy = tip,
+					layout_config   = {
+						width  = sirina,
+						height = visina,
+					}
+				})
+			}
+		}
+	})
+
+	require("telescope").load_extension("ui-select")
+end
+-- -----------------------------------------------------------------------------
+-- Quick buffer switcher:
+-- -----------------------------------------------------------------------------
+function PronalazenjeOtvorenihBafera()
+	return vim.tbl_filter(function(bufnr)
+		return vim.api.nvim_buf_get_option(bufnr, "buflisted")
+	end, vim.api.nvim_list_bufs())
+end
+--
+function DaLiJeTrenutni(bufnr)
+	local bufnr_trenutni = vim.fn.bufnr('%')
+	return bufnr_trenutni == bufnr
+end
+--
+function DaLiJePrethodni(bufnr)
+	local bufnr_prethodni = vim.fn.bufnr('#')
+	return bufnr_prethodni == bufnr
+end
+--
+function PronalazenjeImenaPoBufNumberu(bufnr)
+	local path = vim.api.nvim_buf_get_name(bufnr)
+	local cwd  = vim.loop.cwd()
+	local name = string.gsub(path, cwd, "")
+
+	return name
+end
+--
+function UredjivanjeListeOtvorenihBafera(lista_obj)
+	local konacna_lista = { }
+
+	if lista_obj.trenutni ~= "" then
+		table.insert(konacna_lista, lista_obj.trenutni)
+	end
+
+	if lista_obj.prethodni ~= "" then
+		table.insert(konacna_lista, lista_obj.prethodni)
+	end
+
+	for _, ime_datoteke in ipairs(lista_obj.nova_lista) do
+		table.insert(konacna_lista, ime_datoteke)
+	end
+
+	return konacna_lista
+end
+--
+function PopunjavanjeListeOtvorenihBafera()
+	lista_bafera = PronalazenjeOtvorenihBafera()
+	lista_imena  = {
+		trenutni   = "",
+		prethodni  = "",
+		najsiri    = 0,
+		nova_lista = { }
+	}
+	
+	-- TODO: Da li pisati "skroz efikasno" grananje?
+	for _, bufnr in ipairs(lista_bafera) do
+		local ime_datoteke = PronalazenjeImenaPoBufNumberu(bufnr)
+
+		if vim.api.nvim_buf_get_option(bufnr, "modified") then
+			ime_datoteke = ime_datoteke .. " [+]"
+		end
+
+		local d = #ime_datoteke
+		if #ime_datoteke > lista_imena.najsiri then lista_imena.najsiri = d end
+
+		if DaLiJeTrenutni(bufnr) then
+			lista_imena.trenutni = ime_datoteke
+		elseif DaLiJePrethodni(bufnr) then
+			lista_imena.prethodni = ime_datoteke
+		else
+			table.insert(lista_imena.nova_lista, ime_datoteke)
+		end
+	end
+
+	local konacna_lista = UredjivanjeListeOtvorenihBafera(lista_imena)
+	local sirina = lista_imena.najsiri + 8
+	local visina = #konacna_lista + 4
+	-- Korekcije:
+	sirina = math.min(sirina, 80) -- najveća širina:  80
+	sirina = math.max(sirina, 32) -- najmanja širina: 32
+	visina = math.min(visina, 24) -- najveća visina:  20 redova sa nazivima
+	visina = math.max(visina, 7)  -- najmanja visina: 3 reda sa nazivima
+
+	return {
+		lista         = konacna_lista,
+		sirina        = sirina,
+		visina        = visina,
+		broj_datoteka = #konacna_lista
+	}
+end
+--
+-- TODO
+function prepravkaBufferListItem(item)
+	if string.sub(item, -1) == "]" then
+		item = string.sub(item, 0, -4)
+	end
+	return item
+end
+--
+function SimpleBufferSwitcher()
+	local bafer_info = PopunjavanjeListeOtvorenihBafera()
+	-- print(vim.inspect(bafer_info))
+	if bafer_info.broj_datoteka == 0 then
+		vim.notify("Nema otvorenih datoteka.", "info", { title = "Buffer switcher"} )
+		return
+	end
+
+	if bafer_info.broj_datoteka == 1 then
+		vim.notify("Jedina otvorena datoteka je već prikazana.", "info", { title = "Buffer switcher"} )
+		return
+	end
+
+	PodesavanjeUiSelectProzora("center", bafer_info.sirina, bafer_info.visina)
+	-- +8 je padding sa desne strane (2 brordera + prompt + spejs 
+	-- + pravi padding)
+	-- +4 je dodatni "broj redova" u koje se ubrajaju
+	-- 3 bordera i 1 ulazno polje.
+
+	vim.ui.select(
+		bafer_info.lista ,
+		-- lista_imena ,
+		{
+			prompt = "Buffer switcher"
+		} ,
+		function(choice)
+			if choice == nil then return end
+			local ime_datoteke = prepravkaBufferListItem(choice)
+			vim.cmd(":buffer " .. ime_datoteke)
+		end
+	)
+end
+-- -----------------------------------------------------------------------------
 -- Funkcija koja se poziva direktno iz programa
 -- Na ovom mestu biće definisana lista tagova (neće biti prevelika)
 -- Radna funkcija (definisana iznad) je callback funkcija funkcije
@@ -517,15 +667,22 @@ end
 
 function UokviravanjeSelekcije(mode)
 	-- print(string.format("mode: %s", mode))
+	PodesavanjeUiSelectProzora("cursor", 47, 9)
+
 	vim.ui.select(
 		{
-			"1. <code class='kod_u_tekstu'>%s</code>" ,
-			"2. <%s>" ,
-			"3. <em>%s</em>",
-			"4. <strong>%s</strong>",
-			"5. <a href=''>%s</a>",
+			"<code class='kod_u_tekstu'>%s</code>" ,
+			"<%s>" ,
+			"<em>%s</em>",
+			"<strong>%s</strong>",
+			"<a href=''>%s</a>",
+			-- "1. <code class='kod_u_tekstu'>%s</code>" ,
+			-- "2. <%s>" ,
+			-- "3. <em>%s</em>",
+			-- "4. <strong>%s</strong>",
+			-- "5. <a href=''>%s</a>",
 		} ,
-	    {
+		{
 			prompt = "Izbor taga",
 		} ,
 		function(choice)
@@ -611,8 +768,8 @@ function LSPRenameHandler(err, result, context, config)
 	--
 	-- print(vim.inspect(lista))
 	vim.fn.setqflist(lista, "r")
-	-- vim.cmd("copen")
-	Snacks.picker.qflist()
+	vim.cmd("copen")
+	-- Snacks.picker.qflist()
 	-- require('telescope.builtin').quickfix()
 end
 -- -----------------------------------------------------------------------------

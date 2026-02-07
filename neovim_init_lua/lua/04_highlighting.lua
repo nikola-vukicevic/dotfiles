@@ -86,6 +86,7 @@ if basicHL == true then
 	vim.cmd("hi IlluminatedWordText    guibg=none guifg=#ffeedd")
 	-- -----
 	-- CMP MENU:
+	-- -----
 	vim.cmd("hi CMPWindow  guibg=#30313a")
 	vim.cmd("hi CmpDocWin  guibg=None")
 	vim.cmd("hi CMPLine    guibg=#3c3e5a")
@@ -97,6 +98,7 @@ if basicHL == true then
 	vim.api.nvim_set_hl ( 0 , "LspSignatureHint" ,             { fg = '#e0a080', bold = true } )                 --"#2c303d",                } )
 	-- -----
 	-- Float:
+	-- -----
 	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                --"#2c303d",                } )
 	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#80828a', bold = true } )  -- "#8080a0"
 	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#707484', bold = true } )  -- "#8080a0"
@@ -111,54 +113,72 @@ if basicHL == true then
 	vim.cmd("hi FloatermBorder guibg=None guifg=#cc8833")
 	-- -----
 	-- Mini notify:
+	-- -----
 	vim.api.nvim_set_hl(0, "NotifyBackground", { bg = boja_202 } )
 	-- -----
 	-- Lazy border:
+	-- -----
 	vim.cmd("hi LazyNormal  guifg=#cccccc")
 	-- -----
 	-- LSP Saga border:
+	-- -----
 	-- vim.cmd("hi SagaBorder guifg=#cc8833")
 	-- -----
 	-- NvimTree:
+	-- -----
 	vim.api.nvim_set_hl(0, "NvimTreeNormal",       {  } )
 	vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", {  } )
 	-- -----
 	-- Spell checker:
+	-- -----
 	vim.api.nvim_set_hl(0, "SpellBad", { fg = "#ff3355", underline = true, bold = true } )
 	-- -----
-	-- Better Quick Fix:
-	vim.api.nvim_set_hl(0, "BqfPreviewFloat", { bg = '#292b39' } )
-	vim.api.nvim_set_hl(0, "BqfPreviewBorder", { bg = '#292b39' } )
-	vim.api.nvim_set_hl(0, "BqfPreviewTitle", { bg = '#292b39' } )
+	-- Better Quickfix (nvim-bqf):
+	-- -----
+	vim.api.nvim_set_hl(0, "BqfPreviewFloat",  { bg = '#292b39'                 } )
+	vim.api.nvim_set_hl(0, "BqfPreviewBorder", { bg = '#292b39', fg = '#70747a' } )
+	vim.api.nvim_set_hl(0, "BqfPreviewTitle",  { bg = '#292b39'                 } )
 	-- -----
 	-- Scope highlighting(indent-blankline):
+	-- -----
 	vim.api.nvim_set_hl(0, "IblScope", { fg = '#505050' } )
 	-- -----
 	-- Scope highlighting(indentmini):
+	-- -----
 	-- vim.api.nvim_set_hl(0, "IndentLine",        { fg = '#323d37' } )
 	-- vim.api.nvim_set_hl(0, "IndentLineCurrent", { fg = '#505050' } )
 	-- -----
 	-- Outline:
+	-- -----
 	vim.api.nvim_set_hl(0, "OutlineGuides",   { fg = '#505050' } )
 	vim.api.nvim_set_hl(0, "OutlineFunction", { fg = boja_111, bold = bold } )
 	-- -----
 	-- Hover markup:
+	-- -----
 	-- vim.api.nvim_set_hl(0, "@markup.strong", { fg = boja_111, bold = bold } )
 	vim.api.nvim_set_hl(0, "@markup.strong", { fg = '#f0f0f0', bold = bold   } ) -- #d0d0a0 -- #d09050
 	vim.api.nvim_set_hl(0, "@markup.italic", { fg = '#eaeafe', italic = true } ) -- #boboe0 -- #e0e0e0
 	vim.api.nvim_set_hl(0, "@markup.raw",    { fg = '#a0a4b0'                } )
 	-- -----
 	-- Folke Snacks:
-	vim.api.nvim_set_hl(0, "SnacksPickerBorder",   { fg = '#60646a' } ) -- #d0d0a0 -- #d09050
-	vim.api.nvim_set_hl(0, "SnacksPickerBufFlags", { fg = '#80848a' } ) -- #d0d0a0 -- #d09050
-	vim.api.nvim_set_hl(0, "SnacksPickerTotals",   { fg = '#c0c4aa' } ) -- #d0d0a0 -- #d09050
-	vim.api.nvim_set_hl(0, "SnacksPickerDir",      { fg = '#d0d4d2' } ) -- #d0d0a0 -- #d09050
-	vim.api.nvim_set_hl(0, "SnacksPickerCol",      { fg = '#778084' } ) -- #d0d0a0 -- #d09050
-	vim.api.nvim_set_hl(0, "SnacksPickerInputTitle",    { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
-	vim.api.nvim_set_hl(0, "SnacksPickerPreviewTitle",  { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
-	vim.api.nvim_set_hl(0, "SnacksPickerListTitle",     { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
-	vim.api.nvim_set_hl(0, "SnacksPickerBoxTitle",      { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
-	-- vim.api.nvim_set_hl(0, "SnacksPickerTitle",         { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	-- -----
+	-- vim.api.nvim_set_hl(0, "SnacksPickerBorder",        { fg = '#60646a' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerBufFlags",      { fg = '#80848a' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerTotals",        { fg = '#c0c4aa' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerDir",           { fg = '#d0d4d2' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerCol",           { fg = '#778084' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksTitle",               { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerInputTitle",    { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerPreviewTitle",  { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerListTitle",     { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerMatch",         { fg = '#f0f0ff', bold = bold } ) -- #d0d0a0 -- #d09050
+	-- vim.api.nvim_set_hl(0, "SnacksPickerBoxTitle",      { bg = '#30343a' } ) -- #d0d0a0 -- #d09050
+	-- -----
+	-- Vim visual multi (multi cursor)
+	-- -----
+	vim.api.nvim_set_hl(0, "VM_Insert",  { fg = "#202122", bg = "#ff5577" } )
+	vim.api.nvim_set_hl(0, "VM_Mono",    { fg = "#202122", bg = "#f0c0a0" } )
+	vim.api.nvim_set_hl(0, "VM_Extend",  { fg = "#202122", bg = "#77a0ff" } )
 end
 -- -----------------------------------------------------------------------------
 -- nvim-cmp
@@ -299,10 +319,12 @@ vim.api.nvim_set_hl ( 0 , "DapUIStoppedThread" ,        { fg = "#5070c0", bold =
 -- -------------------------------------------------------------------------- --
 if TelescopeHL == true then
 	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,         { } )                 --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#909090" }                 ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#60646a" }                  ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeTitle" ,          {  bg = "#30343a", fg = "#d0d2f4"  } ) --"#2c303d", fg = "#d0d0d0" } )
+	-- vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#909090" }                 ) --"#2c303d", fg = "#d0d0d0" } )
 	-- vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#b0b0b0" } ) --"#2c303d", fg = "#d0d0d0" } )
-	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#f09080" }                 ) --"#2c303d", fg = "#d0d0d0" } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeSelection" ,      {  fg = "#e0e0e0", bg = "#464a5f" } ) --"#cad3f5", fg = "#363a4f" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#f09080" }                  ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeSelection" ,      {  fg = "#e0e0e0", bg = "#464a5f" }  ) --"#cad3f5", fg = "#363a4f" } )
 end
 -- -------------------------------------------------------------------------- --
 -- Breadcrumbs plugin:
