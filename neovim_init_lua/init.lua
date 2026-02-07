@@ -151,19 +151,20 @@ vim.api.nvim_create_autocmd("FileType", {
 	command = [[nnoremap <buffer> <CR> <CR>:cclose<CR>]]
 })
 --
-vim.api.nvim_create_user_command('GetLspReferences', function()
-	vim.api.nvim_create_autocmd('FileType', {
-		pattern = 'qf',
-		once = true,
-		desc = 'Close the next quickfix window',
-		callback = vim.schedule_wrap(function()
-			vim.cmd('quit')
-			Snacks.picker.qflist()
-		end)
-	})
-
-	vim.lsp.buf.references()
-end, {})
+-- vim.api.nvim_create_user_command('GetLspReferences', function()
+-- 	vim.api.nvim_create_autocmd('FileType', {
+-- 		pattern = 'qf',
+-- 		once = true,
+-- 		desc = 'Close the next quickfix window',
+-- 		callback = vim.schedule_wrap(function()
+-- 			vim.cmd('quit')
+-- 			vim.cmd('Telescope quickfix')
+-- 			-- Snacks.picker.qflist()
+-- 		end)
+-- 	})
+--
+-- 	vim.lsp.buf.references()
+-- end, {})
 --
 -- vim.api.nvim_create_autocmd('FileType', {
 -- 	pattern = 'qf',
@@ -190,6 +191,17 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		vim.g.spell_check = true
 	end
 })
+--
+-- vim.api.nvim_create_autocmd("FileType", {
+-- 	pattern  = {
+-- 		"snacks_picker_preview"
+-- 	},
+-- 	callback = function()
+-- 		vim.cmd("set wrap")
+-- 		vim.cmd("set filetype=imd")
+-- 		print("Dobar dan! :)")
+-- 	end
+-- })
 --
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern  = {
