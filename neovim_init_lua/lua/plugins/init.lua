@@ -88,6 +88,47 @@ vim.diagnostic.config({
 		-- },
 	-- }
 })
+--
+function SortErrorWarnInfo(qf_list)
+	-- print(vim.inspect(qf_list))
+	-- local lista_error   = { }
+	local lista_warn    = { }
+	local lista_info    = { } -- TODO: proveriti da li ova lista može sadržati "još nešto" (osim severity.INFO)
+	local konacna_lista = { }
+
+	-- razvrstavanje poruka (ERROR poruke
+	-- se odmah ubacuju u konačnu listu)
+	for _, item in ipairs(qf_list) do
+		if item.type == "E" then
+			table.insert(konacna_lista, item)
+		elseif item.type == "W" then
+			table.insert(lista_warn, item)
+		else
+			table.insert(lista_info, item)
+		end
+	end
+
+	-- ubacivanje WARN poruka u konačnu listu:
+	for _, item in ipairs(lista_warn) do
+		table.insert(konacna_lista, item)
+	end
+
+	-- ubacivanje INFO poruka u konačnu listu:
+	for _, item in ipairs(lista_info) do
+		table.insert(konacna_lista, item)
+	end
+	-- print(vim.inspect(konacna_lista))
+
+	return konacna_lista
+end
+--
+function FancyErrorWarnInfoList()
+	vim.diagnostic.setqflist( { open = false } )
+	local lista      = vim.fn.getqflist()
+	local nova_lista = SortErrorWarnInfo(lista)
+	vim.fn.setqflist(nova_lista, 'r')
+	vim.cmd.copen()
+end
 -- -----------------------------------------------------------------------------
 -- Plugin - Tree-sitter:
 -- -------------------------------------------------------------------------- --
@@ -232,16 +273,16 @@ require("telescope").setup({
 	},
 	extensions = {
 		["ui-select"] = {
-			require("telescope.themes").get_dropdown({
+			-- require("telescope.themes").get_dropdown({
 				-- prompt_prefix = " ",
-				layout_strategy = "cursor",
-				layout_config = {
-					width  = 54,
-					height = 9,
+				-- layout_strategy = "cursor",
+				-- layout_config = {
+					-- width  = 54,
+					-- height = 9,
 					-- TODO: funkcija koja prebrojava
 					-- stavke u meniju
-				}
-			})
+				-- }
+			-- })
 		},
 		--
 		-- ["fzf"] = {
