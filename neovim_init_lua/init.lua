@@ -303,6 +303,13 @@ vim.api.nvim_create_autocmd({ "Cursormoved"	}, {
 		end
 	end
 })
+--
+vim.api.nvim_create_autocmd("VimLeavePre", {
+	group = vim.api.nvim_create_augroup("SavingCurrentSession", { clear = true}),
+	callback = function()
+		SaveSession()
+	end
+})
 -- -----------------------------------------------------------------------------
 if vim.g.barebones_CFG ~= true then
 	require ('plugins')
