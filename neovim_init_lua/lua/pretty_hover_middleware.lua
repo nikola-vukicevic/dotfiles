@@ -21,10 +21,15 @@ function DaLiJeSpecijalni(token)
 	if token:startsWith("```")  then return true end
 	if token:startsWith("---")  then return true end
 	if token:startsWith(" ---") then return true end
+	-- Da li počinje velikim slovom:
+	if string.match(token:sub(1, 1), "%u") then return true end
+	-- Da li počinje cifrom:
+	if string.find(token, "^%d")           then return true end
 	-- if token:startsWith("\\\\---")     then return true end
 	-- C/C++:
 	if token:startsWith("\\---")        then return true end
 	if token:startsWith("- ")           then return true end
+	if token:startsWith("\\- ")         then return true end
 	if token:startsWith("→ ")           then return true end
 	if token:startsWith("Parameters:")  then return true end
 	if token:startsWith("@brief")       then return true end
