@@ -15,6 +15,10 @@ function UnpressI()
 	vim.cmd.stopinsert()
 end
 -- -----------------------------------------------------------------------------
+function InspectTable(table)
+	print(vim.inspect(table))
+end
+-- -----------------------------------------------------------------------------
 function SpelovanjeToggle()
 	if vim.g.spell_check == false then
 		vim.g.spell_check = true
@@ -215,17 +219,25 @@ end
 function PronalazenjeNaslova()
 	vim.cmd("vimgrep /^#\\{1,6} \\k/ %")
 	-- require('telescope.builtin').quickfix()
-	vim.cmd("copen")
+	vim.cmd("botright copen")
 	-- Snacks.picker.qflist()
 end
 -- -----------------------------------------------------------------------------
 -- UokviravanjeSelekcije:
 -- -----------------------------------------------------------------------------
-function DaLiJeASCII(c)
+function DaLiJeASCII(char)
 	-- print("ASCII provera: '" .. c .. "'")
-	return string.byte(c) <= 127
+	return string.byte(char) <= 127
 end
 -- -----------------------------------------------------------------------------
+function DaLiJeVelikoSlovo(char)
+	return char == string.upper(char)
+end
+-- ----------------------------------------------------------------------------
+function DaLiJeCifra(char)
+	return string.byte(char) >= '0' and string.byte(char) <= '9'
+end
+-- ----------------------------------------------------------------------------
 function DaLiJeGranicnikZaProsirivanje(c)
 	if c == " " then return true end
 	if c == "<" then return true end
@@ -659,6 +671,64 @@ function SimpleBufferSwitcher()
 		end
 	)
 end
+--
+function PronalazenjeKursoraUJumplisti(bufnr)
+	local jumplist = vim.fn.getjumplist()[1]
+
+	for i = #jumplist, 1, -1 do
+		if jumplist[i].bufnr == bufnr then
+			return {
+				lnum = jumplist[i].lnum,
+				col  = jumplist[i].col
+			}
+		end
+	end
+
+	return {
+		lnum = 0,
+		col  = 0
+	}
+end
+--
+function PripremaQfItemaZaBafer(datoteka)
+	local bufnr    = vim.fn.bufnr(datoteka)
+	-- local lnum     = -1
+	-- local col      = -1
+
+	local kursor = PronalazenjeKursoraUJumplisti()
+
+	return {
+		bufnr = bufnr,
+		lnum  = kursor.lnum,
+		col   = kursor.col,
+		text  = "",
+	}
+end
+--
+function QfBufferSwitcher()
+	local bafer_info = PopunjavanjeListeOtvorenihBafera()
+	-- print(vim.inspect(bafer_info))
+	if bafer_info.broj_datoteka == 0 then
+		vim.notify("Nema otvorenih datoteka.", "info", { title = "Buffer switcher"} )
+		return
+	end
+
+	if bafer_info.broj_datoteka == 1 then
+		vim.notify("Jedina otvorena datoteka je već prikazana.", "info", { title = "Buffer switcher"} )
+		return
+	end
+
+	local qflista = { }
+
+	for _,datoteka in ipairs(bafer_info.lista) do
+		local qfitem = PripremaQfItemaZaBafer(datoteka)
+		table.insert(qflista, qfitem)
+		-- InspectTable(qfitem)
+	end
+
+	vim.fn.setqflist(qflista, "r")
+	vim.cmd("copen")	
+end
 -- -----------------------------------------------------------------------------
 -- Funkcija koja se poziva direktno iz programa
 -- Na ovom mestu biće definisana lista tagova (neće biti prevelika)
@@ -699,6 +769,19 @@ end
 -- -----------------------------------------------------------------------------
 -- LSP RENAME:
 -- -----------------------------------------------------------------------------
+function GetLspReferences()
+	vim.lsp.buf.references(
+		nil, 
+		{
+			on_list = function(options)
+				-- InspectTable(options)
+				vim.fn.setqflist(options.items, "r")
+				require("telescope.builtin").quickfix({ prompt_title = "LSP references" })
+			end
+		}
+	)
+end
+--
 function LSPRenamePripremaQuickFixa(promena, bufnr)
 	local linija_start = promena.range.start.line + 1
 	local linija       = vim.api.nvim_buf_get_lines(bufnr, linija_start - 1, linija_start, false)[1]
@@ -768,9 +851,9 @@ function LSPRenameHandler(err, result, context, config)
 	--
 	-- print(vim.inspect(lista))
 	vim.fn.setqflist(lista, "r")
-	vim.cmd("copen")
+	-- vim.cmd("botright copen")
 	-- Snacks.picker.qflist()
-	-- require('telescope.builtin').quickfix()
+	require('telescope.builtin').quickfix({ prompt_title = "Rename (LSP references)" })
 end
 -- -----------------------------------------------------------------------------
 function LSPRename(ime)
@@ -864,84 +947,104 @@ end
 -- -----------------------------------------------------------------------------
 -- Bolji quit:
 -- -----------------------------------------------------------------------------
-function prebrojavanjeBafera()
-	local baferi = vim.fn.getbufinfo()
-	local n = 0
+function prebrojavanjeProzoraIBafera()
+	local lista_prozora = vim.api.nvim_list_wins()
+	local lista_bafera  = { }
 
-	for _,bafer in ipairs(baferi) do
-		if bafer.listed > 0 and bafer.name ~= "" then
-			n = n + 1
+	for _,winnr in ipairs(lista_prozora) do
+		local bufnr  = vim.api.nvim_win_get_buf(winnr)
+		local indeks = "buf_" .. bufnr
+
+		if not lista_bafera[indeks] then
+			lista_bafera[indeks] = { }
 		end
+
+		table.insert(lista_bafera[indeks], winnr)
 	end
 
-	return n
+	return lista_bafera
 end
--- -----
-function prebrojavanjeElemenataTabele(t)
-	local n = 0
-
-	for _, v in pairs(t) do
-		n = n + 1
-	end
-
-	return n
-end
--- -----
-function izlistavanjeProzora()
-	local prozori = vim.fn.getwininfo()
-	local n_win   = prebrojavanjeElemenataTabele(prozori)
-	local buf     = vim.api.nvim_get_current_buf()
-	local n_curr  = 0
-	local t = { }
-	-- local n_w = vim.fn.winnr("$")     -- broj prozora
-
-	for _,prozor in ipairs(prozori) do
-		if prozor.bufnr == buf then
-			n_curr = n_curr + 1
-		end
-		-- print(prozor.bufnr)
-		t[prozor.bufnr] = 1 -- može (skoro) bilo šta umesto 1
-	end
-
-	local n_buf = prebrojavanjeBafera()
-	print("#win: " .. n_win .. " #buf: " .. n_buf .. " #curr: " .. n_curr)
-	-- return {
-	-- 	n_win = n_win,
-	-- 	n_buf = n_buf,
-	-- 	n_curr = n_curr
-	-- }
-	return { n_win, n_buf, n_curr }
-end
--- --------------------
+--
+-- function fancyPrebrojavanjeZaTabelu(tabela)
+-- 	local prebrojavanje = 0
+--
+-- 	for _ in pairs(tabela) do
+-- 		prebrojavanje = prebrojavanje + 1
+-- 	end
+--
+-- 	return prebrojavanje
+-- end
+--
 function boljiQuit()
-	local n_win, n_buf, n_curr = unpack(izlistavanjeProzora())
+	local lista_bafera = prebrojavanjeProzoraIBafera()
+	local indeks       = "buf_" .. vim.api.nvim_buf_get_number(0)
+	-- local broj_bafera  = fancyPrebrojavanjeZaTabelu(lista_bafera)
 
-	if n_buf > 1 then
-		if n_curr > 1 then
-			vim.cmd("q")
-		else
-			-- vim.cmd("set bufhidden=delete | bprevious")
-			-- vim.cmd("bp|bd#")
-			vim.cmd("bprevious|bdelete#")
-		end
+	-- InspectTable(lista_bafera)
+	-- print(broj_bafera)
+	-- print(#lista_bafera[indeks])
+
+	if #lista_bafera[indeks] < 2 then
+		vim.cmd("bd")
 	else
-		if n_win > 1 then
-			vim.cmd("q")
-		else
-			vim.cmd("bd")
-		end
+		vim.cmd("q")
+	end
+end
+-- -----------------------------------------------------------------------------
+-- Session management (DIY):
+-- -----------------------------------------------------------------------------
+function GenerisanjeSessionImenaZaCwd()
+	local cwd_ime = string.gsub(vim.loop.cwd(), "/", '____')
+	-- print("cwd_ime: " .. cwd_ime)
+	return cwd_ime
+end
+--
+function LoadSession(dir)
+	local putanja     = "/home/korisnik/.local/state/nvim/sessions/"
+	local last_ime    = "last.vim"
+	local cwd_ime     = "nepostojeca_datoteka.vim"
+	local info_poruka = ""
+
+	if dir == "last" then
+		cwd_ime     = last_ime
+		info_poruka = "Učitan poslednji session."
+	elseif dir == "cwd" then
+		cwd_ime     = GenerisanjeSessionImenaZaCwd() .. ".vim"
+		info_poruka = "Učitan session za cwd:\n" .. vim.loop.cwd()
 	end
 
+	putanja = putanja .. cwd_ime
 
-	-- if n_win > 1 then
-	-- 	if n_curr > 1 then
-	-- 		vim.cmd("q")
-	-- 	else
-	-- 		vim.cmd("bp|bd#")
-	-- 	end
-	-- else
-	-- 	vim.cmd("bd")
-	-- end
+	if not vim.loop.fs_stat(putanja) then
+		if dir == "last" then
+			info_poruka = "Ne postoji 'poslednji' sačuvani session!"
+		else
+			info_poruka = "Ne postoji sačuvan session za trenutni cwd!"
+		end
+		vim.notify(info_poruka, "info", { title = "Info" } )
+
+		return
+	end
+
+	vim.cmd.source(putanja)
+	vim.notify(info_poruka, "info", { title = "Info" } )
+end
+--
+function SaveSession()
+	local lista_bafera = PronalazenjeOtvorenihBafera()
+	-- print(vim.inspect(lista_bafera))
+
+	if #lista_bafera < 1 then
+		-- print("Doviđorno!")
+		return
+	end
+
+	local putanja  = "/home/korisnik/.local/state/nvim/sessions/"
+	local last_ime = "last.vim"
+	local cwd_ime  = GenerisanjeSessionImenaZaCwd() .. ".vim"
+
+	vim.cmd("mksession! " .. putanja .. cwd_ime)
+	vim.cmd("mksession! " .. putanja .. last_ime)
 end
 -- -----------------------------------------------------------------------------
 -- Cowsay za Alpha

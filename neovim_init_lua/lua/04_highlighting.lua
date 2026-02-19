@@ -318,7 +318,8 @@ vim.api.nvim_set_hl ( 0 , "DapUIStoppedThread" ,        { fg = "#5070c0", bold =
 -- Telescope:
 -- -------------------------------------------------------------------------- --
 if TelescopeHL == true then
-	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,         { } )                 --"#2c303d",                } )
+	-- vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,         { }                                  ) --"#2c303d",                } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeNormal" ,         { bg = "#292b39"                   } ) --"#2c303d",                } )
 	vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#60646a" }                  ) --"#2c303d", fg = "#d0d0d0" } )
 	vim.api.nvim_set_hl ( 0 , "TelescopeTitle" ,          {  bg = "#30343a", fg = "#d0d2f4"  } ) --"#2c303d", fg = "#d0d0d0" } )
 	-- vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#909090" }                 ) --"#2c303d", fg = "#d0d0d0" } )

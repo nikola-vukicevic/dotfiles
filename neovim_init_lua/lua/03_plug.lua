@@ -129,8 +129,8 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		{
 			"nvim-telescope/telescope.nvim",
-			version = "*",
-			-- branch = 'master',
+			-- version = "*",
+			branch = 'master',
 			-- branch = 'feat/unwritten-buffer-previewer',
 			-- tag = "0.2.1",
 			-- branch = '0.1.x',
@@ -140,9 +140,10 @@ require("lazy").setup(
 				-- 	"nvim-telescope/telescope-fzf-native.nvim",
 				-- 	build = "make"
 				-- },
-				"nvim-telescope/telescope-ui-select.nvim"
+				"nvim-telescope/telescope-ui-select.nvim",
 			}
 		},
+		-- "kkharji/sqlite.lua",
 		-- "ibhagwan/fzf-lua",
 		-- {
 		-- 	"folke/snacks.nvim",
@@ -172,9 +173,9 @@ require("lazy").setup(
 				-- 	"  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
 				-- }
 				startify.section.bottom_buttons.val = {
-					startify.button( "s", "Select session" , ":lua require('persistence').select()<cr>"),
-					startify.button( "r", "Restore last session (cwd)" , ":lua require('persistence').load()<cr>"),
-					startify.button( "l", "Restore last session" , ":lua require('persistence').load({ last = true })<cr>"),
+					-- startify.button( "s", "Select session" , ":lua SelectSession()<cr>"),
+					startify.button( "r", "Restore last session (cwd)" , ":lua LoadSession('cwd')<cr>"),
+					startify.button( "l", "Restore last session" , ":lua LoadSession('last')<cr>"),
 					startify.button( "q", " Quit" , ":lua AlphaQuit()<cr>"),
 				}
 				alpha.setup(startify.config)
@@ -183,13 +184,14 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		-- Session management:
 		-- ---------------------------------------------
-		{
-			"folke/persistence.nvim",
-			event = "BufReadPre", -- this will only start session saving when an actual file was opened
-			opts = {
-			-- add any custom options here
-			}
-		},
+		-- Od 08.02.2026. - obavlja se preko DIY funkcija
+		-- {
+		-- 	"folke/persistence.nvim",
+		-- 	event = "BufReadPre", -- this will only start session saving when an actual file was opened
+		-- 	opts = {
+		-- 	-- add any custom options here
+		-- 	}
+		-- },
 		-- ---------------------------------------------
 		-- lf nvim:
 		-- ---------------------------------------------
