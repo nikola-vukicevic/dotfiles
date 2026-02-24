@@ -210,15 +210,170 @@ require("illuminate").configure({
 -- -------------------------------------------------------------------------- -
 -- Plugin - Telescope:
 -- -------------------------------------------------------------------------- -
-local telescope_actions       = require("telescope.actions")
-local telescope_action_layout = require("telescope.actions.layout")
+local telescope_actions        = require("telescope.actions")
+local telescope_actions_layout = require("telescope.actions.layout")
+local telescope_actions_state  = require("telescope.actions.state")
+local telescope_state          = require("telescope.state")
+local telescope_previewers     = require("telescope.previewers")
+-- local telescope_conf           = require("telescope.config").values
+local telescope_utils          = require("telescope.utils")
+local telescope_entry_display  = require("telescope.pickers.entry_display")
 
 vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
+-- vim.cmd("autocmd User TelescopePreviewerLoaded setlocal wrap")
+vim.cmd("autocmd User TelescopePreviewerLoaded setlocal cursorline")
+vim.cmd("autocmd User TelescopePreviewerLoaded setlocal scrolloff=999")
+
+function has_filetype(ft)
+	return ft and ft ~= ""
+end
+
+function regex_highlighter(bufnr, ft)
+	if has_filetype(ft) then
+		return pcall(api.nvim_set_option_value, "syntax", ft, { buf = bufnr })
+	end
+	return false
+end
+
+function PronalaZenjePromptBuffera()
+	return vim.tbl_filter(function(b)
+		return vim.bo[b].filetype == "TelescopePrompt"
+	end, vim.api.nvim_list_bufs())
+end
+
+-- function DaLiAktiviratiDefaultPreviewer()
+-- 	local picker_type  = ""
+-- 	local prompt_bufnr = 0
+--
+-- 	prompt_bufnr = PronalaZenjePromptBuffera()[1]
+-- 	-- print(prompt_bufnr)
+--
+-- 	picker_type = (telescope_state.get_status(prompt_bufnr).picker.prompt_title)
+-- 	-- print("'" .. picker_type .. "'")
+--
+-- 	if picker_type == "Buffers" or picker_type == "Quickfix" or picker_type == "LSP References" then
+-- 		-- print("Priprema za custom previewer")
+-- 		return false
+-- 	end
+--
+-- 	-- print("Priprema za default previewer")
+-- 	return true
+-- end
+--
+local entry_tabulator = telescope_entry_display.create({
+	separator = "|",
+	items = {
+		{ width     = 16   },
+		{ width     = 9    },
+		{ remaining = true }
+	}
+})
+--
+function FormatEntry(entry)
+	-- InspectTable(entry)
+	return entry_tabulator({
+		{ entry.filename                 },
+		{ entry.lnum .. ":" .. entry.col },
+		{ entry.text                     }
+	})
+end
+--
+function CustomEntryMaker(entry)
+	-- InspectTable(entry)
+	return {
+		valid    = true,
+		value    = entry,
+		ordinal  = entry.ordinal,
+		text     = entry.text,
+		display  = FormatEntry,
+		filename = entry.filename,
+		type     = entry.type,
+		lnum     = entry.lnum,
+		col      = entry.col
+	}
+end
+--
+function DaLiJeVezanZaOtvoreniBafer(datoteka)
+	local bufnr = vim.fn.bufnr(datoteka)
+	if bufnr == -1 then return false end
+	return vim.api.nvim_buf_get_option(bufnr, "buflisted")
+end
+--
+function custom_buffer_previewer(filepath, bufnr, opts)
+	if not DaLiJeVezanZaOtvoreniBafer(filepath) == true then
+	-- if DaLiAktiviratiDefaultPreviewer() == true then
+		-- print("Default previewer")
+		telescope_previewers.buffer_previewer_maker(filepath, bufnr, opts)
+		return
+	end
+
+	vim.schedule(function()
+		-- print("Custom previewer")
+		local entry = telescope_actions_state.get_selected_entry()
+		-- InspectTable(entry)
+		local bufnr_file = vim.fn.bufnr(filepath)
+		local lines      = vim.api.nvim_buf_get_lines(bufnr_file, 0, -1, false)
+		local file_type  = vim.api.nvim_buf_get_option(bufnr_file, "filetype")
+
+		vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+
+		vim.treesitter.stop(bufnr)
+
+		-- local kursor = PronalazenjeKursoraUJumplisti(bufnr_file)
+		-- vim.api.nvim_win_set_cursor(opts.winid, { kursor.lnum, kursor.col } )
+		pcall(vim.api.nvim_win_set_cursor, opts.winid, { entry.lnum, 1 } )
+
+		if file_type ~= "" and telescope_utils.has_ts_parser(file_type) then
+			vim.treesitter.start(bufnr, file_type)
+		-- else
+		-- 	regex_highlighter(bufnr, filetype)
+		end
+	end)
+end
+
+-- function custom_buffer_previewer(filepath, bufnr, opts)
+-- 	if DaLiAktiviratiDefaultPreviewer() == true then
+-- 		-- print("Default previewer")
+-- 		telescope_previewers.buffer_previewer_maker(filepath, bufnr, opts)
+-- 		return
+-- 	end
+--
+-- 	-- print("Custom previewer")
+-- 	local entry = telescope_actions_state.get_selected_entry()
+-- 	-- InspectTable(entry)
+--
+-- 	local bufnr_file = vim.fn.bufnr(filepath)
+-- 	local lines      = vim.api.nvim_buf_get_lines(bufnr_file, 0, -1, false)
+-- 	local file_type  = vim.api.nvim_buf_get_option(bufnr_file, "filetype")
+--
+-- 	vim.schedule(function()
+-- 		vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+-- 	end)
+--
+-- 	vim.treesitter.stop(bufnr)
+--
+-- 	vim.schedule(function()
+-- 		-- local kursor = PronalazenjeKursoraUJumplisti(bufnr_file)
+-- 		-- vim.api.nvim_win_set_cursor(opts.winid, { kursor.lnum, kursor.col } )
+-- 		pcall(vim.api.nvim_win_set_cursor, opts.winid, { entry.lnum, 1 } )
+-- 	end)
+--
+-- 	if file_type ~= "" and telescope_utils.has_ts_parser(file_type) then
+-- 		vim.treesitter.start(bufnr, file_type)
+-- 	-- else
+-- 	-- 	regex_highlighter(bufnr, filetype)
+-- 	end
+-- end
 
 require("telescope").setup({
 	defaults = {
 		initial_mode  = "normal",
 		prompt_prefix = " ",
+		path_display = {
+			"filename_first",
+			"truncate"
+		},
+		buffer_previewer_maker = custom_buffer_previewer,
 		-- borderchars    = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
 		layout_config  = {
 			horizontal = {
@@ -227,14 +382,21 @@ require("telescope").setup({
 				preview_width = 0.46,
 			},
 		},
+		borderchars = {
+			prompt  = { "─", "│", "─", "│", "│", "│", "╯", "╰" },
+			results = { "─", "│", " ", "│", "╭", "╮", "│", "│" },
+			preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+		},
 		mappings = {
 			i = {
-				["<M-p>"] = telescope_action_layout.toggle_preview,
+				["<M-p>"] = telescope_actions_layout.toggle_preview,
 				-- ["<esc>"] = telescope_actions.close,
 				-- ["<F1"]   = telescope_actions.close,
+				["<M-k>"] = telescope_actions.cycle_history_prev,
+				["<M-j>"] = telescope_actions.cycle_history_next,
 			},
 			n = {
-				["<M-p>"] = telescope_action_layout.toggle_preview,
+				["<M-p>"] = telescope_actions_layout.toggle_preview,
 				["q"]     = telescope_actions.close,
 				-- ["<esc>"] = telescope_actions.close,
 			},
@@ -269,7 +431,18 @@ require("telescope").setup({
 					-- ["<c-f>"] = actions.to_fuzzy_refine
 				},
 			}
-		}
+		},
+		-- quickfix = {
+		-- 	entry_maker = function(entry)
+		-- 		return {
+		-- 			value = entry,
+		-- 			display = entry.display,
+		-- 			ordinal = entry.ordinal,
+		-- 			path    = entry.path,
+		-- 			lnum    = entry.lnum
+		-- 		}
+		-- 	end
+		-- }
 	},
 	extensions = {
 		["ui-select"] = {
@@ -296,18 +469,20 @@ require("telescope").setup({
 })
 --
 require("telescope").load_extension("ui-select")
--- require('telescope').load_extension("fzf")
 -- -------------------------------------------------------------------------- -
 -- Better Quickfix (nvim-bqf)
 -- -------------------------------------------------------------------------- -
 require("bqf").setup({
 	preview = {
-		win_height  = 18,
+		win_height  = 20,
 		win_vheight = 12,
 		winblend    = 0,
+	},
+	func_map = {
+		-- openc = '<CR>',
+		-- open = 'o'
 	}
 })
-
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
 -- -------------------------------------------------------------------------- -
