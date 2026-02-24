@@ -776,7 +776,10 @@ function GetLspReferences()
 			on_list = function(options)
 				-- InspectTable(options)
 				vim.fn.setqflist(options.items, "r")
-				require("telescope.builtin").quickfix({ prompt_title = "LSP references" })
+				require("telescope.builtin").quickfix({
+					prompt_title = "LSP references",
+					-- entry_maker  = CustomEntryMaker
+				})
 			end
 		}
 	)

@@ -100,8 +100,8 @@ if basicHL == true then
 	-- Float:
 	-- -----
 	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                --"#2c303d",                } )
-	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#80828a', bold = true } )  -- "#8080a0"
-	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#707484', bold = true } )  -- "#8080a0"
+	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#80828a', bold = true } )  -- "#8080a0"
+	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#707484', bold = true } )  -- "#8080a0"
 	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#90949a', bold = true } )  -- "#8080a0"
 	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#90a0f0', bold = true } )  -- "#8080a0"
 	                                                                                       -- "#e09050"
