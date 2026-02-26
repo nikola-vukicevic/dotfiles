@@ -30,7 +30,7 @@ vim.keymap.set( "" , "<M-i>" , "<C-i>" ,                               opts_nr  
 -- vim.keymap.set( "" , "<M-z>" , "<C-r>" ,                               opts_nr  )
 -- vim.keymap.set( "" , "<M-k>" , "cprev" ,                          opts_snr )
 -- vim.keymap.set( "" , "<M-j>" , "cnext" ,                          opts_snr )
-vim.keymap.set( "" , "<M-a>" , ":lua FancyErrorWarnInfoList()<cr>" ,            opts_snr )
+vim.keymap.set( "" , "<M-a>" , ":lua require('telescope.builtin').diagnostics( { entry_maker = CustomEntryMakerDiagnostics } )<cr>" , opts_snr )
 vim.keymap.set( "" , "<C-a>" , ":lua AutoLSPFloatToggle()<cr>" ,                opts_snr )
 vim.keymap.set( "" , "<C-s>" , ":lua AutoLSPHoverToggle()<cr>" ,                opts_snr )
 vim.keymap.set( "" , "<C-f>" , ":lua vim.diagnostic.jump({ count = 1  })<cr>" , opts_snr )
@@ -119,16 +119,40 @@ end, opts )
 -- ------------------------------------------------------------------------------
 -- vim.keymap.set("i", "<esc>", "<esc>`^", opts_snr)
 -- ------------------------------------------------------------------------------
--- Još "fensiji" izlazak iz insert mode-a:
+-- Fensi izlazak iz insert mode-a:
 -- ------------------------------------------------------------------------------
 vim.keymap.set( "n" , "i" , function()
 	vim.cmd("startinsert")
 	vim.g.insert_okidac = "i"
 end, opts_nr )
 --
+vim.keymap.set( "n" , "a" , function()
+	vim.api.nvim_feedkeys("a", "n", true)
+	vim.g.insert_okidac = "a"
+end, opts_nr )
+--
+function fancy_escape_za_poslednji_znak()
+	vim.api.nvim_create_autocmd(
+		"InsertLeave",
+		{
+			pattern = "*",
+			once    = true,
+			callback = function()
+				vim.cmd("normal! $")
+			end
+		}
+	)
+end
+--
 vim.keymap.set("i", "<esc>", function()
+	local poslednji = vim.fn.col('.') == vim.fn.col('$') - 1
+
 	if vim.g.insert_okidac == "i" then
-		vim.cmd("normal! l")
+		if poslednji == true then
+			fancy_escape_za_poslednji_znak()
+		else
+			vim.cmd("normal! l")
+		end
 	end
 
 	vim.cmd("stopinsert")

@@ -283,7 +283,7 @@ require("lazy").setup(
 				vim.notify = require("notify")
 			end
 		},
-		"kevinhwang91/nvim-bqf",
+		-- "kevinhwang91/nvim-bqf",
 		-- "nvimdev/indentmini.nvim",
 		{
 			"lukas-reineke/indent-blankline.nvim",

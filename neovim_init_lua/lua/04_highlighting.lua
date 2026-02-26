@@ -46,7 +46,7 @@ local boja_122 = "#c6a0f6" -- return
 --
 local boja_201 = "#eedd00" -- hint
 -- local boja_202 = "#ee9900" -- warning
-local boja_202 = "#f09050" -- warning
+local boja_202 = "#f09060" -- warning
 local boja_203 = "#e04030" -- error
 -- local boja_113 = "#e5ff99"
 -- local boja_114 = "#ffcc99"
@@ -326,6 +326,16 @@ if TelescopeHL == true then
 	-- vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#b0b0b0" } ) --"#2c303d", fg = "#d0d0d0" } )
 	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#f09080" }                  ) --"#2c303d", fg = "#d0d0d0" } )
 	vim.api.nvim_set_hl ( 0 , "TelescopeSelection" ,      {  fg = "#e0e0e0", bg = "#464a5f" }  ) --"#cad3f5", fg = "#363a4f" } )
+	-- Quickfix
+	vim.api.nvim_set_hl ( 0 , "QuickfixResultFilename" ,               {  fg = "#80a0ff" } )
+	vim.api.nvim_set_hl ( 0 , "QuickfixResultLineCol" ,                {  fg = "#e09060" } )
+	vim.api.nvim_set_hl ( 0 , "QuickfixResultLineColFade" ,            {  fg = "#707174" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultError" ,      {  fg = "#f05040" , bold = bold } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultWarn" ,       {  fg = "#f0a040" , bold = bold } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultIno" ,        {  fg = "#80a0f0" , bold = bold } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultErrorText" ,  {  fg = "#e0a0a0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultWarnText" ,   {  fg = "#f0f1ed" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultInoText" ,    {  fg = "#f0f1fa" } )
 end
 -- -------------------------------------------------------------------------- --
 -- Breadcrumbs plugin:

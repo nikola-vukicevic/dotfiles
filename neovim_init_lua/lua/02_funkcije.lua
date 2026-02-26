@@ -778,7 +778,7 @@ function GetLspReferences()
 				vim.fn.setqflist(options.items, "r")
 				require("telescope.builtin").quickfix({
 					prompt_title = "LSP references",
-					-- entry_maker  = CustomEntryMaker
+					entry_maker  = CustomEntryMakerQuickfix
 				})
 			end
 		}
@@ -856,7 +856,10 @@ function LSPRenameHandler(err, result, context, config)
 	vim.fn.setqflist(lista, "r")
 	-- vim.cmd("botright copen")
 	-- Snacks.picker.qflist()
-	require('telescope.builtin').quickfix({ prompt_title = "Rename (LSP references)" })
+	require('telescope.builtin').quickfix({
+		prompt_title = "Rename (LSP references)",
+		entry_maker  = CustomEntryMakerQuickfix
+	})
 end
 -- -----------------------------------------------------------------------------
 function LSPRename(ime)
