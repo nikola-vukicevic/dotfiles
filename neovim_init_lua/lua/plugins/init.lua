@@ -95,7 +95,7 @@ function SortErrorWarnInfo(qf_list)
 	-- local lista_error   = { }
 	local lista_warn    = { }
 	local lista_info    = { } -- TODO: proveriti da li ova lista može sadržati "još nešto" (osim severity.INFO)
-	local konacna_lista = { }
+	local konacna_lista = { } -- severity.ERROR poruke odmah idu ovde
 
 	-- razvrstavanje poruka (ERROR poruke
 	-- se odmah ubacuju u konačnu listu)
@@ -128,7 +128,11 @@ function FancyErrorWarnInfoList()
 	local lista      = vim.fn.getqflist()
 	local nova_lista = SortErrorWarnInfo(lista)
 	vim.fn.setqflist(nova_lista, 'r')
-	vim.cmd.copen()
+	-- vim.cmd.copen()
+	require('telescope.builtin').quickfix({
+		prompt_title = "Diagnostics",
+		entry_maker  = CustomEntryMakerDiagnostics
+	})
 end
 -- -------------------------------------------------------------------------- -
 -- Plugin - Illuminate:
@@ -148,84 +152,120 @@ require("illuminate").configure({
 local telescope_actions        = require("telescope.actions")
 local telescope_actions_layout = require("telescope.actions.layout")
 local telescope_actions_state  = require("telescope.actions.state")
-local telescope_state          = require("telescope.state")
 local telescope_previewers     = require("telescope.previewers")
--- local telescope_conf           = require("telescope.config").values
 local telescope_utils          = require("telescope.utils")
 local telescope_entry_display  = require("telescope.pickers.entry_display")
-
+-- local telescope_state          = require("telescope.state")
+-- local telescope_conf           = require("telescope.config").values
+--
 vim.cmd("autocmd User TelescopePreviewerLoaded setlocal number")
--- vim.cmd("autocmd User TelescopePreviewerLoaded setlocal wrap")
 vim.cmd("autocmd User TelescopePreviewerLoaded setlocal cursorline")
 vim.cmd("autocmd User TelescopePreviewerLoaded setlocal scrolloff=999")
-
+-- vim.cmd("autocmd User TelescopePreviewerLoaded setlocal wrap")
+--
 function has_filetype(ft)
 	return ft and ft ~= ""
 end
-
+--
 function regex_highlighter(bufnr, ft)
 	if has_filetype(ft) then
 		return pcall(api.nvim_set_option_value, "syntax", ft, { buf = bufnr })
 	end
 	return false
 end
-
+--
 function PronalaZenjePromptBuffera()
 	return vim.tbl_filter(function(b)
 		return vim.bo[b].filetype == "TelescopePrompt"
 	end, vim.api.nvim_list_bufs())
 end
-
--- function DaLiAktiviratiDefaultPreviewer()
--- 	local picker_type  = ""
--- 	local prompt_bufnr = 0
 --
--- 	prompt_bufnr = PronalaZenjePromptBuffera()[1]
--- 	-- print(prompt_bufnr)
---
--- 	picker_type = (telescope_state.get_status(prompt_bufnr).picker.prompt_title)
--- 	-- print("'" .. picker_type .. "'")
---
--- 	if picker_type == "Buffers" or picker_type == "Quickfix" or picker_type == "LSP References" then
--- 		-- print("Priprema za custom previewer")
--- 		return false
--- 	end
---
--- 	-- print("Priprema za default previewer")
--- 	return true
--- end
---
-local entry_tabulator = telescope_entry_display.create({
-	separator = "|",
-	items = {
-		{ width     = 16   },
-		{ width     = 9    },
+local EntryTabulatorQuickfix = telescope_entry_display.create({
+	separator = " ", -- |│ ",
+	items     = {
+		{ width     = 20   },
+		{ width     = 7    },
 		{ remaining = true }
 	}
 })
 --
-function FormatEntry(entry)
-	-- InspectTable(entry)
-	return entry_tabulator({
-		{ entry.filename                 },
-		{ entry.lnum .. ":" .. entry.col },
-		{ entry.text                     }
+local EntryTabulatorDiagnostics = telescope_entry_display.create({
+	separator = " ",
+	items     = {
+		{ width     = 8    },
+		{ width     = 7    },
+		{ width     = 3    },
+		{ remaining = true }
+	}
+})
+--
+function FormatEntryQuickfix(entry)
+	local filename = vim.fn.fnamemodify(vim.fn.bufname(entry.bufnr), ":.")
+	local line_col = entry.lnum .. ":" .. entry.col
+	local text     = entry.text:match("^%s*(.-)%s*$")
+
+	return EntryTabulatorQuickfix({
+		{ filename, "QuickfixResultFilename" },
+		{ line_col, "QuickfixResultLineCol"  },
+		{ text,     "QuickfixResultText"     }
 	})
 end
 --
-function CustomEntryMaker(entry)
+function FormatEntryDiagnostics(entry)
 	-- InspectTable(entry)
-	return {
-		valid    = true,
-		value    = entry,
-		ordinal  = entry.ordinal,
-		text     = entry.text,
-		display  = FormatEntry,
-		filename = entry.filename,
-		type     = entry.type,
-		lnum     = entry.lnum,
-		col      = entry.col
-	}
+	local filename  = vim.fn.fnamemodify(entry.filename, ":.")
+	local line_col  = entry.lnum .. ":" .. entry.col
+	local diag_type = ""
+	local diag_hl   = ""
+	local text_hl   = ""
+	local text      = entry.text:match("^%s*(.-)%s*$")
+
+	if entry.type == "ERROR" then
+		diag_type = "[E]"
+		diag_hl   = "TelescopeDiagnosticsResultError"
+		text_hl   = "TelescopeDiagnosticsResultErrorText"
+	elseif entry.type == "WARN" then
+		diag_type = "[W]"
+		diag_hl   = "TelescopeDiagnosticsResultWarn"
+		text_hl   = "TelescopeDiagnosticsResultWarnText"
+	else
+		diag_type = "[I]"
+		diag_hl   = "TelescopeDiagnosticsResultInfo"
+		text_hl   = "TelescopeDiagnosticsResultInfoText"
+	end
+
+	return EntryTabulatorDiagnostics({
+		{ filename,  "QuickfixResultFilename"    },
+		{ line_col,  "QuickfixResultLineColFade" },
+		{ diag_type, diag_hl                     },
+		{ text,      text_hl        }
+	})
+end
+--
+function CustomEntryMakerQuickfix(entry)
+	-- InspectTable(entry)
+	local make_entry    = require("telescope.make_entry")
+	local default_maker = make_entry.gen_from_quickfix()
+	local entry_tbl     = default_maker(entry)
+
+	if entry_tbl then
+		entry_tbl.display = FormatEntryQuickfix
+	end
+
+	return entry_tbl
+end
+--
+function CustomEntryMakerDiagnostics(entry)
+	-- InspectTable(entry)
+	local make_entry    = require("telescope.make_entry")
+	local default_maker = make_entry.gen_from_diagnostics()
+	local entry_tbl     = default_maker(entry)
+
+	if entry_tbl then
+		entry_tbl.display = FormatEntryDiagnostics
+	end
+
+	return entry_tbl
 end
 --
 function DaLiJeVezanZaOtvoreniBafer(datoteka)
@@ -265,41 +305,7 @@ function custom_buffer_previewer(filepath, bufnr, opts)
 		end
 	end)
 end
-
--- function custom_buffer_previewer(filepath, bufnr, opts)
--- 	if DaLiAktiviratiDefaultPreviewer() == true then
--- 		-- print("Default previewer")
--- 		telescope_previewers.buffer_previewer_maker(filepath, bufnr, opts)
--- 		return
--- 	end
 --
--- 	-- print("Custom previewer")
--- 	local entry = telescope_actions_state.get_selected_entry()
--- 	-- InspectTable(entry)
---
--- 	local bufnr_file = vim.fn.bufnr(filepath)
--- 	local lines      = vim.api.nvim_buf_get_lines(bufnr_file, 0, -1, false)
--- 	local file_type  = vim.api.nvim_buf_get_option(bufnr_file, "filetype")
---
--- 	vim.schedule(function()
--- 		vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
--- 	end)
---
--- 	vim.treesitter.stop(bufnr)
---
--- 	vim.schedule(function()
--- 		-- local kursor = PronalazenjeKursoraUJumplisti(bufnr_file)
--- 		-- vim.api.nvim_win_set_cursor(opts.winid, { kursor.lnum, kursor.col } )
--- 		pcall(vim.api.nvim_win_set_cursor, opts.winid, { entry.lnum, 1 } )
--- 	end)
---
--- 	if file_type ~= "" and telescope_utils.has_ts_parser(file_type) then
--- 		vim.treesitter.start(bufnr, file_type)
--- 	-- else
--- 	-- 	regex_highlighter(bufnr, filetype)
--- 	end
--- end
-
 require("telescope").setup({
 	defaults = {
 		initial_mode  = "normal",
@@ -361,12 +367,26 @@ require("telescope").setup({
 			sort_mru = true,
 			mappings = {
 				n = {
-					-- ["dd"] = telescope_actions.delete_buffer + telescope_actions.move_to_top,
+					["dd"]    = telescope_actions.delete_buffer ,--+ telescope_actions.move_to_top,
 					["<M-q>"] = telescope_actions.send_to_qflist + telescope_actions.open_qflist
 					-- ["<c-f>"] = actions.to_fuzzy_refine
 				},
 			}
 		},
+		quickfix = {
+			mappings = {
+				i = {
+					["<m-d>"] = telescope_actions.to_fuzzy_refine,
+				},
+			}
+		},
+		diagnostics = {
+			mappings = {
+				i = {
+					["<m-d>"] = telescope_actions.to_fuzzy_refine,
+				},
+			}
+		}
 		-- quickfix = {
 		-- 	entry_maker = function(entry)
 		-- 		return {
@@ -407,17 +427,17 @@ require("telescope").load_extension("ui-select")
 -- -------------------------------------------------------------------------- -
 -- Better Quickfix (nvim-bqf)
 -- -------------------------------------------------------------------------- -
-require("bqf").setup({
-	preview = {
-		win_height  = 20,
-		win_vheight = 12,
-		winblend    = 0,
-	},
-	func_map = {
-		-- openc = '<CR>',
-		-- open = 'o'
-	}
-})
+-- require("bqf").setup({
+-- 	preview = {
+-- 		win_height  = 20,
+-- 		win_vheight = 12,
+-- 		winblend    = 0,
+-- 	},
+-- 	func_map = {
+-- 		-- openc = '<CR>',
+-- 		-- open = 'o'
+-- 	}
+-- })
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
 -- -------------------------------------------------------------------------- -
