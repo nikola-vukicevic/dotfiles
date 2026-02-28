@@ -30,7 +30,8 @@ vim.keymap.set( "" , "<M-i>" , "<C-i>" ,                               opts_nr  
 -- vim.keymap.set( "" , "<M-z>" , "<C-r>" ,                               opts_nr  )
 -- vim.keymap.set( "" , "<M-k>" , "cprev" ,                          opts_snr )
 -- vim.keymap.set( "" , "<M-j>" , "cnext" ,                          opts_snr )
-vim.keymap.set( "" , "<M-a>" , ":lua require('telescope.builtin').diagnostics( { entry_maker = CustomEntryMakerDiagnostics } )<cr>" , opts_snr )
+vim.keymap.set( "" , "<M-a>" , ":lua FancyErrorWarnInfoList()<cr>" ,            opts_snr )
+-- vim.keymap.set( "" , "<M-a>" , ":lua require('telescope.builtin').diagnostics( { entry_maker = CustomEntryMakerDiagnostics } )<cr>" , opts_snr )
 vim.keymap.set( "" , "<C-a>" , ":lua AutoLSPFloatToggle()<cr>" ,                opts_snr )
 vim.keymap.set( "" , "<C-s>" , ":lua AutoLSPHoverToggle()<cr>" ,                opts_snr )
 vim.keymap.set( "" , "<C-f>" , ":lua vim.diagnostic.jump({ count = 1  })<cr>" , opts_snr )
@@ -75,7 +76,8 @@ vim.keymap.set( "n" , "<leader><F9>" , ":lua UklanjanjeNepotrebnihWhitespaceova(
 vim.keymap.set( "" , "<F7>" ,         ":lua SpelovanjeToggle()<cr>" , opts_nr )
 vim.keymap.set( "" , "<leader><F7>" , ":lua JezikToggle()<cr>" ,      opts_nr )
 -- vim.keymap.set( "" , "<leader>g" ,    ":AerialToggle<cr>"           , opts_nr )
-vim.keymap.set( "" , "<leader>g" ,    ":Outline<cr>"           ,      opts_nr )
+-- vim.keymap.set( "" , "<leader>g" ,    ":Outline<cr>"           ,      opts_nr )
+vim.keymap.set( "" , "<leader>g" ,    ":lua FancyDocSymbols()<cr>" ,  opts_nr )
 --
 vim.keymap.set( "v" , "<" ,         "<gv" ,                        opts_nr )
 vim.keymap.set( "v" , ">" ,         ">gv" ,                        opts_nr )
@@ -107,6 +109,7 @@ vim.keymap.set( "n", "<esc><esc>", function()
 		vim.cmd("NvimTreeClose")
 	elseif ft == "qf" then
 		vim.cmd("cclose")
+		vim.cmd("lclose")
 	elseif ft == "help" then
 		vim.cmd("q")
 	else
@@ -162,6 +165,7 @@ vim.keymap.set("n", "q", function()
 	local ft = vim.bo.filetype
 	if ft == "qf" then
 		vim.cmd("cclose")
+		vim.cmd("lclose")
 	end
 end, opts)
 -- search za Normal mode:

@@ -224,25 +224,25 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		-- LSP symbols side window:
 		-- ---------------------------------------------
-		{
-			"hedyhli/outline.nvim",
-			config = function()
-				require("outline").setup {
-					outline_window = {
-						width = 36,
-						relative_width = false,
-					},
-					keymaps = {
-						toggle_preview = "h",
-					},
-					symbols = {
-						icons = {
-							Function = { icon = "f", hl = "OutlineFunction" },
-						}
-					}
-				}
-			end,
-		},
+		-- {
+		-- 	"hedyhli/outline.nvim",
+		-- 	config = function()
+		-- 		require("outline").setup {
+		-- 			outline_window = {
+		-- 				width = 36,
+		-- 				relative_width = false,
+		-- 			},
+		-- 			keymaps = {
+		-- 				toggle_preview = "h",
+		-- 			},
+		-- 			symbols = {
+		-- 				icons = {
+		-- 					Function = { icon = "f", hl = "OutlineFunction" },
+		-- 				}
+		-- 			}
+		-- 		}
+		-- 	end,
+		-- },
 		-- ---------------------------------------------
 		-- Color themes:
 		-- ---------------------------------------------
@@ -283,7 +283,7 @@ require("lazy").setup(
 				vim.notify = require("notify")
 			end
 		},
-		-- "kevinhwang91/nvim-bqf",
+		"kevinhwang91/nvim-bqf",
 		-- "nvimdev/indentmini.nvim",
 		{
 			"lukas-reineke/indent-blankline.nvim",

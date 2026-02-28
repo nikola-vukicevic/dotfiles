@@ -945,6 +945,131 @@ end
 -- -----------------------------------------------------------------------------
 -- END OF QUICK FIX RENAME
 -- -----------------------------------------------------------------------------
+-- LSP DOCUMENT SYMBOLS:
+-- -----------------------------------------------------------------------------
+local tipovi_lsp_simbola = {
+	[1] =   { ""  , "file"           } ,
+	[2] =   { ""  , "module"         } ,
+	[3] =   { ""  , "namespace"      } ,
+	[4] =   { ""  , "package"        } ,
+	[5] =   { ""  , "class"          } ,
+	[6] =   { ""  , "method"         } ,
+	[7] =   { ""  , "property"       } ,
+	[8] =   { ""  , "field"          } ,
+	[9] =   { ""  , "constructor"    } ,
+	[10] =  { "練" , "enum"           } ,
+	[11] =  { "練" , "interface"      } ,
+	[12] =  { ""  , "function"       } ,
+	[13] =  { ""  , "variable"       } ,
+	[14] =  { ""  , "constant"       } ,
+	[15] =  { ""  , "string"         } ,
+	[16] =  { ""  , "number"         } ,
+	[17] =  { "◩"  , "boolean"        } ,
+	[18] =  { ""  , "array"          } ,
+	[19] =  { ""  , "object"         } ,
+	[20] =  { ""  , "key"            } ,
+	[21] =  { "ﳠ"  , "null"           } ,
+	[22] =  { ""  , "enummember"     } ,
+	[23] =  { ""  , "struct"         } ,
+	[24] =  { ""  , "event"          } ,
+	[25] =  { ""  , "operator"       } ,
+	[26] =  { ""  , "typeparameter"  } ,
+	[255] = { ""  , "macro"          } ,
+}
+--
+function util_sort_doc_symbol(a, b)
+	return a.lnum > b.lnum
+end
+--
+function FancyDocSymbols()
+	local lista = { }
+	local bufnr = vim.api.nvim_get_current_buf()
+
+	for i = 1, #vim.g.lsp_buf_result do
+		local symbol = vim.g.lsp_buf_result[i]
+		local qf_item = {
+			bufnr = bufnr,
+			lnum  = symbol.range.start.line + 1,
+			col   = symbol.range.start.character,
+			text  = tipovi_lsp_simbola[symbol.kind][1] .. tipovi_lsp_simbola[symbol.kind][2] .. "|" .. symbol.name, -- TODO - ovo bi STVARNO moralo bolje!
+		}
+		table.insert(lista, qf_item)
+	end
+
+	table.sort(lista, util_sort_doc_symbol)
+	vim.fn.setqflist(lista)
+
+	require("telescope.builtin").quickfix({
+		prompt_title = "Document symbols",
+		entry_maker  = CustomEntryMakerDocSymbol
+	})
+end
+-- -----------------------------------------------------------------------------
+-- END OF LSP DOCUMENT SYMBOLS:
+-- -----------------------------------------------------------------------------
+-- FANCY DIAGNOSTICS (ERROR-WARN-INFO):
+-- -----------------------------------------------------------------------------
+function util_sort_diagnostics(a, b)
+	return a.lnum < b.lnum
+end
+--
+function SortErrorWarnInfo(qf_list)
+	-- InspectTable(qf_list)
+	-- local lista_error   = { }
+	local lista_warn    = { }
+	local lista_info    = { } -- TODO: proveriti da li ova lista može sadržati "još nešto" (osim severity.INFO)
+	local konacna_lista = { } -- severity.ERROR poruke odmah idu ovde
+
+	-- razvrstavanje poruka (ERROR poruke
+	-- se odmah ubacuju u konačnu listu)
+	for _, item in ipairs(qf_list) do
+		if item.severity == 1 then
+			table.insert(konacna_lista, item)
+		elseif item.severity == 2 then
+			table.insert(lista_warn, item)
+		else
+			table.insert(lista_info, item)
+		end
+	end
+
+	-- ubacivanje WARN poruka u konačnu listu:
+	for _, item in ipairs(lista_warn) do
+		table.insert(konacna_lista, item)
+	end
+
+	-- ubacivanje INFO poruka u konačnu listu:
+	for _, item in ipairs(lista_info) do
+		table.insert(konacna_lista, item)
+	end
+	-- print(vim.inspect(konacna_lista))
+
+	return konacna_lista
+end
+--
+function FancyErrorWarnInfoList(opt)
+	local lista = vim.diagnostic.get()
+	table.sort(lista, util_sort_diagnostics)
+	local nova_lista = SortErrorWarnInfo(lista)
+	-- vim.fn.setqflist(nova_lista, 'r')
+	-- InspectTable(nova_lista)
+	-- vim.cmd.copen()
+	local opts = opt or require("telescope.config").values or { }
+	-- InspectTable(opts)
+
+	require('telescope.pickers').new({ }, { -- opts, {
+		prompt_title = "Diagnostics",
+		finder       = require('telescope.finders').new_table({
+			results     = nova_lista,
+			entry_maker = CustomEntryMakerDiagnostics,
+		}),
+		previewer = opts.qflist_previewer(opts),
+		sorter    = require('telescope.sorters').empty(),
+
+	}):find()
+end
+-- -----------------------------------------------------------------------------
+-- END OF FANCY ERROR-WARN-INFO LIST:
+-- -----------------------------------------------------------------------------
 -- DAP STUFF:
 -- -----------------------------------------------------------------------------
 function ToggleDapUi()
