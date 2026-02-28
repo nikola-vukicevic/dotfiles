@@ -89,51 +89,6 @@ vim.diagnostic.config({
 		-- },
 	-- }
 })
---
-function SortErrorWarnInfo(qf_list)
-	-- print(vim.inspect(qf_list))
-	-- local lista_error   = { }
-	local lista_warn    = { }
-	local lista_info    = { } -- TODO: proveriti da li ova lista može sadržati "još nešto" (osim severity.INFO)
-	local konacna_lista = { } -- severity.ERROR poruke odmah idu ovde
-
-	-- razvrstavanje poruka (ERROR poruke
-	-- se odmah ubacuju u konačnu listu)
-	for _, item in ipairs(qf_list) do
-		if item.type == "E" then
-			table.insert(konacna_lista, item)
-		elseif item.type == "W" then
-			table.insert(lista_warn, item)
-		else
-			table.insert(lista_info, item)
-		end
-	end
-
-	-- ubacivanje WARN poruka u konačnu listu:
-	for _, item in ipairs(lista_warn) do
-		table.insert(konacna_lista, item)
-	end
-
-	-- ubacivanje INFO poruka u konačnu listu:
-	for _, item in ipairs(lista_info) do
-		table.insert(konacna_lista, item)
-	end
-	-- print(vim.inspect(konacna_lista))
-
-	return konacna_lista
-end
---
-function FancyErrorWarnInfoList()
-	vim.diagnostic.setqflist( { open = false } )
-	local lista      = vim.fn.getqflist()
-	local nova_lista = SortErrorWarnInfo(lista)
-	vim.fn.setqflist(nova_lista, 'r')
-	-- vim.cmd.copen()
-	require('telescope.builtin').quickfix({
-		prompt_title = "Diagnostics",
-		entry_maker  = CustomEntryMakerDiagnostics
-	})
-end
 -- -------------------------------------------------------------------------- -
 -- Plugin - Illuminate:
 -- -------------------------------------------------------------------------- -
@@ -192,9 +147,19 @@ local EntryTabulatorQuickfix = telescope_entry_display.create({
 local EntryTabulatorDiagnostics = telescope_entry_display.create({
 	separator = " ",
 	items     = {
-		{ width     = 8    },
+		{ width     = 12   },
 		{ width     = 7    },
-		{ width     = 3    },
+		{ width     = 1    },
+		{ remaining = true }
+	}
+})
+--
+local EntryTabulatorDocSymbol = telescope_entry_display.create({
+	separator = " ",
+	items     = {
+		{ width     = 7    },
+		{ width     = 2    },
+		{ width     = 12   },
 		{ remaining = true }
 	}
 })
@@ -212,24 +177,25 @@ function FormatEntryQuickfix(entry)
 end
 --
 function FormatEntryDiagnostics(entry)
-	-- InspectTable(entry)
-	local filename  = vim.fn.fnamemodify(entry.filename, ":.")
+	local path      = vim.api.nvim_buf_get_name(entry.bufnr)
+	local filename  = vim.fn.fnamemodify(path, ":.")
 	local line_col  = entry.lnum .. ":" .. entry.col
 	local diag_type = ""
 	local diag_hl   = ""
 	local text_hl   = ""
 	local text      = entry.text:match("^%s*(.-)%s*$")
+	-- InspectTable(entry)
 
-	if entry.type == "ERROR" then
-		diag_type = "[E]"
+	if entry.type == 1 then
+		diag_type = ""
 		diag_hl   = "TelescopeDiagnosticsResultError"
 		text_hl   = "TelescopeDiagnosticsResultErrorText"
-	elseif entry.type == "WARN" then
-		diag_type = "[W]"
+	elseif entry.type == 2 then
+		diag_type = ""
 		diag_hl   = "TelescopeDiagnosticsResultWarn"
 		text_hl   = "TelescopeDiagnosticsResultWarnText"
 	else
-		diag_type = "[I]"
+		diag_type = ""
 		diag_hl   = "TelescopeDiagnosticsResultInfo"
 		text_hl   = "TelescopeDiagnosticsResultInfoText"
 	end
@@ -238,7 +204,23 @@ function FormatEntryDiagnostics(entry)
 		{ filename,  "QuickfixResultFilename"    },
 		{ line_col,  "QuickfixResultLineColFade" },
 		{ diag_type, diag_hl                     },
-		{ text,      text_hl        }
+		{ text,      text_hl                     }
+	})
+end
+--
+function FormatEntryDocSymbol(entry)
+	-- InspectTable(entry)
+	local line_col = entry.lnum .. ":" .. entry.col
+	local simbol   = string.sub(entry.text, 1, 3)
+	local indeks   = string.find(entry.text, "|")
+	local tip      = string.sub(entry.text, 4, indeks - 1)
+	local text     = string.sub(entry.text, indeks + 1)
+
+	return EntryTabulatorDocSymbol({
+		{ line_col, "QuickfixResultLineColFade" },
+		{ simbol,   "BreadcrumbsQf" .. tip        },
+		{ tip,      "BreadcrumbsQf" .. tip        },
+		{ text,     "QuickfixResultText"        }
 	})
 end
 --
@@ -256,13 +238,32 @@ function CustomEntryMakerQuickfix(entry)
 end
 --
 function CustomEntryMakerDiagnostics(entry)
+	local make_entry = require("telescope.make_entry")
+
+	opts = { }
+
+	return make_entry.set_default_entry_mt({
+		value    = entry,
+		bufnr    = entry.bufnr,
+		lnum     = entry.lnum + 1,
+		col      = entry.col,
+		code     = entry.code,
+		text     = entry.message:gsub("\n", ""),
+		type     = entry.severity,
+		filename = vim.api.nvim_buf_get_name(entry.bufnr),
+		ordinal  = entry.message .. " " .. entry.lnum,
+		display  = FormatEntryDiagnostics,
+	}, opts)
+end
+--
+function CustomEntryMakerDocSymbol(entry)
 	-- InspectTable(entry)
 	local make_entry    = require("telescope.make_entry")
-	local default_maker = make_entry.gen_from_diagnostics()
+	local default_maker = make_entry.gen_from_quickfix()
 	local entry_tbl     = default_maker(entry)
 
 	if entry_tbl then
-		entry_tbl.display = FormatEntryDiagnostics
+		entry_tbl.display = FormatEntryDocSymbol
 	end
 
 	return entry_tbl
@@ -386,6 +387,20 @@ require("telescope").setup({
 					["<m-d>"] = telescope_actions.to_fuzzy_refine,
 				},
 			}
+		},
+		lsp_document_symbols = {
+			mappings = {
+				i = {
+					["<m-d>"] = telescope_actions.to_fuzzy_refine,
+				},
+			}
+		},
+		lsp_workspace_symbols = {
+			mappings = {
+				i = {
+					["<m-d>"] = telescope_actions.to_fuzzy_refine,
+				},
+			}
 		}
 		-- quickfix = {
 		-- 	entry_maker = function(entry)
@@ -427,17 +442,17 @@ require("telescope").load_extension("ui-select")
 -- -------------------------------------------------------------------------- -
 -- Better Quickfix (nvim-bqf)
 -- -------------------------------------------------------------------------- -
--- require("bqf").setup({
--- 	preview = {
--- 		win_height  = 20,
--- 		win_vheight = 12,
--- 		winblend    = 0,
--- 	},
--- 	func_map = {
--- 		-- openc = '<CR>',
--- 		-- open = 'o'
--- 	}
--- })
+require("bqf").setup({
+	preview = {
+		win_height  = 20,
+		win_vheight = 12,
+		winblend    = 0,
+	},
+	func_map = {
+		-- openc = '<CR>',
+		-- open = 'o'
+	}
+})
 -- -------------------------------------------------------------------------- -
 -- Plugin - LF:
 -- -------------------------------------------------------------------------- -
