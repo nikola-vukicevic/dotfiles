@@ -981,28 +981,65 @@ function util_sort_doc_symbol(a, b)
 	return a.lnum > b.lnum
 end
 --
+-- function FancyDocSymbols_STARI()
+-- 	if not vim.g.lsp_buf_result then return end
+--
+-- 	local lista = { }
+-- 	local bufnr = vim.api.nvim_get_current_buf()
+--
+-- 	for i = 1, #vim.g.lsp_buf_result do
+-- 		local symbol = vim.g.lsp_buf_result[i]
+-- 		local qf_item = {
+-- 			bufnr = bufnr,
+-- 			lnum  = symbol.range.start.line + 1,
+-- 			col   = symbol.range.start.character,
+-- 			text  = tipovi_lsp_simbola[symbol.kind][1] .. tipovi_lsp_simbola[symbol.kind][2] .. "|" .. symbol.name, -- TODO - ovo bi STVARNO moralo bolje!
+-- 		}
+-- 		table.insert(lista, qf_item)
+-- 	end
+--
+-- 	table.sort(lista, util_sort_doc_symbol)
+-- 	vim.fn.setqflist(lista)
+--
+-- 	require("telescope.builtin").quickfix({
+-- 		prompt_title = "Document symbols",
+-- 		entry_maker  = CustomEntryMakerDocSymbol
+-- 	})
+-- end
+--
 function FancyDocSymbols()
+	if not vim.g.lsp_buf_result then return end
+
 	local lista = { }
 	local bufnr = vim.api.nvim_get_current_buf()
 
 	for i = 1, #vim.g.lsp_buf_result do
-		local symbol = vim.g.lsp_buf_result[i]
-		local qf_item = {
-			bufnr = bufnr,
-			lnum  = symbol.range.start.line + 1,
-			col   = symbol.range.start.character,
-			text  = tipovi_lsp_simbola[symbol.kind][1] .. tipovi_lsp_simbola[symbol.kind][2] .. "|" .. symbol.name, -- TODO - ovo bi STVARNO moralo bolje!
+		local symbol    = vim.g.lsp_buf_result[i]
+		-- InspectTable(symbol)
+		local list_item = {
+			bufnr    = bufnr,
+			lnum     = symbol.range.start.line + 1,
+			col      = symbol.range.start.character,
+			kind     = tipovi_lsp_simbola[symbol.kind][1],
+			kind_txt = tipovi_lsp_simbola[symbol.kind][2],
+			name     = symbol.name
 		}
-		table.insert(lista, qf_item)
+		table.insert(lista, list_item)
 	end
 
 	table.sort(lista, util_sort_doc_symbol)
-	vim.fn.setqflist(lista)
 
-	require("telescope.builtin").quickfix({
+	local opts = opt or require("telescope.config").values or { }
+
+	require('telescope.pickers').new({ }, { -- opts, {
 		prompt_title = "Document symbols",
-		entry_maker  = CustomEntryMakerDocSymbol
-	})
+		finder       = require('telescope.finders').new_table({
+			results     = lista,
+			entry_maker = CustomEntryMakerDocSymbol,
+		}),
+		previewer = opts.qflist_previewer(opts),
+		sorter    = require('telescope.sorters').get_fzy_sorter(opts), -- .empty()
+	}):find()
 end
 -- -----------------------------------------------------------------------------
 -- END OF LSP DOCUMENT SYMBOLS:
@@ -1013,7 +1050,8 @@ function util_sort_diagnostics(a, b)
 	return a.lnum < b.lnum
 end
 --
-function SortErrorWarnInfo(qf_list)
+function SortErrorWarnInfo(qf_list, opts) -- opts = način označavanja severity-ja ("E", "W", "type" ili 1, 2, "severity")
+	-- InspectTable(opts)
 	-- InspectTable(qf_list)
 	-- local lista_error   = { }
 	local lista_warn    = { }
@@ -1023,9 +1061,9 @@ function SortErrorWarnInfo(qf_list)
 	-- razvrstavanje poruka (ERROR poruke
 	-- se odmah ubacuju u konačnu listu)
 	for _, item in ipairs(qf_list) do
-		if item.severity == 1 then
+		if item[opts[3]] == opts[1] then
 			table.insert(konacna_lista, item)
-		elseif item.severity == 2 then
+		elseif item[opts[3]] == opts[2] then
 			table.insert(lista_warn, item)
 		else
 			table.insert(lista_info, item)
@@ -1049,7 +1087,7 @@ end
 function FancyErrorWarnInfoList(opt)
 	local lista = vim.diagnostic.get()
 	table.sort(lista, util_sort_diagnostics)
-	local nova_lista = SortErrorWarnInfo(lista)
+	local nova_lista = SortErrorWarnInfo(lista, { 1, 2, "severity" })
 	-- vim.fn.setqflist(nova_lista, 'r')
 	-- InspectTable(nova_lista)
 	-- vim.cmd.copen()
@@ -1063,9 +1101,18 @@ function FancyErrorWarnInfoList(opt)
 			entry_maker = CustomEntryMakerDiagnostics,
 		}),
 		previewer = opts.qflist_previewer(opts),
-		sorter    = require('telescope.sorters').empty(),
-
+		sorter    = require('telescope.sorters').get_fzy_sorter(opts), -- empty(),
 	}):find()
+end
+--
+function FancyErrorWarnInfoListBqf()
+	vim.diagnostic.setqflist({open=false})
+	-- local lista = vim.diagnostic.get()
+	local lista = vim.fn.getqflist()
+	-- table.sort(lista, util_sort_diagnostics)
+	local nova_lista = SortErrorWarnInfo(lista, { "E", "W", "type" })
+	vim.fn.setqflist(nova_lista, 'r')
+	vim.cmd.copen()
 end
 -- -----------------------------------------------------------------------------
 -- END OF FANCY ERROR-WARN-INFO LIST:

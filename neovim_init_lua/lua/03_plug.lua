@@ -80,6 +80,7 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		{
 			"nvim-treesitter/nvim-treesitter",
+			branch = "main",
 			lazy   = false,
 			build  = ":TSUpdate",
 			-- commit = "64d1696"
