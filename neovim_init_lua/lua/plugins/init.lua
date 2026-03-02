@@ -135,6 +135,15 @@ function PronalaZenjePromptBuffera()
 	end, vim.api.nvim_list_bufs())
 end
 --
+local EntryTabulatorLiveGrep = telescope_entry_display.create({
+	separator = " ", -- |│ ",
+	items     = {
+		{ width     = 20   },
+		{ width     = 7    },
+		{ remaining = true }
+	}
+})
+--
 local EntryTabulatorQuickfix = telescope_entry_display.create({
 	separator = " ", -- |│ ",
 	items     = {
@@ -163,6 +172,17 @@ local EntryTabulatorDocSymbol = telescope_entry_display.create({
 		{ remaining = true }
 	}
 })
+--
+function FormatEntryLiveGrep(entry)
+	-- InspectTable(entry)
+	local line_col = entry.lnum .. ":" .. entry.col
+
+	return EntryTabulatorLiveGrep({
+		{ entry.filename, "QuickfixResultFilename" },
+		{ line_col,       "QuickfixResultLineCol"  },
+		{ entry.text,     "QuickfixResultText"     }
+	})
+end
 --
 function FormatEntryQuickfix(entry)
 	local filename = vim.fn.fnamemodify(vim.fn.bufname(entry.bufnr), ":.")
@@ -208,20 +228,75 @@ function FormatEntryDiagnostics(entry)
 	})
 end
 --
-function FormatEntryDocSymbol(entry)
-	-- InspectTable(entry)
+-- function FormatEntryDocSymbol_STARI(entry)
+-- 	-- InspectTable(entry)
+-- 	local line_col = entry.lnum .. ":" .. entry.col
+-- 	local simbol   = string.sub(entry.text, 1, 3)
+-- 	local indeks   = string.find(entry.text, "|")
+-- 	local tip      = string.sub(entry.text, 4, indeks - 1)
+-- 	local text     = string.sub(entry.text, indeks + 1)
+--
+-- 	return EntryTabulatorDocSymbol({
+-- 		{ line_col, "QuickfixResultLineColFade" },
+-- 		{ simbol,   "BreadcrumbsQf" .. tip      },
+-- 		{ tip,      "BreadcrumbsQf" .. tip      },
+-- 		{ text,     "QuickfixResultText"        }
+-- 	})
+-- end
+--
+function FormatEntryDocSymbol(entry) -- zapravo, ovo je gotovo, ali, fali prompt
 	local line_col = entry.lnum .. ":" .. entry.col
-	local simbol   = string.sub(entry.text, 1, 3)
-	local indeks   = string.find(entry.text, "|")
-	local tip      = string.sub(entry.text, 4, indeks - 1)
-	local text     = string.sub(entry.text, indeks + 1)
 
 	return EntryTabulatorDocSymbol({
-		{ line_col, "QuickfixResultLineColFade" },
-		{ simbol,   "BreadcrumbsQf" .. tip        },
-		{ tip,      "BreadcrumbsQf" .. tip        },
-		{ text,     "QuickfixResultText"        }
+		{ line_col,       "QuickfixResultLineColFade"       },
+		{ entry.kind,     "BreadcrumbsQf" .. entry.kind_txt },
+		{ entry.kind_txt, "BreadcrumbsQf" .. entry.kind_txt },
+		{ entry.text,     "QuickfixResultText"              }
 	})
+end
+--
+function CustomEntryMakerLiveGrep(entry)
+	local indeks_1 = entry:find(":")
+	local indeks_2 = entry:find(":", indeks_1 + 1)
+	local indeks_3 = entry:find(":", indeks_2 + 1) - 1
+	local indeks_4 = indeks_3 + 2
+
+	while entry:sub(indeks_4, indeks_4):match("%s") ~= nil do
+		indeks_4 = indeks_4 + 1
+	end
+
+	local filename = entry:sub(1, indeks_1 - 1)
+	local lnum     = entry:sub(indeks_1 + 1, indeks_2 - 1)
+	local col      = entry:sub(indeks_2 + 1, indeks_3) - 1
+	local text     = entry:sub(indeks_4)
+
+	return {
+		value    = entry,
+		text     = text,           -- lista[4], --:match("^%s*(.-)%s*$"),
+		lnum     = tonumber(lnum), -- tonumber(lista[2]),
+		col      = tonumber(col),  -- tonumber(lista[3]),
+		filename = filename,       -- lista[1],
+		ordinal  = entry,
+		display  = FormatEntryLiveGrep,
+	}
+end
+--
+function CustomEntryMakerLiveGrep_SA_LISTOM(entry)
+	local lista = { }
+
+	for item in entry:gmatch("([^:]+)") do
+		table.insert(lista, item)
+	end
+
+	return {
+		value    = entry,
+		text     = lista[4], --:match("^%s*(.-)%s*$"),
+		lnum     = tonumber(lista[2]),
+		col      = tonumber(lista[3]),
+		filename = lista[1],
+		ordinal  = entry,
+		display  = FormatEntryLiveGrep,
+	}
 end
 --
 function CustomEntryMakerQuickfix(entry)
@@ -238,11 +313,11 @@ function CustomEntryMakerQuickfix(entry)
 end
 --
 function CustomEntryMakerDiagnostics(entry)
-	local make_entry = require("telescope.make_entry")
+	-- local make_entry = require("telescope.make_entry")
 
-	opts = { }
+	-- opts = { }
 
-	return make_entry.set_default_entry_mt({
+	return {--make_entry.set_default_entry_mt({
 		value    = entry,
 		bufnr    = entry.bufnr,
 		lnum     = entry.lnum + 1,
@@ -253,20 +328,35 @@ function CustomEntryMakerDiagnostics(entry)
 		filename = vim.api.nvim_buf_get_name(entry.bufnr),
 		ordinal  = entry.message .. " " .. entry.lnum,
 		display  = FormatEntryDiagnostics,
-	}, opts)
+	}--, opts)
 end
 --
+-- function CustomEntryMakerDocSymbol_STARI(entry)
+-- 	-- InspectTable(entry)
+-- 	local make_entry    = require("telescope.make_entry")
+-- 	local default_maker = make_entry.gen_from_quickfix()
+-- 	local entry_tbl     = default_maker(entry)
+--
+-- 	if entry_tbl then
+-- 		entry_tbl.display = FormatEntryDocSymbol
+-- 	end
+--
+-- 	return entry_tbl
+-- end
+--
 function CustomEntryMakerDocSymbol(entry)
-	-- InspectTable(entry)
-	local make_entry    = require("telescope.make_entry")
-	local default_maker = make_entry.gen_from_quickfix()
-	local entry_tbl     = default_maker(entry)
-
-	if entry_tbl then
-		entry_tbl.display = FormatEntryDocSymbol
-	end
-
-	return entry_tbl
+	return {
+		value    = entry,
+		bufnr    = entry.bufnr,
+		lnum     = entry.lnum,
+		col      = entry.col,
+		text     = entry.name,
+		kind     = entry.kind,
+		kind_txt = entry.kind_txt,
+		filename = vim.api.nvim_buf_get_name(entry.bufnr),
+		ordinal  = entry.name .. " " .. entry.lnum,
+		display  = FormatEntryDocSymbol,
+	}
 end
 --
 function DaLiJeVezanZaOtvoreniBafer(datoteka)
@@ -349,6 +439,7 @@ require("telescope").setup({
 		sort_mru              = true,
 
 		live_grep = {
+			entry_maker = CustomEntryMakerLiveGrep,
 			-- prompt_prefix = " ",
 			initial_mode = "insert",
 			mappings = {
@@ -375,6 +466,7 @@ require("telescope").setup({
 			}
 		},
 		quickfix = {
+			entry_maker = CustomEntryMakerQuickfix,
 			mappings = {
 				i = {
 					["<m-d>"] = telescope_actions.to_fuzzy_refine,
