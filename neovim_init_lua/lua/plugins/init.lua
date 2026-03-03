@@ -159,7 +159,9 @@ local EntryTabulatorDiagnostics = telescope_entry_display.create({
 		{ width     = 12   },
 		{ width     = 7    },
 		{ width     = 1    },
-		{ remaining = true }
+		{ remaining = true },
+		-- { width     = nil  },
+		-- { width     = nil  }
 	}
 })
 --
@@ -203,7 +205,9 @@ function FormatEntryDiagnostics(entry)
 	local diag_type = ""
 	local diag_hl   = ""
 	local text_hl   = ""
-	local text      = entry.text:match("^%s*(.-)%s*$")
+	local text      = entry.text:match("^%s*(.-)%s*$") -- .. " [" .. entry.code .. "]"
+	-- local type_txt  = "[" .. entry.type_txt .. "]"
+	-- local code      = "[" .. entry.code .. "]"
 	-- InspectTable(entry)
 
 	if entry.type == 1 then
@@ -224,7 +228,9 @@ function FormatEntryDiagnostics(entry)
 		{ filename,  "QuickfixResultFilename"    },
 		{ line_col,  "QuickfixResultLineColFade" },
 		{ diag_type, diag_hl                     },
-		{ text,      text_hl                     }
+		{ text,      text_hl                     },
+		-- { type_txt,  diag_hl                     },
+		-- { code,      diag_hl                     }
 	})
 end
 --
@@ -313,11 +319,16 @@ function CustomEntryMakerQuickfix(entry)
 end
 --
 function CustomEntryMakerDiagnostics(entry)
-	-- local make_entry = require("telescope.make_entry")
+	local type_txt
+	if entry.severity == 1 then
+		type_txt = "error"
+	elseif entry.severity == 2 then
+		type_txt = "warn"
+	else
+		type_txt = "info"
+	end
 
-	-- opts = { }
-
-	return {--make_entry.set_default_entry_mt({
+	return {
 		value    = entry,
 		bufnr    = entry.bufnr,
 		lnum     = entry.lnum + 1,
@@ -325,24 +336,12 @@ function CustomEntryMakerDiagnostics(entry)
 		code     = entry.code,
 		text     = entry.message:gsub("\n", ""),
 		type     = entry.severity,
+		type_txt = type_txt,
 		filename = vim.api.nvim_buf_get_name(entry.bufnr),
 		ordinal  = entry.message .. " " .. entry.lnum,
 		display  = FormatEntryDiagnostics,
-	}--, opts)
+	}
 end
---
--- function CustomEntryMakerDocSymbol_STARI(entry)
--- 	-- InspectTable(entry)
--- 	local make_entry    = require("telescope.make_entry")
--- 	local default_maker = make_entry.gen_from_quickfix()
--- 	local entry_tbl     = default_maker(entry)
---
--- 	if entry_tbl then
--- 		entry_tbl.display = FormatEntryDocSymbol
--- 	end
---
--- 	return entry_tbl
--- end
 --
 function CustomEntryMakerDocSymbol(entry)
 	return {
