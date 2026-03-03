@@ -328,7 +328,7 @@ if TelescopeHL == true then
 	-- vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#f09080" }                  ) --"#2c303d", fg = "#d0d0d0" } )
 	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#ccbbaa" , bold = bold }                  ) --"#2c303d", fg = "#d0d0d0" } )
 	vim.api.nvim_set_hl ( 0 , "TelescopeSelection" ,      {  fg = "#e0e0e0", bg = "#464a5f" }  ) --"#cad3f5", fg = "#363a4f" } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeMatching" ,       {  fg = "#ffb0ca" , bold = bold   }  ) --"#cad3f5", fg = "#363a4f" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeMatching" ,       {  fg = "#ead0c0" , bold = bold   }  ) --"#cad3f5", fg = "#363a4f" } )
 	-- Quickfix
 	vim.api.nvim_set_hl ( 0 , "QuickfixResultFilename" ,               {  fg = "#80a0ff" , bold = bold } )
 	vim.api.nvim_set_hl ( 0 , "QuickfixResultLineCol" ,                {  fg = "#e09060" , bold = bold } )
