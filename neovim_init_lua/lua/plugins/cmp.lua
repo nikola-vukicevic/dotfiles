@@ -76,10 +76,10 @@ cmp.setup({
 		-- ----------------------------------
 		["<CR>"] = cmp.mapping.confirm({
 			behavior = cmp.ConfirmBehavior.Replace ,
-			select   = false }
-		), -- Accept currently selected item.
-		   -- Set `select` to `false` to only
-		   -- confirm explicitly selected items.
+			select   = true
+		}), -- Accept currently selected item.
+		    -- Set `select` to `false` to only
+		    -- confirm explicitly selected items.
 		-- ----------------------------------
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() and luasnip.expand_or_jumpable() and not cmp.get_selected_entry() then

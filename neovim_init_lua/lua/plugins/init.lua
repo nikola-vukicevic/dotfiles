@@ -365,19 +365,26 @@ function DaLiJeVezanZaOtvoreniBafer(datoteka)
 end
 --
 function custom_buffer_previewer(filepath, bufnr, opts)
-	if not DaLiJeVezanZaOtvoreniBafer(filepath) == true then
 	-- if DaLiAktiviratiDefaultPreviewer() == true then
+	if not DaLiJeVezanZaOtvoreniBafer(filepath) == true then
 		-- print("Default previewer")
 		telescope_previewers.buffer_previewer_maker(filepath, bufnr, opts)
 		return
 	end
 
 	vim.schedule(function()
-		-- print("Custom previewer")
 		local entry = telescope_actions_state.get_selected_entry()
 		-- InspectTable(entry)
 		local bufnr_file = vim.fn.bufnr(filepath)
 		local lines      = vim.api.nvim_buf_get_lines(bufnr_file, 0, -1, false)
+
+		if #lines < 1 then
+			-- print("Default previewer")
+			telescope_previewers.buffer_previewer_maker(filepath, bufnr, opts)
+			return
+		end
+
+		-- print("Custom previewer")
 		local file_type  = vim.api.nvim_buf_get_option(bufnr_file, "filetype")
 
 		vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
@@ -552,6 +559,27 @@ require("lf").setup({
 	width    = 102,
 	height   = 25,
 	border   = "rounded",
+})
+-- -----------------------------------------------------------------------------
+-- ToggleTerm:
+-- -----------------------------------------------------------------------------
+require("toggleterm").setup({
+	direction  = "float",
+	float_opts = {
+		border = "curved",
+		width  = 120, -- 600
+		height = 32,
+	},
+	-- shade_terminals = false,
+	winblend = 0,
+	highlights = {
+		NormalFloat = {
+			link = "NormalFloat";
+		},
+		FloatBorder = {
+			link = "ToggleTermBorder";
+		}
+	}
 })
 -- -----------------------------------------------------------------------------
 local ft = require("Comment.ft")
