@@ -244,8 +244,9 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- -----------------------------------------------------------------------------
 vim.api.nvim_create_autocmd("BufWritePost" , {
 	pattern = "*.imd",
-	command = ":w !node /home/korisnik/git/node/markdown/idiosync_parser.js"
-	-- command = ":w !python /home/korisnik/git/python/markdown/idiosync_parser.py"
+	command = ":w !/home/korisnik/git/idiosync_parser/cpp_parser/idiosync_parser"
+	-- command = ":w !node /home/korisnik/git/idiosync_parser/node_parser/idiosync_parser.js"
+	-- command = ":w !python /home/korisnik/git/idiosync_parser/python_parser/idiosync_parser.py"
 })
 --
 vim.api.nvim_create_autocmd("BufWritePost" , {
