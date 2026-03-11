@@ -99,8 +99,12 @@ if basicHL == true then
 	-- -----
 	-- Float:
 	-- -----
-	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,  { bg = None } )                --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#80828a', bold = true } )  -- "#8080a0"
+	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,       { bg = None } )                --"#2c303d",                } )
+	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,       { bg = None, fg='#c0c0c0', bold = true } )  -- "#8080a0"
+	vim.api.nvim_set_hl ( 0 , "FloatTitle" ,        { bg='#272935',            bold = true } )  -- "#8080a0"
+	vim.api.nvim_set_hl ( 0 , "ToggleTermBorder" ,  { bg = None, fg='#c0c0c0', bold = true } )  -- "#8080a0"
+	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#80a0d0', bold = true } )  -- "#8080a0"
+	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#80828a', bold = true } )  -- "#8080a0"
 	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#707484', bold = true } )  -- "#8080a0"
 	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#90949a', bold = true } )  -- "#8080a0"
 	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#90a0f0', bold = true } )  -- "#8080a0"
@@ -326,16 +330,17 @@ if TelescopeHL == true then
 	-- vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#909090" }                 ) --"#2c303d", fg = "#d0d0d0" } )
 	-- vim.api.nvim_set_hl ( 0 , "TelescopeBorder" ,         {  fg = "#b0b0b0" } ) --"#2c303d", fg = "#d0d0d0" } )
 	-- vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#f09080" }                  ) --"#2c303d", fg = "#d0d0d0" } )
-	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#ccbbaa" , bold = bold }                  ) --"#2c303d", fg = "#d0d0d0" } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeSelection" ,      {  fg = "#e0e0e0", bg = "#464a5f" }  ) --"#cad3f5", fg = "#363a4f" } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeMatching" ,       {  fg = "#ead0c0" , bold = bold   }  ) --"#cad3f5", fg = "#363a4f" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopePromptCounter" ,  {  fg = "#ccbbaa" , bold = bold    }  ) --"#2c303d", fg = "#d0d0d0" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeSelection" ,      {  fg = "#e0e0e0" , bg = "#464a5f" }  ) --"#cad3f5", fg = "#363a4f" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeMatching" ,       {  fg = "#f0a0d0" , bold = bold    }  ) --"#cad3f5", fg = "#363a4f" } )
+	-- vim.api.nvim_set_hl ( 0 , "TelescopeMatching" ,       {  fg = "#ead0c0" , bold = bold   }  ) --"#cad3f5", fg = "#363a4f" } )
 	-- Quickfix
-	vim.api.nvim_set_hl ( 0 , "QuickfixResultFilename" ,               {  fg = "#80a0ff" , bold = bold } )
-	vim.api.nvim_set_hl ( 0 , "QuickfixResultLineCol" ,                {  fg = "#e09060" , bold = bold } )
-	vim.api.nvim_set_hl ( 0 , "QuickfixResultLineColFade" ,            {  fg = "#707174" , bold = bold } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultError" ,      {  fg = "#f05040" , bold = bold } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultWarn" ,       {  fg = "#f0a040" , bold = bold } )
-	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultInfo" ,       {  fg = "#80a0f0" , bold = bold } )
+	vim.api.nvim_set_hl ( 0 , "QuickfixResultFilename" ,               {  fg = "#80a0ff" } )
+	vim.api.nvim_set_hl ( 0 , "QuickfixResultLineCol" ,                {  fg = "#e09060" } )
+	vim.api.nvim_set_hl ( 0 , "QuickfixResultLineColFade" ,            {  fg = "#707174" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultError" ,      {  fg = "#f05040" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultWarn" ,       {  fg = "#f0a040" } )
+	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultInfo" ,       {  fg = "#80a0f0" } )
 	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultErrorText" ,  {  fg = "#e0a0a0" } )
 	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultWarnText" ,   {  fg = "#f0f1ed" } )
 	vim.api.nvim_set_hl ( 0 , "TelescopeDiagnosticsResultInoText" ,    {  fg = "#f0f1fa" } )

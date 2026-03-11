@@ -200,7 +200,11 @@ require("lazy").setup(
 		-- ---------------------------------------------
 		-- lf nvim:
 		-- ---------------------------------------------
-		"akinsho/toggleterm.nvim",
+		{
+			"akinsho/toggleterm.nvim",
+			version = "*",
+			config  = true
+		},
 		"lmburns/lf.nvim",
 		-- "ptzz/lf.vim",
 		-- "voldikss/vim-floaterm",
