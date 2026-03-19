@@ -5,103 +5,157 @@ local text_02 = "### function `reset_strukture_pokusaji`  \n\n---\n→ `void`  \
 -- -----------------------------------------------------------------------------
 local f_split  = vim.fn.split
 -- -----------------------------------------------------------------------------
-function SpajanjeListe(list, delim, indeks)
+function SpajanjeListe(list, delim)
 	local s = ""
-		for _,t in ipairs(list) do
-			local p = ""
-			if t[indeks] == true then p = delim end
-			s = s .. p .. t[1]
+
+	for _,token in ipairs(list) do
+		local p = ""
+
+		if token.zapocinje_novi_red or token.zapocet_u_gornjem_redu then
+			p = delim
 		end
+
+		if token.spajanje_sa_gornjim then
+			p = p .. " "
+		end
+
+		s = s .. p .. token.sadrzaj
+	end
+
 	return s
 end
 -- ----------------------------------------------------------------------------
-function DaLiJeSpecijalni(token)
-	if token:startsWith("\n")   then return true end
-	if token:startsWith("#")    then return true end
-	if token:startsWith("```")  then return true end
-	if token:startsWith("---")  then return true end
-	if token:startsWith(" ---") then return true end
-	-- Da li počinje velikim slovom:
-	if string.match(token:sub(1, 1), "%u") then return true end
-	-- Da li počinje cifrom:
-	if string.find(token, "^%d")           then return true end
-	-- if token:startsWith("\\\\---")     then return true end
-	-- C/C++:
-	if token:startsWith("\\---")        then return true end
-	if token:startsWith("- ")           then return true end
-	if token:startsWith("\\- ")         then return true end
-	if token:startsWith("→ ")           then return true end
-	if token:startsWith("Parameters:")  then return true end
-	if token:startsWith("@brief")       then return true end
-	if token:startsWith("@param")       then return true end
-	if token:startsWith("@constructor") then return true end
-	if token:startsWith("@return")      then return true end
-	-- JS/TS:
-	if token:startsWith("*@brief*")       then return true end
-	if token:startsWith("*@param*")       then return true end
-	if token:startsWith("*@constructor*") then return true end
-	if token:startsWith("*@return*")      then return true end
+function DaLiAktiviraPrelaske(token, c_ili_cpp)
+	local zapocinje_novi_red    = token.zapocinje_novi_red
+	local zapocinje_donji_red   = token.zapocinje_donji_red
+	local razdvajanje_od_donjeg = token.razdvajanje_od_donjeg
+	local code_context          = token.code_context
 
-	return false
-end
--- ----------------------------------------------------------------------------
-function DaLiPrelaziUNoviRed(specijalni, prethodni_spec, prelazak_sledeci)
-	return prelazak_sledeci  == true
-	       or specijalni     == true
-	       or prethodni_spec == true
-end
--- ----------------------------------------------------------------------------
-function DaLiAktiviraPrelazakSledeceg(token, specijalni, prelazak_prethodni)
-	if specijalni == true then return false end
-
-	if specijalni == false and prelazak_prethodni == true then
-		return true
+	if token.sadrzaj:customStartsWith("\n") then
+		zapocinje_novi_red  = true
 	end
 
-	if token:startsWith("```")     then return true end
-	if token:startsWith("*@code*") then return true end
+	if token.sadrzaj:customStartsWith("#") then
+		zapocinje_novi_red    = true
+		zapocinje_donji_red   = true
+		razdvajanje_od_donjeg = true
+	end
 
-	return false
+	if token.sadrzaj:customStartsWith("```") then
+		zapocinje_novi_red    = true
+		zapocinje_donji_red   = true
+		razdvajanje_od_donjeg = true
+
+		if #token.sadrzaj > 4 then
+			code_context = true
+		else
+			code_context = false
+		end
+	end
+
+	if token.sadrzaj:customStartsWith("---") then
+		zapocinje_novi_red  = true
+		zapocinje_donji_red = true
+	end
+
+	if token.sadrzaj:customStartsWith(" ---") then
+		zapocinje_novi_red  = true
+		zapocinje_donji_red = true
+	end
+
+	-- Da li počinje velikim slovom:
+	if string.find(token.sadrzaj, "^%u") then
+		zapocinje_novi_red  = true
+		-- zapocinje_donji_red = false
+	end
+
+	-- Da li počinje cifrom:
+	if string.find(token.sadrzaj, "^%d") then
+		zapocinje_novi_red  = true
+		-- zapocinje_donji_red = false
+	end
+
+	-- if token.sadrzaj:customStartsWith("\\\\---")     then return true end
+
+	-- C/C++:
+	if c_ili_cpp then
+		if token.sadrzaj:customStartsWith("\\---")        then zapocinje_novi_red = true end
+		if token.sadrzaj:customStartsWith("- ")           then zapocinje_novi_red = true end
+		if token.sadrzaj:customStartsWith("\\- ")         then zapocinje_novi_red = true end
+		if token.sadrzaj:customStartsWith("→ ")           then zapocinje_novi_red = true end
+		if token.sadrzaj:customStartsWith("Parameters:")  then zapocinje_novi_red = true end
+		if token.sadrzaj:customStartsWith("@brief")       then zapocinje_novi_red = true end
+		if token.sadrzaj:customStartsWith("@param")       then zapocinje_novi_red = true end
+		if token.sadrzaj:customStartsWith("@constructor") then zapocinje_novi_red = true end
+		if token.sadrzaj:customStartsWith("@return")      then zapocinje_novi_red = true end
+	end
+
+	-- JS/TS:
+	if token.sadrzaj:customStartsWith("*@brief*")       then zapocinje_novi_red = true end
+	if token.sadrzaj:customStartsWith("*@param*")       then zapocinje_novi_red = true end
+	if token.sadrzaj:customStartsWith("*@constructor*") then zapocinje_novi_red = true end
+	if token.sadrzaj:customStartsWith("*@return*")      then zapocinje_novi_red = true end
+
+	-- Lua:
+	if token.sadrzaj:customStartsWith("@*param*")       then zapocinje_novi_red = true end
+
+	if code_context then
+		-- print(token.sadrzaj)
+		zapocinje_novi_red = true
+	end
+
+	return {
+		zapocinje_novi_red    = zapocinje_novi_red,
+		zapocinje_donji_red   = zapocinje_donji_red,
+		specijalni            = zapocinje_novi_red,
+		razdvajanje_od_donjeg = razdvajanje_od_donjeg,
+		code_context          = code_context,
+		-- code_context_prenos   = code_context_prenos
+	}
 end
 -- ----------------------------------------------------------------------------
 function prepravkeC(token)
-	local l = vim.fn.split(token, "###")
+	local l = vim.fn.split(token.sadrzaj, "###")
 	local rez
 
 	if #l < 2 then
-		rez = token
+		rez = token.sadrzaj
 	else
-		rez = l[1] .. "\n" .. l[2]:trimStart()
+		rez = l[1] .. "\n" .. l[2]--:customTrimStart()
 	end
 
-	return rez:gsub("\\_", "_")
+	token.sadrzaj = rez:gsub("\\", "")
+	-- return rez:gsub("\\", "")
+	-- return rez:gsub("\\_", "_")
 end
 -- ----------------------------------------------------------------------------
-function ObradaTokena(token, spec_prethodni, novi_red_prethodni, prelazak_prethodni)
-	local specijalni       = DaLiJeSpecijalni(token)
-	local prelazak_sledeci = DaLiAktiviraPrelazakSledeceg(token, specijalni, prelazak_prethodni)
-	local novi_red         = DaLiPrelaziUNoviRed(specijalni, spec_prethodni, prelazak_sledeci)
+function ObradaTokena(token)
+	token.sadrzaj = token.sadrzaj:gsub("\\", "")
+	local c_ili_cpp             = vim.bo.filetype == "c" or vim.bo.filetype == "cpp"
+	local rez                   = DaLiAktiviraPrelaske(token, c_ili_cpp)
 
-	if token:startsWith("\\---") then
-		token = token:gsub("\\", "" )
+	token.specijalni            = rez.specijalni
+	token.zapocinje_novi_red    = rez.zapocinje_novi_red
+	token.zapocinje_donji_red   = rez.zapocinje_donji_red
+	token.razdvajanje_od_donjeg = rez.razdvajanje_od_donjeg
+	token.code_context          = rez.code_context
+
+	if token.specijalni or token.code_context then
+		token.spajanje_sa_gornjim = false
 	end
 
-	if token:startsWith("---") or token:startsWith(" ---") then
-		token = token:gsub("[%-]+ ", "---\n" )
+	if token.sadrzaj:customStartsWith("\\---") then
+		token.sadrzaj = token.sadrzaj:gsub("\\", "" )
 	end
 
-	if vim.bo.filetype == "c" or vim.bo.filetype == "cpp" then
-		token = prepravkeC(token) -- token:gsub(" ###", "\n")
+	if token.sadrzaj:customStartsWith("---") or token.sadrzaj:customStartsWith(" ---") then
+		token.sadrzaj = token.sadrzaj:gsub("[%-]+ ", "---\n" )
 	end
 
-	token = token:trimStart()
-
-	return {
-		token;
-		specijalni;
-		novi_red;
-		prelazak_sledeci;
-	}
+	if c_ili_cpp then
+		prepravkeC(token) -- token:gsub(" ###", "\n")
+		-- token.sadrzaj = prepravkeC(token.sadrzaj) -- token:gsub(" ###", "\n")
+	end
 end
 -- ----------------------------------------------------------------------------
 function ObradaHover(str, delim)
@@ -110,58 +164,85 @@ function ObradaHover(str, delim)
 
 	for _,red in ipairs(list) do
 		if red ~= "" then
-		-- if red ~= "" and red ~= "\n" then
-			local p1 = true  -- specijalni
-			local p2 = false -- novi_red
-			local p3 = true  -- prelazak
+			local token = {
+				specijalni             = false,
+				zapocinje_novi_red     = false,
+				zapocinje_donji_red    = false,
+				zapocet_u_gornjem_redu = false,
+				spajanje_sa_gornjim    = true,
+				razdvajanje_od_donjeg  = false,
+				code_context           = false,
+				sadrzaj                = red --:trimStart()
+			}
 
 			if list_new[#list_new] ~= nil then
-				p1 = list_new[#list_new][2]
-				p2 = list_new[#list_new][3]
-				p3 = list_new[#list_new][4]
+				token.zapocet_u_gornjem_redu = list_new[#list_new].zapocinje_donji_red
+				token.zapocinje_novi_red     = token.zapocet_u_gornjem_redu
+				token.spajanje_sa_gornjim    = token.spajanje_sa_gornjim and not list_new[#list_new].razdvajanje_od_donjeg
+				token.code_context           = list_new[#list_new].code_context
 			end
 
-			local t = ObradaTokena(red, p1, p2, p3)
-			table.insert(list_new, t)
+			ObradaTokena(token)
+			table.insert(list_new, token)
 		end
 	end
 
-	return SpajanjeListe(list_new, delim, 3)
+	return SpajanjeListe(list_new, delim)
 end
 -- -----------------------------------------------------------------------------
 local f_obrada = ObradaHover
 -- -----------------------------------------------------------------------------
 function string:startsWith(s2)
 	return self:sub(1, #s2) == s2
+end
+-- -----------------------------------------------------------------------------
+function string:customStartsWith(s2)
+	local i = 1
+
+	-- Zanemarivanje whitespace-ova na početku
+	-- TODO match ^[ \t]
+	while self:sub(i, i) == " " or self:sub(i, i) == "\t" do
+		i = i + 1
+	end
+
+	return self:sub(i, i + #s2 - 1) == s2 -- TODO: proveriti taj "-1"
 
 end
 -- -----------------------------------------------------------------------------
-function string:trimStart()
+function string:customTrimStart()
 	local l = 1
 	
-	while self:sub(l, l) == " " do
+	while self:sub(l, l) == " " or self:sub(l, l) == "\t" do
 		l = l + 1
 	end
 
 	return self:sub(l, #self)
 end
 -- -----------------------------------------------------------------------------
+function LogToFile(sadrzaj, putanja)
+	local datoteka = io.open(putanja, "w")
+
+	if datoteka then
+		datoteka:write(sadrzaj)
+		datoteka:close()
+	else
+		print("Datoteka" .. putanja .. "nije uspešno otvorena za upis!")
+	end
+end
+-- -----------------------------------------------------------------------------
 function HoverHandler(err, result, context, config)
 	if not result then return end
-	-- print("\"Kontekst:\"")
-	-- print(vim.inspect(context))
-	-- print("\"Rezultat:\"")
-	-- print(vim.inspect(result))
+
 	local delim  = "\n"
-	-- local G = 1000
-	-- local tekst
-	-- for i = 1, G, 1 do
-	-- 	tekst  = f_obrada(result.contents.value, delim)
-	-- end
+
 	local tekst    = f_obrada(result.contents.value, delim)
+	-- InspectTable(tekst)
 	local parsed   = require("pretty_hover.parser").parse(tekst)
+	-- InspectTable(parsed)
 	local md_tekst = PrepravkaDocHover(parsed.text)
-	-- print(vim.inspect(md_tekst))
+	-- InspectTable(md_tekst)
+	LogToFile(result.contents.value, "/home/korisnik/lua_log_1")
+	LogToFile(tekst,                 "/home/korisnik/lua_log_2")
 
 	vim.lsp.util.open_floating_preview(md_tekst, "markdown", {
 		focus     = true;
@@ -212,21 +293,6 @@ function LSPHoverDebug()
 	-- print("Sledi odgovor ....")
 	vim.lsp.buf_request(0, "textDocument/hover", position_params, HoverHandlerDebug)
 end
--- -----------------------------------------------------------------------------
--- Vrv može DELETE
--- function probaPrettyHover()
--- 	local parsed = require("pretty_hover.parser").parse(text_02)
---
--- 	vim.lsp.util.open_floating_preview(parsed.text, "markdown", {
--- 		focus = true,
--- 		focusable = true,
--- 		wrap = true,
--- 		wrap_at = 40,
--- 		max_width = 46,
--- 		border = "rounded",
--- 		focus_id = "pretty-hover-example",
--- 	})
--- end
 -- -----------------------------------------------------------------------------
 function IspisTokena(lista, s1, s2)
 	local str = ""

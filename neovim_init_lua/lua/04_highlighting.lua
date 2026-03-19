@@ -80,7 +80,8 @@ if basicHL == true then
 	vim.cmd("hi SpecialKey             gui=NONE guifg=#323d37")
 	vim.cmd("hi NonText                gui=NONE guifg=#323d37 cterm=bold")
 	vim.cmd("hi Visual                 gui=NONE guibg=#444755")
-	vim.cmd("hi Comment                gui=NONE guifg=#656a70")
+	vim.cmd("hi Comment                gui=NONE guifg=#64656a")
+	-- vim.cmd("hi Comment                gui=NONE guifg=#656a70")
 	vim.cmd("hi DiagnosticUnnecessary  guifg=#665550") -- 66554
 	vim.cmd("hi StartifyFile           guifg=#ee5599")
 	vim.cmd("hi IlluminatedWordText    guibg=none guifg=#ffeedd")
@@ -100,9 +101,11 @@ if basicHL == true then
 	-- Float:
 	-- -----
 	vim.api.nvim_set_hl ( 0 , "NormalFloat" ,       { bg = None } )                --"#2c303d",                } )
-	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,       { bg = None, fg='#c0c0c0', bold = true } )  -- "#8080a0"
+	vim.api.nvim_set_hl ( 0 , "FloatBorder" ,       { bg = None, fg='#707174', bold = true } )  -- "#8080a0"
 	vim.api.nvim_set_hl ( 0 , "FloatTitle" ,        { bg='#272935',            bold = true } )  -- "#8080a0"
 	vim.api.nvim_set_hl ( 0 , "ToggleTermBorder" ,  { bg = None, fg='#c0c0c0', bold = true } )  -- "#8080a0"
+	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,       { bg = None, fg='#808184', bold = true } )  -- "#8080a0"
+	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,       { bg = None, fg='#c0c0c0', bold = true } )  -- "#8080a0"
 	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#80a0d0', bold = true } )  -- "#8080a0"
 	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#80828a', bold = true } )  -- "#8080a0"
 	-- vim.api.nvim_set_hl ( 0 , "FloatBorder" ,  { bg = None, fg='#707484', bold = true } )  -- "#8080a0"

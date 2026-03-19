@@ -217,7 +217,7 @@ function PomeranjeLinijeNaGore()
 end
 -- -----------------------------------------------------------------------------
 function PronalazenjeNaslova()
-	vim.cmd("vimgrep /^#\\{1,6} \\k/ %")
+	vim.cmd("vimgrep /^#\\{2,6} \\k/ %")
 	-- require('telescope.builtin').quickfix()
 	vim.cmd("botright copen")
 	-- Snacks.picker.qflist()
@@ -243,12 +243,18 @@ function DaLiJeGranicnikZaProsirivanje(c)
 	if c == "<" then return true end
 	if c == ">" then return true end
 	if c == "#" then return true end
+	if c == "=" then return true end
 	if c == "." then return true end
 	if c == "," then return true end
 	if c == ":" then return true end
 	if c == ";" then return true end
 	if c == "(" then return true end
 	if c == ")" then return true end
+	if c == "{" then return true end
+	if c == "}" then return true end
+	if c == "[" then return true end
+	if c == "]" then return true end
+	if c == "'" then return true end
 	--
 	if c == "\t" then return true end
 	if c == "\"" then return true end
@@ -673,6 +679,7 @@ function SimpleBufferSwitcher()
 end
 --
 function PronalazenjeKursoraUJumplisti(bufnr)
+	-- print(bufnr)
 	local jumplist = vim.fn.getjumplist()[1]
 
 	for i = #jumplist, 1, -1 do
@@ -685,8 +692,8 @@ function PronalazenjeKursoraUJumplisti(bufnr)
 	end
 
 	return {
-		lnum = 0,
-		col  = 0
+		lnum = 1,
+		col  = 1
 	}
 end
 --
@@ -695,7 +702,7 @@ function PripremaQfItemaZaBafer(datoteka)
 	-- local lnum     = -1
 	-- local col      = -1
 
-	local kursor = PronalazenjeKursoraUJumplisti()
+	local kursor = PronalazenjeKursoraUJumplisti(bufnr)
 
 	return {
 		bufnr = bufnr,
@@ -718,6 +725,11 @@ function QfBufferSwitcher()
 		return
 	end
 
+	if #vim.api.nvim_list_wins() > 1 then
+		require("telescope.builtin").buffers()		
+		return
+	end
+
 	local qflista = { }
 
 	for _,datoteka in ipairs(bafer_info.lista) do
@@ -737,13 +749,15 @@ end
 
 function UokviravanjeSelekcije(mode)
 	-- print(string.format("mode: %s", mode))
-	PodesavanjeUiSelectProzora("cursor", 47, 9)
+	PodesavanjeUiSelectProzora("cursor", 47, 11)
 
 	vim.ui.select(
 		{
 			"<code class='kod_u_tekstu'>%s</code>" ,
-			"<%s>" ,
 			"<em>%s</em>",
+			"\"%s\"",
+			"'%s'",
+			"<%s>" ,
 			"<strong>%s</strong>",
 			"<a href=''>%s</a>",
 			-- "1. <code class='kod_u_tekstu'>%s</code>" ,
