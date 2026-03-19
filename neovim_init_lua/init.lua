@@ -5,6 +5,7 @@ vim.g.jezik           = "SR"
 vim.g.spell_check     = false
 vim.g.auto_lsp_float  = false
 vim.g.diff_mode       = false
+vim.o.shell           = "/usr/bin/bash"
 -- vim.g.lsp_progres     = 0
 -- -----------------------------------------------------------------------------
 if vim.fn.argv(0) == "barebones" then
