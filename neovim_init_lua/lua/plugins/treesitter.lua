@@ -10,6 +10,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
 		"*.lua",
 		"*.py",
 		"*.go",
+		"*.rust",
 		"*.zig",
 		"*.odin",
 	},
@@ -17,6 +18,18 @@ vim.api.nvim_create_autocmd('BufEnter', {
 		vim.treesitter.start()
 	end
 })
+-- TODO: staviti pod komentar posle instalacije
+require('nvim-treesitter').install {
+	"c", "cpp",
+	"html", "css",
+	"javascript", "typescript",
+	"lua",
+	"python",
+	"go",
+	"rust",
+	"zig",
+	"odin"
+}
 -- -----------------------------------------------------------------------------
 -- Select:
 -- -----------------------------------------------------------------------------
