@@ -1,11 +1,12 @@
 -- -----------------------------------------------------------------------------
-vim.opt.mouse         = "a"
-vim.g.floaterm_opener = "edit"
-vim.g.jezik           = "SR"
-vim.g.spell_check     = false
-vim.g.auto_lsp_float  = false
-vim.g.diff_mode       = false
-vim.o.shell           = "/usr/bin/bash"
+vim.opt.mouse            = "a"
+vim.g.floaterm_opener    = "edit"
+vim.g.jezik              = "SR"
+vim.g.spell_check        = false
+vim.g.diff_mode          = false
+vim.g.auto_lsp_float     = false
+vim.g.lsp_hover_novi_red = false
+vim.o.shell              = "/usr/bin/bash"
 -- vim.g.lsp_progres     = 0
 -- -----------------------------------------------------------------------------
 if vim.fn.argv(0) == "barebones" then
@@ -245,7 +246,8 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- -----------------------------------------------------------------------------
 vim.api.nvim_create_autocmd("BufWritePost" , {
 	pattern = "*.imd",
-	command = ":w !/home/korisnik/git/idiosync_parser/cpp_parser/idiosync_parser"
+	command = ":w !/home/korisnik/git/idiosync_parser/odin_parser/idiosync_parser_odin"
+	-- command = ":w !/home/korisnik/git/idiosync_parser/cpp_parser/idiosync_parser"
 	-- command = ":w !node /home/korisnik/git/idiosync_parser/node_parser/idiosync_parser.js"
 	-- command = ":w !python /home/korisnik/git/idiosync_parser/python_parser/idiosync_parser.py"
 })
@@ -287,7 +289,8 @@ vim.api.nvim_create_autocmd({ "Cursormoved"	}, {
 		"*.lua",
 		"*.py",
 		"*.rs",
-		"*.zig"
+		"*.zig",
+		"*.odin"
 	},
 	callback = function()
 		if vim.g.auto_lsp_float == true then
