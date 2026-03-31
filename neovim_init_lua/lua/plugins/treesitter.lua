@@ -10,7 +10,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
 		"*.lua",
 		"*.py",
 		"*.go",
-		"*.rust",
+		"*.rs",
 		"*.zig",
 		"*.odin",
 	},
