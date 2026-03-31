@@ -4,10 +4,14 @@
 vim.api.nvim_create_autocmd('BufEnter', {
 	pattern  = {
 		"*.c", "*.cpp", "*.h", "*.hpp",
+		"*.c3",
 		"*.html", "*.css",
 		"*.js", "*.ts", "*.mjs", "*.mts", "*.cjs", "*.cts",
 		"*.lua",
 		"*.py",
+		"*.go",
+		"*.zig",
+		"*.odin",
 	},
 	callback = function()
 		vim.treesitter.start()

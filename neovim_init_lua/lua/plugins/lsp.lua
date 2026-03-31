@@ -4,10 +4,12 @@ local path_lua_ls = "/home/korisnik/git/lua-language-server/bin/lua-language-ser
 local autoStartLSP  = true
 --
 local aktivanC      = true
+local aktivanC3     = true
 local aktivanCss    = true
 local aktivanHtml   = true
 local aktivanTsJs   = true
 local aktivanLua    = true
+local aktivanOdin   = true
 local aktivanPython = true
 local aktivanPhp    = true
 local aktivanGo     = true
@@ -53,6 +55,31 @@ vim.lsp.config[nazivServeraC] = {
 }
 --
 table.insert(listaServera, nazivServeraC)
+--
+end
+-- -----------------------------------------------------------------------------
+-- C3:
+-- -----------------------------------------------------------------------------
+if autoStartLSP == true and aktivanC3 == true then
+--
+local nazivServeraC3 = "c3_lsp"
+--
+vim.lsp.config[nazivServeraC3] = {
+	cmd = {
+		"c3lsp"
+	},
+	filetypes = {
+		"c3",
+		"c3i"
+	},
+	root_markers = {
+		"project.json",
+		"manifest.json",
+		".git"
+	},
+}
+--
+table.insert(listaServera, nazivServeraC3)
 --
 end
 -- -----------------------------------------------------------------------------
@@ -168,6 +195,35 @@ vim.lsp.config[nazivServeraLua] = {
 }
 --
 table.insert(listaServera, nazivServeraLua)
+--
+end
+-- -----------------------------------------------------------------------------
+-- Odin:
+-- -----------------------------------------------------------------------------
+
+if autoStartLSP == true and aktivanOdin == true then
+--
+local nazivServeraOdin = "ols"
+--
+vim.lsp.config[nazivServeraOdin] = {
+	cmd = {
+		"odinls"
+	},
+	filetypes = {
+		"odin"
+	},
+	init_options = {
+		-- enable_checker_only_saved = true,
+		enable_semantic_tokens    = true,
+		enable_hover              = true,
+		enable_snippets           = true,
+		verbose                   = true,
+		odin_command              = "/usr/bin/odin",
+		-- checker_args              = "-strict-style -buffer -file"
+	}
+}
+--
+table.insert(listaServera, nazivServeraOdin)
 --
 end
 -- -----------------------------------------------------------------------------

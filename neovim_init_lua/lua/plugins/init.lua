@@ -395,7 +395,7 @@ function custom_buffer_previewer(filepath, bufnr, opts)
 		-- vim.api.nvim_win_set_cursor(opts.winid, { kursor.lnum, kursor.col } )
 		pcall(vim.api.nvim_win_set_cursor, opts.winid, { entry.lnum, 1 } )
 
-		if file_type ~= "" and telescope_utils.has_ts_parser(file_type) then
+		if file_type ~= "" then -- TODO - and telescope_utils.has_ts_parser(file_type) then
 			vim.treesitter.start(bufnr, file_type)
 		-- else
 		-- 	regex_highlighter(bufnr, filetype)
