@@ -5,17 +5,17 @@ local text_02 = "### function `reset_strukture_pokusaji`  \n\n---\n→ `void`  \
 -- -----------------------------------------------------------------------------
 local f_split  = vim.fn.split
 -- -----------------------------------------------------------------------------
-function SpajanjeListe(list, delim)
+function SpajanjeListe(list, delim, lsp_hover_novi_red)
 	local s = ""
 
 	for _,token in ipairs(list) do
 		local p = ""
 
-		if token.zapocinje_novi_red or token.zapocet_u_gornjem_redu then
+		if lsp_hover_novi_red or token.zapocinje_novi_red or token.zapocet_u_gornjem_redu then
 			p = delim
 		end
 
-		if token.spajanje_sa_gornjim then
+		if not lsp_hover_novi_red and token.spajanje_sa_gornjim then
 			p = p .. " "
 		end
 
@@ -158,7 +158,7 @@ function ObradaTokena(token)
 	end
 end
 -- ----------------------------------------------------------------------------
-function ObradaHover(str, delim)
+function ObradaHover(str, delim, lsp_hover_novi_red)
 	local list     = f_split(str, delim)
 	local list_new = { }
 
@@ -187,7 +187,7 @@ function ObradaHover(str, delim)
 		end
 	end
 
-	return SpajanjeListe(list_new, delim)
+	return SpajanjeListe(list_new, delim, lsp_hover_novi_red)
 end
 -- -----------------------------------------------------------------------------
 local f_obrada = ObradaHover
@@ -235,14 +235,14 @@ function HoverHandler(err, result, context, config)
 
 	local delim  = "\n"
 
-	local tekst    = f_obrada(result.contents.value, delim)
+	local tekst    = f_obrada(result.contents.value, delim, vim.g.lsp_hover_novi_red)
 	-- InspectTable(tekst)
 	local parsed   = require("pretty_hover.parser").parse(tekst)
 	-- InspectTable(parsed)
 	local md_tekst = PrepravkaDocHover(parsed.text)
 	-- InspectTable(md_tekst)
-	LogToFile(result.contents.value, "/home/korisnik/lua_log_1")
-	LogToFile(tekst,                 "/home/korisnik/lua_log_2")
+	-- LogToFile(result.contents.value, "/home/korisnik/lua_log_1")
+	-- LogToFile(tekst,                 "/home/korisnik/lua_log_2")
 
 	vim.lsp.util.open_floating_preview(md_tekst, "markdown", {
 		focus     = true;

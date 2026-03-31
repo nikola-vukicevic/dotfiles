@@ -97,6 +97,7 @@ vim.keymap.set( "" , "<M-p>" ,     ":set wrap!<cr>" ,           opts_nr )
 vim.keymap.set( "" , "<F11>" ,     ":lua boljiQuit()<cr>" ,    opts_snr )
 vim.keymap.set( "" , "<F12>" ,     ":qa<cr>" ,                  opts_nr )
 -- -----
+-- TODO - proveriti, ali, ovaj dole blok vrv ne treba više
 vim.keymap.set("c" , "<M-j>" , "<Down>"  , { desc = "" , remap = false } )
 vim.keymap.set("c" , "<M-k>" , "<Up>"    , { desc = "" , remap = false } )
 vim.keymap.set("i" , "<M-j>" , "<Down>"  , { desc = "" , remap = false } )
@@ -183,13 +184,13 @@ vim.keymap.set( "n" , "<M-f>" , "<C-d>" , opts_nr )
 -- premotavanje pola stranice na gore:
 vim.keymap.set( "n" , "<M-d>" , "<C-u>" , opts_nr )
 -- premeštanje reda jedno mesto na dole:
-vim.keymap.set( "n" , "<M-j>" , ":lua PomeranjeLinijeNaDole()<cr>" , opts_snr )
+vim.keymap.set( "n" , "<c-j>" , ":lua PomeranjeLinijeNaDole()<cr>" , opts_snr )
 -- premeštanje reda jedno mesto na gore:
-vim.keymap.set( "n" , "<M-k>" , ":lua PomeranjeLinijeNaGore()<cr>" , opts_snr )
+vim.keymap.set( "n" , "<c-k>" , ":lua PomeranjeLinijeNaGore()<cr>" , opts_snr )
 -- dupliranje reda na dole (kursor prelazi u donji red):
-vim.keymap.set( "n" , "<M-h>", ":lua DupliranjeLinijeNaDole()<cr>" , opts_snr )
+vim.keymap.set( "n" , "<m-h>", ":lua DupliranjeLinijeNaDole()<cr>" , opts_snr )
 -- dupliranje reda na gore (kursor ostaje u istom redu):
-vim.keymap.set( "n" , "<M-l>", ":lua DupliranjeLinijeNaGore()<cr>" , opts_snr )
+vim.keymap.set( "n" , "<m-l>", ":lua DupliranjeLinijeNaGore()<cr>" , opts_snr )
 -- " horizontalni skok na početak reda:
 vim.keymap.set( "n" , "<leader>h" , "0" ,                            opts_snr )
 -- " horizontalni skok na kraj reda:
@@ -260,8 +261,8 @@ vim.keymap.set( "n" , "k" , "(v:count == 0 ? 'gk' : 'k')" , opts_nrexp )
 -- -----------------------------------------------------------------------------
 -- Vim visual multi (multi cursor):
 -- -----------------------------------------------------------------------------
-vim.keymap.set( "n", "<C-j>", "<Plug>(VM-Add-Cursor-Down)" )
-vim.keymap.set( "n", "<C-k>", "<Plug>(VM-Add-Cursor-Up)"   )
+vim.keymap.set( "n", "<m-j>", "<Plug>(VM-Add-Cursor-Down)" )
+vim.keymap.set( "n", "<m-k>", "<Plug>(VM-Add-Cursor-Up)"   )
 -- -----------------------------------------------------------------------------
 -- LSP:
 -- -----------------------------------------------------------------------------

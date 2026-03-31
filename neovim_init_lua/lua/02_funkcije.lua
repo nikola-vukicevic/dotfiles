@@ -122,6 +122,12 @@ function FormatiranjeZig()
 	vim.cmd("'<,'>! zig fmt --stdin")
 end
 -- -----------------------------------------------------------------------------
+function FormatiranjeOdin()
+	-- local command     = ""
+	-- local config_file = ""
+	vim.cmd("'<,'>! /home/korisnik/git/ols/odinfmt -stdin")
+end
+-- -----------------------------------------------------------------------------
 function FormatiranjeIzvornogKoda(mode)
 	if mode == "n" then
 		vim.notify("Tekst mora biti selektovan!")
@@ -146,6 +152,8 @@ function FormatiranjeIzvornogKoda(mode)
 		FormatiranjePython()
 	elseif tip == "zig" then
 		FormatiranjeZig()
+	elseif tip == "odin" then
+		FormatiranjeOdin()
 	end
 end
 -- -----------------------------------------------------------------------------
