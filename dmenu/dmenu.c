@@ -16,6 +16,7 @@
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
 #endif
+#include <X11/extensions/Xrender.h>
 #include <X11/Xft/Xft.h>
 
 #include "drw.h"
@@ -24,10 +25,9 @@
 /* macros */
 #define INTERSECT(x,y,w,h,r)  (MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - MAX((x),(r).x_org)) \
                              * MAX(0, MIN((y)+(h),(r).y_org+(r).height) - MAX((y),(r).y_org)))
-#define LENGTH(X)             (sizeof X / sizeof X[0])
 #define TEXTW(X)              (drw_fontset_getwidth(drw, (X)) + lrpad)
 
-#define OPAQUE                0xffU
+#define OPAQUE                0xffu
 
 /* enums */
 // enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
@@ -36,6 +36,7 @@ enum { SchemeNorm, SchemeSel, SchemeNormHighlight, SchemeSelHighlight,
 
 struct item {
 	char *text;
+	unsigned int width;
 	struct item *left, *right;
 	int out;
 	double distance;
@@ -69,7 +70,7 @@ static Colormap cmap;
 
 static int (*fstrncmp)(const char *, const char *, size_t) = strncmp;
 static char *(*fstrstr)(const char *, const char *) = strstr;
-static void xinitvisual();
+static void xinitvisual(void);
 
 static unsigned int
 textw_clamp(const char *str, unsigned int n)
@@ -114,7 +115,7 @@ max_textw(void)
 {
 	int len = 0;
 	for (struct item *item = items; item && item->text; item++)
-		len = MAX(TEXTW(item->text), len);
+		len = MAX(item->width, len);
 	return len;
 }
 
@@ -123,7 +124,7 @@ cleanup(void)
 {
 	size_t i;
 
-	XUngrabKey(dpy, AnyKey, AnyModifier, root);
+	XUngrabKeyboard(dpy, CurrentTime);
 	for (i = 0; i < SchemeLast; i++)
 		free(scheme[i]);
 	for (i = 0; items && items[i].text; ++i)
@@ -156,8 +157,7 @@ static void
 drawhighlights(struct item *item, int x, int y, int maxw)
 {
 	int i, indent;
-	char *highlight;
-	char c;
+	char c, *highlight;
 
 	if (!(strlen(item->text) && strlen(text)))
 		return;
@@ -166,8 +166,7 @@ drawhighlights(struct item *item, int x, int y, int maxw)
 	                   ? SchemeSelHighlight
 	                   : SchemeNormHighlight]);
 	for (i = 0, highlight = item->text; *highlight && text[i];) {
-		// if (*highlight == text[i]) {
-		if (!fstrncmp(&(*highlight), &text[i], 1)) {
+		if (!fstrncmp(highlight, &text[i], 1)) {
 			/* get indentation */
 			c = *highlight;
 			*highlight = '\0';
@@ -179,18 +178,17 @@ drawhighlights(struct item *item, int x, int y, int maxw)
 			highlight[1] = '\0';
 			drw_text(
 				drw,
-				x + indent - (lrpad / 2),
+				x + indent - (lrpad / 2.),
 				y,
 				MIN(maxw - indent, TEXTW(highlight) - lrpad),
 				bh, 0, highlight, 0
 			);
 			highlight[1] = c;
-			i++;
+			++i;
 		}
-		highlight++;
+		++highlight;
 	}
 }
-
 
 static int
 drawitem(struct item *item, int x, int y, int w)
@@ -213,7 +211,7 @@ drawmenu(void)
 {
 	unsigned int curpos;
 	struct item *item;
-	int x = 0, y = 0, fh = drw->fonts->h, w;
+	int x = 0, y = 0, w;
 
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	drw_rect(drw, 0, 0, mw, mh, 1, 1);
@@ -230,7 +228,7 @@ drawmenu(void)
 	curpos = TEXTW(text) - TEXTW(&text[cursor]);
 	if ((curpos += lrpad / 2 - 1) < w) {
 		drw_setscheme(drw, scheme[SchemeNorm]);
-		drw_rect(drw, x + curpos, 2 + (bh - fh) / 2, 2, fh - 4, 1, 0);
+		drw_rect(drw, x + curpos, 2, 2, bh - 4, 1, 0);
 	}
 
 	if (lines > 0) {
@@ -319,18 +317,18 @@ fuzzymatch(void)
 	matches = matchend = NULL;
 
 	/* walk through all items */
-	for (it = items; it && it->text; it++) {
+	for (it = items; it && it->text; ++it) {
 		if (text_len) {
 			itext_len = strlen(it->text);
 			pidx = 0; /* pointer */
 			sidx = eidx = -1; /* start of match, end of match */
 			/* walk through item text */
-			for (i = 0; i < itext_len && (c = it->text[i]); i++) {
+			for (i = 0; i < itext_len && (c = it->text[i]); ++i) {
 				/* fuzzy match pattern */
 				if (!fstrncmp(&text[pidx], &c, 1)) {
 					if(sidx == -1)
 						sidx = i;
-					pidx++;
+					++pidx;
 					if (pidx == text_len) {
 						eidx = i;
 						break;
@@ -345,7 +343,7 @@ fuzzymatch(void)
 				it->distance = log(sidx + 2) + (double)(eidx - sidx - text_len);
 				/* fprintf(stderr, "distance %s %f\n", it->text, it->distance); */
 				appenditem(it, &matches, &matchend);
-				number_of_matches++;
+				++number_of_matches;
 			}
 		} else {
 			appenditem(it, &matches, &matchend);
@@ -354,19 +352,18 @@ fuzzymatch(void)
 
 	if (number_of_matches) {
 		/* initialize array with matches */
-		if (!(fuzzymatches = realloc(fuzzymatches, number_of_matches * sizeof(struct item*))))
-			die("cannot realloc %u bytes:", number_of_matches * sizeof(struct item*));
-		for (i = 0, it = matches; it && i < number_of_matches; i++, it = it->right) {
+		if (!(fuzzymatches = realloc(fuzzymatches,
+		                             number_of_matches * sizeof(struct item *))))
+			die("cannot realloc %u bytes:", number_of_matches * sizeof(struct item *));
+		for (i = 0, it = matches; it && i < number_of_matches; ++i, it = it->right)
 			fuzzymatches[i] = it;
-		}
 		/* sort matches according to distance */
 		qsort(fuzzymatches, number_of_matches, sizeof(struct item*), compare_distance);
 		/* rebuild list of matches */
 		matches = matchend = NULL;
-		for (i = 0, it = fuzzymatches[i];  i < number_of_matches && it && \
-				it->text; i++, it = fuzzymatches[i]) {
+		for (i = 0, it = fuzzymatches[i]; i < number_of_matches && it &&
+		        it->text; ++i, it = fuzzymatches[i])
 			appenditem(it, &matches, &matchend);
-		}
 		free(fuzzymatches);
 	}
 	curr = sel = matches;
@@ -474,19 +471,19 @@ movewordedge(int dir)
 static void
 keypress(XKeyEvent *ev)
 {
-	char buf[32];
+	char buf[64];
 	int len;
-	KeySym ksym;
+	KeySym ksym = NoSymbol;
 	Status status;
 
 	len = XmbLookupString(xic, ev, buf, sizeof buf, &ksym, &status);
 	switch (status) {
 	default: /* XLookupNone, XBufferOverflow */
 		return;
-	case XLookupChars:
+	case XLookupChars: /* composed string from input method */
 		goto insert;
 	case XLookupKeySym:
-	case XLookupBoth:
+	case XLookupBoth: /* a KeySym and a string are returned: use keysym */
 		break;
 	}
 
@@ -700,19 +697,25 @@ static void
 readstdin(void)
 {
 	char *line = NULL;
-	size_t i, junk, size = 0;
+	size_t i, itemsiz = 0, linesiz = 0;
 	ssize_t len;
 
 	/* read each line from stdin and add it to the item list */
-	for (i = 0; (len = getline(&line, &junk, stdin)) != -1; i++, line = NULL) {
-		if (i + 1 >= size / sizeof *items)
-			if (!(items = realloc(items, (size += BUFSIZ))))
-				die("cannot realloc %zu bytes:", size);
+	for (i = 0; (len = getline(&line, &linesiz, stdin)) != -1; i++) {
+		if (i + 1 >= itemsiz) {
+			itemsiz += 256;
+			if (!(items = realloc(items, itemsiz * sizeof(*items))))
+				die("cannot realloc %zu bytes:", itemsiz * sizeof(*items));
+		}
 		if (line[len - 1] == '\n')
 			line[len - 1] = '\0';
-		items[i].text = line;
+		if (!(items[i].text = strdup(line)))
+			die("strdup:");
+		items[i].width = TEXTW(line);
+
 		items[i].out = 0;
 	}
+	free(line);
 	if (items)
 		items[i].text = NULL;
 	lines = MIN(lines, i);
@@ -773,16 +776,17 @@ setup(void)
 #endif
 	/* init appearance */
 	for (j = 0; j < SchemeLast; j++)
-		scheme[j] = drw_scm_create(drw, colors[j], alphas[i], 2);
+		scheme[j] = drw_scm_create(drw, colors[j], 2, alphas[j]);
 
 	clip = XInternAtom(dpy, "CLIPBOARD",   False);
 	utf8 = XInternAtom(dpy, "UTF8_STRING", False);
 
 	/* calculate menu geometry */
 	bh = drw->fonts->h + 2;
-	bh = MAX(bh,lineheight);	/* make a menu line AT LEAST 'lineheight' tall */
-	lines = MAX(lines, 0);
-	mh = (lines + 1) * bh;
+	// lines = MAX(lines, 0);
+	bh = MAX(bh, lineheight);	/* make a menu line AT LEAST 'lineheight' tall */
+	// mh = (lines + 1) * bh;
+	mh = (lines + 1) * bh + user_padding_bottom;
 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
 #ifdef XINERAMA
 	i = 0;
@@ -813,7 +817,7 @@ setup(void)
 		if (centered) {
 			mw = MIN(MAX(max_textw() + promptw, min_width), info[i].width);
 			x = info[i].x_org + ((info[i].width  - mw) / 2);
-			y = info[i].y_org + ((info[i].height - mh) / 2);
+			y = info[i].y_org + ((info[i].height - mh) / menu_height_ratio);
 		} else {
 			x = info[i].x_org;
 			y = info[i].y_org + (topbar ? 0 : info[i].height - mh);
@@ -844,21 +848,16 @@ setup(void)
 
 	/* create menu window */
 	swa.override_redirect = True;
-	// swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
-	swa.background_pixel = 0;
 	swa.border_pixel = 0;
 	swa.colormap = cmap;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
-	// win = XCreateWindow(dpy, parentwin, x, y, mw, mh, border_width,
-	//                     CopyFromParent, CopyFromParent, CopyFromParent,
-	//                     CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
-	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, border_width,
+	// win = XCreateWindow(dpy, root, x, y, mw, mh, 0,
+	win = XCreateWindow(dpy, root, x, y, mw, mh, border_width,
 	                    depth, CopyFromParent, visual,
 	                    CWOverrideRedirect | CWBackPixel | CWBorderPixel | CWColormap | CWEventMask, &swa);
 	if (border_width)
 		XSetWindowBorder(dpy, win, scheme[SchemeSel][ColBg].pixel);
 	XSetClassHint(dpy, win, &ch);
-
 
 	/* input methods */
 	if ((xim = XOpenIM(dpy, NULL, NULL, NULL)) == NULL)
@@ -869,6 +868,7 @@ setup(void)
 
 	XMapRaised(dpy, win);
 	if (embed) {
+		XReparentWindow(dpy, win, parentwin, x, y);
 		XSelectInput(dpy, parentwin, FocusChangeMask | SubstructureNotifyMask);
 		if (XQueryTree(dpy, parentwin, &dw, &w, &dws, &du) && dws) {
 			for (i = 0; i < du && dws[i] != win; ++i)
@@ -884,10 +884,10 @@ setup(void)
 static void
 usage(void)
 {
-	die("usage: dmenu [-bfiv] [-l lines] [-h height] [-p prompt] [-fn font] [-m monitor]\n"
-	    // "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]");
-	      "             [-nb color] [-nf color] [-sb color] [-sf color]\n"
-	      "             [-nhb color] [-nhf color] [-shb color] [-shf color] [-w windowid]\n", stderr);
+	// die("usage: dmenu [-bfiv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
+	die("usage: dmenu [-bFfiv] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
+	    "             [-nb color] [-nf color] [-sb color] [-sf color]\n"
+	    "             [-nhb color] [-nhf color] [-shb color] [-shf color] [-w windowid]");
 }
 
 int
@@ -903,10 +903,10 @@ main(int argc, char *argv[])
 			exit(0);
 		} else if (!strcmp(argv[i], "-b")) /* appears at the bottom of the screen */
 			topbar = 0;
+		else if (!strcmp(argv[i], "-F"))   /* disables fuzzy matching */
+			fuzzy = 0;
 		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */
 			fast = 1;
-		else if (!strcmp(argv[i], "-F"))   /* grabs keyboard before reading stdin */
-			fuzzy = 0;
 		else if (!strcmp(argv[i], "-c"))   /* centers dmenu on screen */
 			centered = 1;
 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
@@ -917,10 +917,6 @@ main(int argc, char *argv[])
 		/* these options take one argument */
 		else if (!strcmp(argv[i], "-l"))   /* number of lines in vertical list */
 			lines = atoi(argv[++i]);
-		else if (!strcmp(argv[i], "-h")) { /* minimum height of one menu line */
-			lineheight = atoi(argv[++i]);
-			lineheight = MAX(lineheight, min_lineheight);
-		}
 		else if (!strcmp(argv[i], "-m"))
 			mon = atoi(argv[++i]);
 		else if (!strcmp(argv[i], "-p"))   /* adds prompt to left of input field */
@@ -985,8 +981,8 @@ main(int argc, char *argv[])
 	return 1; /* unreachable */
 }
 
- void
-xinitvisual()
+void
+xinitvisual(void)
 {
 	XVisualInfo *infos;
 	XRenderPictFormat *fmt;
@@ -1005,17 +1001,17 @@ xinitvisual()
 	for(i = 0; i < nitems; i ++) {
 		fmt = XRenderFindVisualFormat(dpy, infos[i].visual);
 		if (fmt->type == PictTypeDirect && fmt->direct.alphaMask) {
-			visual = infos[i].visual;
-			depth = infos[i].depth;
-			cmap = XCreateColormap(dpy, root, visual, AllocNone);
-			useargb = 1;
-			break;
+			 visual = infos[i].visual;
+			 depth = infos[i].depth;
+			 cmap = XCreateColormap(dpy, root, visual, AllocNone);
+			 useargb = 1;
+			 break;
 		}
 	}
 
 	XFree(infos);
 
-	if (! visual) {
+	if (!visual) {
 		visual = DefaultVisual(dpy, screen);
 		depth = DefaultDepth(dpy, screen);
 		cmap = DefaultColormap(dpy, screen);
