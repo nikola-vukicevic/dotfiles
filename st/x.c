@@ -59,6 +59,11 @@ static void zoom(const Arg *);
 static void zoomabs(const Arg *);
 static void zoomreset(const Arg *);
 static void zoom15();
+static void zoom16();
+static void zoom17();
+static void write_to_file();
+static void read_from_file();
+static void init_from_file();
 static void ttysend(const Arg *);
 
 /* config.h for applying patches and the configuration. */
@@ -81,12 +86,12 @@ typedef XftGlyphFontSpec GlyphFontSpec;
 /* Purely graphic info */
 typedef struct {
 	int tw, th; /* tty width and height */
-	int w, h; /* window width and height */
+	int w, h;   /* window width and height */
 	int hborderpx, vborderpx;
-	int ch; /* char height */
-	int cw; /* char width  */
-	int cyo; /* char y offset */
-	int mode; /* window state/mode flags */
+	int ch;     /* char height */
+	int cw;     /* char width  */
+	int cyo;    /* char y offset */
+	int mode;   /* window state/mode flags */
 	int cursor; /* cursor style */
 } TermWindow;
 
@@ -259,9 +264,8 @@ static char *opt_line  = NULL;
 static char *opt_name  = NULL;
 static char *opt_title = NULL;
 
-static int focused = 0;
-
 static uint buttons; /* bit field of pressed buttons */
+static int focused = 0;
 
 void
 clipcopy(const Arg *dummy)
@@ -319,6 +323,7 @@ zoomabs(const Arg *arg)
 	cresize(0, 0);
 	redraw();
 	xhints();
+	write_to_file();
 }
 
 void
@@ -335,9 +340,88 @@ zoomreset(const Arg *arg)
 void
 zoom15()
 {
+	user_baseline = 1;
+	Arg arg;
+	arg.f = defaultfontsize - 5;
+	zoomabs(&arg);
+}
+
+void
+zoom16()
+{
+	user_baseline = 1;
+	Arg arg;
+	arg.f = defaultfontsize - 3;
+	zoomabs(&arg);
+}
+
+void
+zoom17()
+{
+	user_baseline = 2;
 	Arg arg;
 	arg.f = defaultfontsize - 1;
 	zoomabs(&arg);
+}
+
+void
+write_to_file()
+{
+	FILE *f;
+	f = fopen("/home/korisnik/.dwm/tmp/st_zoom", "w");
+	if (f == NULL) return;
+	fprintf(f, "%lf\n", defaultfontsize);
+	fprintf(f, "%lf\n", usedfontsize);
+	fclose(f);
+}
+
+void
+read_from_file(double* s1, double* s2)
+{
+	FILE *f;
+	f = fopen("/home/korisnik/.dwm/tmp/st_zoom", "r");
+
+	if (f == NULL) {
+		return;
+	}
+
+	double size_def, size;
+
+	fscanf(f, "%lf", &size_def);
+	fscanf(f, "%lf", &size);
+
+	*s1 = size_def;
+	*s2 = size;
+
+	fclose(f);
+}
+
+void
+init_from_file(int def_f)
+{
+	double size_def = -1.0, size = -1.0;
+	read_from_file(&size_def, &size);
+
+	if (size_def < 0) {
+		// zoom15();
+		(def_f == 0) ? zoom15() : zoom16();
+		return;
+	}
+
+	if (size < size_def - 4) {
+		zoom15();
+		return;
+	}
+
+	if (size > size_def - 2) {
+		zoom17();
+		return;
+	}
+
+	if (size > size_def - 4) {
+		zoom16();
+		return;
+	}
 }
 
 void
@@ -814,6 +898,7 @@ xloadcolor(int i, const char *name, Color *ncolor)
 void
 xloadalpha(void)
 {
+	xloadcolor(focused ?bg :bgUnfocused, NULL, &dc.col[defaultbg]);
 	float const usedAlpha = focused ? alpha : alphaUnfocused;
 	if (opt_alpha) alpha = strtof(opt_alpha, NULL);
 	dc.col[defaultbg].color.alpha = (unsigned short)(0xffff * usedAlpha);
@@ -839,8 +924,6 @@ xloadcols(void)
 			else
 				die("could not allocate color %d\n", i);
 		}
-	if (dc.collen) // cannot die, as the color is already loaded.
-		xloadcolor(focused ?bg :bgUnfocused, NULL, &dc.col[defaultbg]);
 
 	xloadalpha();
 	loaded = 1;
@@ -849,7 +932,7 @@ xloadcols(void)
 int
 xgetcolor(int x, unsigned char *r, unsigned char *g, unsigned char *b)
 {
-	if (!BETWEEN(x, 0, dc.collen))
+	if (!BETWEEN(x, 0, dc.collen - 1))
 		return 1;
 
 	*r = dc.col[x].color.red >> 8;
@@ -864,7 +947,7 @@ xsetcolorname(int x, const char *name)
 {
 	Color ncolor;
 
-	if (!BETWEEN(x, 0, dc.collen))
+	if (!BETWEEN(x, 0, dc.collen - 1))
 		return 1;
 
 	if (!xloadcolor(x, name, &ncolor))
@@ -1061,8 +1144,28 @@ xloadfonts(const char *fontstr, double fontsize)
 
 	/* Setting character width and height. */
 	win.cw = ceilf(dc.font.width * cwscale);
-	// win.ch = 27;
-	win.ch = (dc.font.height >= 26 && dc.font.height <= 27)? 27 : ceilf(dc.font.height * chscale);
+	// win.ch = ceilf(dc.font.height * chscale);
+	// win.ch = (dc.font.height >= 21 && dc.font.height <= 22)? 22 : ceilf(dc.font.height * chscale);
+	// win.ch = (dc.font.height >= 26 && dc.font.height <= 27)? 27 : ceilf(dc.font.height * chscale);
+
+	// if (not_consolas && dc.font.height >= 21 && dc.font.height <= 22) {
+	// 	win.ch = 21;
+	// } else if (not_consolas && dc.font.height >= 23 && dc.font.height <= 24) {
+	// 	win.ch = 23;
+	// } else if (not_consolas && dc.font.height >= 26 && dc.font.height <= 27) {
+	// 	win.ch = 25;
+	// } else {
+	// 	win.ch = ceilf(dc.font.height * chscale);
+	// }
+	if (not_consolas && dc.font.height >= 21 && dc.font.height <= 22) {
+		win.ch = 22;
+	} else if (not_consolas && dc.font.height >= 26 && dc.font.height <= 27) {
+		win.ch = 25;
+	} else {
+		win.ch = ceilf(dc.font.height * chscale);
+	}
+
+	// win.cyo = ceilf(dc.font.height * (chscale - 1) / 2);
 	win.cyo = ceilf(dc.font.height * (chscale - 1) / 2) - user_baseline;
 
 	FcPatternDel(pattern, FC_SLANT);
@@ -1259,7 +1362,7 @@ xinit(int cols, int rows)
 {
 	XGCValues gcvalues;
 	Cursor cursor;
-	Window parent;
+	Window parent, root;
 	pid_t thispid = getpid();
 	XColor xmousefg, xmousebg;
 	XWindowAttributes attr;
@@ -1311,13 +1414,23 @@ xinit(int cols, int rows)
 		| ButtonMotionMask | ButtonPressMask | ButtonReleaseMask;
 	xw.attrs.colormap = xw.cmap;
 
-	xw.win = XCreateWindow(xw.dpy, parent, xw.l, xw.t,
+	root = XRootWindow(xw.dpy, xw.scr);
+	// if (!(opt_embed && (parent = strtol(opt_embed, NULL, 0))))
+	// 	parent = root;
+	xw.win = XCreateWindow(xw.dpy, root, xw.l, xw.t,
+			// win.w, win.h, 0, XDefaultDepth(xw.dpy, xw.scr), InputOutput,
 			win.w, win.h, 0, xw.depth, InputOutput,
 			xw.vis, CWBackPixel | CWBorderPixel | CWBitGravity
 			| CWEventMask | CWColormap, &xw.attrs);
+	if (parent != root)
+		XReparentWindow(xw.dpy, xw.win, parent, xw.l, xw.t);
 
 	memset(&gcvalues, 0, sizeof(gcvalues));
 	gcvalues.graphics_exposures = False;
+	// dc.gc = XCreateGC(xw.dpy, xw.win, GCGraphicsExposures,
+	// 		&gcvalues);
+	// xw.buf = XCreatePixmap(xw.dpy, xw.win, win.w, win.h,
+	// 		DefaultDepth(xw.dpy, xw.scr));
 	xw.buf = XCreatePixmap(xw.dpy, xw.win, win.w, win.h, xw.depth);
 	dc.gc = XCreateGC(xw.dpy, xw.buf, GCGraphicsExposures, &gcvalues);
 	XSetForeground(xw.dpy, dc.gc, dc.col[defaultbg].pixel);
@@ -1643,17 +1756,16 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
 	}
 
 	/* Render underline and strikethrough. */
-	// Moje prepravke (malo drugačije u odnosu na diff)
 	if (base.mode & ATTR_UNDERLINE) {
-		// XftDrawRect(xw.draw, fg, winx, winy + dc.font.ascent * chscale + 1,
-		XftDrawRect(xw.draw, fg, winx, winy + win.cyo - user_offset_underline + dc.font.ascent * chscale + 1,
-				width, 1);
+		// XftDrawRect(xw.draw, fg, winx, winy + win.cyo + dc.font.ascent * chscale + 1,
+				// width, 1);
+		XftDrawRect(xw.draw, fg, winx, winy + win.cyo - user_offset_underline + dc.font.ascent * chscale + 1, width, 1);
 	}
 
 	if (base.mode & ATTR_STRUCK) {
-		// XftDrawRect(xw.draw, fg, winx, winy + 2 * dc.font.ascent * chscale / 3,
-		XftDrawRect(xw.draw, fg, winx, winy + win.cyo - user_offset_strikethrough + 2 * dc.font.ascent * chscale / 3,
-				width, 1);
+		// XftDrawRect(xw.draw, fg, winx, winy + win.cyo + 2 * dc.font.ascent * chscale / 3,
+				// width, 1);
+		XftDrawRect(xw.draw, fg, winx, winy + win.cyo - user_offset_strikethrough + 2 * dc.font.ascent * chscale / 3, width, 1);
 	}
 
 	/* Reset clip to none. */
@@ -1771,6 +1883,9 @@ xseticontitle(char *p)
 	XTextProperty prop;
 	DEFAULT(p, opt_title);
 
+	if (p[0] == '\0')
+		p = opt_title;
+
 	if (Xutf8TextListToTextProperty(xw.dpy, &p, 1, XUTF8StringStyle,
 	                                &prop) != Success)
 		return;
@@ -1784,6 +1899,9 @@ xsettitle(char *p)
 {
 	XTextProperty prop;
 	DEFAULT(p, opt_title);
+
+	if (p[0] == '\0')
+		p = opt_title;
 
 	if (Xutf8TextListToTextProperty(xw.dpy, &p, 1, XUTF8StringStyle,
 	                                &prop) != Success)
@@ -1933,7 +2051,7 @@ focus(XEvent *ev)
 			ttywrite("\033[I", 3, 0);
 		if (!focused) {
 			focused = 1;
-			xloadcols();
+			xloadalpha();
 			tfulldirt();
 		}
 	} else {
@@ -1944,7 +2062,7 @@ focus(XEvent *ev)
 			ttywrite("\033[O", 3, 0);
 		if (focused) {
 			focused = 0;
-			xloadcols();
+			xloadalpha();
 			tfulldirt();
 		}
 	}
@@ -1997,7 +2115,7 @@ void
 kpress(XEvent *ev)
 {
 	XKeyEvent *e = &ev->xkey;
-	KeySym ksym;
+	KeySym ksym = NoSymbol;
 	char buf[64], *customkey;
 	int len;
 	Rune c;
@@ -2007,10 +2125,13 @@ kpress(XEvent *ev)
 	if (IS_SET(MODE_KBDLOCK))
 		return;
 
-	if (xw.ime.xic)
+	if (xw.ime.xic) {
 		len = XmbLookupString(xw.ime.xic, e, buf, sizeof buf, &ksym, &status);
-	else
+		if (status == XBufferOverflow)
+			return;
+	} else {
 		len = XLookupString(e, buf, sizeof buf, &ksym, NULL);
+	}
 	/* 1. shortcuts */
 	for (bp = shortcuts; bp < shortcuts + LEN(shortcuts); bp++) {
 		if (ksym == bp->keysym && match(bp->mod, e->state)) {
@@ -2257,7 +2378,9 @@ run:
 	tnew(cols, rows);
 	xinit(cols, rows);
 	// ----------------
-	zoom15();
+	init_from_file(1); // 0 - zoom15; 1 - zoom_16;
+	// zoom15();
+	// zoom16();
 	// ----------------
 	xsetenv();
 	selinit();

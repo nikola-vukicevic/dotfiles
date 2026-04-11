@@ -115,7 +115,6 @@ size_t utf8encode(Rune, char *);
 void *xmalloc(size_t);
 void *xrealloc(void *, size_t);
 char *xstrdup(const char *);
-
 int isboxdraw(Rune);
 ushort boxdrawindex(const Glyph *);
 #ifdef XFT_VERSION
@@ -123,6 +122,7 @@ ushort boxdrawindex(const Glyph *);
 void boxdraw_xinit(Display *, Colormap, XftDraw *, Visual *);
 void drawboxes(int, int, int, int, XftColor *, XftColor *, const XftGlyphFontSpec *, int);
 #endif
+
 
 /* config.h globals */
 extern char *utmp;
@@ -137,7 +137,6 @@ extern unsigned int tabspaces;
 extern unsigned int defaultfg;
 extern unsigned int defaultbg;
 extern unsigned int defaultcs;
-extern const int boxdraw, boxdraw_bold, boxdraw_braille;
-extern float alpha, alphaUnfocused;
 extern char *iso14755_cmd;
-
+extern float alpha, alphaUnfocused;
+extern const int boxdraw, boxdraw_bold, boxdraw_braille;

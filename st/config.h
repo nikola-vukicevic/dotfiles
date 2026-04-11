@@ -5,17 +5,62 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "monospace:size=16:antialias=true:autohint=true";
+/* -------------------------------------------------------------------------- */
+// CONFIG_01 - Inconsolata LGC
+// CONFIG_02 - Commit mono
+// CONFIG_03 - Fira Code
+// CONFIG_04 - Consolas
+// CONFIG_05 - JetBrains
+#define CONFIG_01
+/* -------------------------------------------------------------------------- */
+#ifndef CONFIG_04
+const int not_consolas = 1;
+#else
+const int not_consolas = 0;
+#endif
+/* -------------------------------------------------------------------------- */
+// 0.00 -> 42 linije; 0.02 -> 40 linija:
+const double config_01_prosirenje = 0.00;
+// 0.00 -> 42 linije; 0.03 -> 40 linija:
+const double config_02_prosirenje = 0.00;
+//
+const double config_03_prosirenje = 0.00;
+const double config_04_prosirenje = 0.00;
+const double config_05_prosirenje = 0.00;
+/* -------------------------------------------------------------------------- */
+static char *font = (not_consolas) ?
+                    "monospace:size=16:antialias=true:autohint=true" :
+                    "monospace:size=17:antialias=true:autohint=true";
 /* Spare fonts */
 static char *font2[] = {
-/*	"Inconsolata for Powerline:pixelsize=12:antialias=true:autohint=true", */
-/*	"Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true", */
+	// "Inconsolata LGC Nerd Font Mono:size=16:antialias=true:autohint=true",
+	// "CommitMono Nerd Font Mono:size=18:antialias=true:autohint=true",
+	// "Hack Nerd Font Mono:pixelsize=11:antialias=true:autohint=true",
 };
-
-static int borderpx = 0;
-static int user_offset_underline     = -3;
+/* -------------------------------------------------------------------------- */
+static int borderpx                  = 0;
 static int user_offset_strikethrough = -2;
-static int user_baseline             = 1;
+static int user_offset_underline     = 0;
+
+#ifdef CONFIG_01
+int user_baseline = 1;
+#endif
+
+#ifdef CONFIG_02
+static int user_baseline = 0;
+#endif
+
+#ifdef CONFIG_03
+static int user_baseline = -1;
+#endif
+
+#ifdef CONFIG_04
+static int user_baseline = -2;
+#endif
+
+#ifdef CONFIG_05
+static int user_baseline = 0;
+#endif
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -35,10 +80,27 @@ char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 char *vtiden = "\033[?6c";
 
 /* Kerning / character bounding-box multipliers */
-static float cwscale = 0.95;
-// static float chscale = 1.01;
-static float chscale = 0.95; // JetBrains Mono
-// static float chscale = 1.1;  // Cascadia
+static float cwscale = 1.0;
+
+#ifdef CONFIG_01
+static float chscale = 1.00 + config_01_prosirenje;
+#endif
+
+#ifdef CONFIG_02
+static float chscale = 1.02 + config_02_prosirenje;
+#endif
+
+#ifdef CONFIG_03
+static float chscale = 1.02 + config_03_prosirenje;
+#endif
+
+#ifdef CONFIG_04
+static float chscale = 1.1 + config_04_prosirenje;
+#endif
+
+#ifdef CONFIG_05
+static float chscale = 0.95 + config_05_prosirenje;
+#endif
 
 /*
  * word delimiter string
@@ -65,7 +127,7 @@ int allowwindowops = 0;
  * low minlatency will tear/flicker more, as it can "detect" idle too early.
  */
 static double minlatency = 2;
-static double maxlatency = 25;
+static double maxlatency = 33;
 
 /*
  * blinking timeout (set to 0 to disable blinking) for the terminal blinking
@@ -84,8 +146,8 @@ static unsigned int cursorthickness = 2;
  *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
  * 0: disable (render all U25XX glyphs normally from the font).
  */
-const int boxdraw         = 0;
-const int boxdraw_bold    = 0;
+const int boxdraw      = 0;
+const int boxdraw_bold = 0;
 
 /* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
 const int boxdraw_braille = 0;
@@ -117,7 +179,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 4;
 
 /* bg opacity */
-float alpha = 0.96, alphaUnfocused = 0.90;
+float alpha = 0.975, alphaUnfocused = 0.92;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -130,7 +192,7 @@ static const char *colorname[] = {
 	"#eb4f97",  /*  5:  magenta  */
 	"#78cbce",  /*  6:  cyan     */
 	"#dadada",  /*  7:  white    */
-	
+
 	/* 8 bright colors */
 	"#888888",  /*  8:  brblack  */
 	"#f39b9b",  /*  9:  brred    */
@@ -181,7 +243,7 @@ static unsigned int rows = 24;
 /*
  * Default colour and shape of the mouse cursor
  */
-static unsigned int mouseshape = XC_xterm;
+static unsigned int mouseshape = XC_left_ptr;
 static unsigned int mousefg = 7;
 static unsigned int mousebg = 0;
 
@@ -233,12 +295,15 @@ static Shortcut shortcuts[] = {
 	// { TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
 	// { TERMMOD,              XK_Next,        zoom,           {.f = -1} },
 	// { TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
-	{ TERMMOD,              XK_H,           zoom15,         {       } },
-	{ TERMMOD,              XK_J,           zoom,           {.f = -1} },
-	{ TERMMOD,              XK_K,           zoom,           {.f = +1} },
+	// { TERMMOD,              XK_H,           zoom15,         {       } },
+	{ TERMMOD,              XK_H,           zoom,           {.f = -1} },
+	// { TERMMOD,              XK_K,           zoom,           {.f = +1} },
 	{ MODKEY|ShiftMask,     XK_J,           kscrolldown,    {.i =  1} },
 	{ MODKEY|ShiftMask,     XK_K,           kscrollup,      {.i =  1} },
-	{ TERMMOD,              XK_L,           zoomreset,      {.f =  0} },
+	// { TERMMOD,              XK_L,           zoomreset,      {.f =  0} },
+	{ TERMMOD,              XK_J,           zoom15,         {       } },
+	{ TERMMOD,              XK_K,           zoom16,         {       } },
+	{ TERMMOD,              XK_L,           zoom17,         {       } },
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
