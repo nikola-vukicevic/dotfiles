@@ -3,7 +3,7 @@ In 2016, after a long hiatus, I returned to Linux and Arch was a nice discovery 
 
 So far so good! :)
 
-## dwm (6.4)
+## dwm (6.8)
 
 Patches:
 
@@ -19,7 +19,7 @@ Patches:
 
 (+ some small custom tweaks)
 
-## st (0.9)
+## st (0.9.3)
 
 Patches:
 
@@ -31,7 +31,7 @@ Patches:
 - https://st.suckless.org/patches/scrollback/ (+ scrollback-mouse)
 - https://st.suckless.org/patches/vertcenter/
 
-## dmenu (5.2)
+## dmenu (5.4)
 
 Patches:
 
