@@ -4,20 +4,21 @@
 static const unsigned int borderpx  = 0;   /* border pixel of windows */
 static const unsigned int gappx     = 0;   /* gaps between windows */
 static const unsigned int snap      = 32;  /* snap pixel */
-static const int swallowfloating    = 0;   /* 1 means swallow floating windows by default */
+static const int swallowfloating    = 1;   /* 1 means swallow floating windows by default */
 static const int scalepreview       = 4;   /* tag preview scaling */
+static const int previewbar         = 1;   /* show the bar in the preview window */
 static const int showbar            = 1;   /* 0 means no bar */
 static const int topbar             = 1;   /* 0 means bottom bar */
 static const int focusonwheel       = 0;
 /* ----- */
-static const int user_bh            = 27;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
+static const int user_bh            = 24;  /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const int user_bh_padding    = 3;   /* if user_bh == 0, user bh padding is added to font height */
 static const int user_attach_bottom = 1;
 /* ----- */
 static const char *fonts[]      = {
-	"monospace:size=11"
+	"monospace:size=10"
 };
-static const char dmenufont[]   = "monospace:size=15";
+static const char dmenufont[]   = "monospace:size=14.0:autohint=true";
 static const char col_gray1[]   = "#2e2e31";
 static const char col_gray2[]   = "#2e2e31";
 static const char col_gray3[]   = "#bbbbbb";
@@ -39,18 +40,21 @@ static const Rule rules[] = {
 	 */
 	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
 	{ "Sublime_text",    NULL,     NULL,           1 << 6,    0,          0,           0,        -1 },
-	{ "Gimp",            NULL,     NULL,           0,         1,          0,           0,        -1 },
-	{ "Firefox",         NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
-	{ "St",              NULL,     NULL,           0,         0,          1,           0,        -1 },
+	{ "librewolf",       NULL,     NULL,           1 << 1,    0,          0,          -1,        -1 },
+	// { "Navigator",       NULL,     NULL,           1 << 1,    0,          0,          -1,        -1 },
+	// { "Gimp",            NULL,     NULL,           0,         1,          0,           0,        -1 },
+	// { "Firefox",         NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
+	// { "St",              NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ NULL,              NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 	{ "Brave-browser",   NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
 };
 
 /* layout(s) */
-static const float mfact        = 0.6;  /* factor of master area size [0.05..0.95] */
+static const float mfact        = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster        = 1;    /* number of clients in master area */
 static const int resizehints    = 1;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1;    /* 1 will force focus on the fullscreen window */
+static const int refreshrate    = 120;  /* refresh rate (per second) for client move/resize */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -75,15 +79,15 @@ static const Layout layouts[] = {
 #define STATUSBAR "dwmblocks"
 
 /* commands */
-static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, "-i" , NULL };
+static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+// static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 #include "shift-tools.c"
 
-static Key keys[] = {
-	
-	/* modifier             key         function           argument */
-	
+static const Key keys[] = {
+	/* modifier                     key        function        argument */
 	{ MODKEY,	            XK_n,       shiftviewclients,  { .i = -1 } },
 	{ MODKEY,	            XK_m,       shiftviewclients,  { .i = +1 } },
 	{ MODKEY,               XK_d,       spawn,             {.v = dmenucmd } },   /* izmena - bilo p */
@@ -93,8 +97,10 @@ static Key keys[] = {
 	{ MODKEY,               XK_k,       focusstack,        {.i = -1 } },
 	{ MODKEY,               XK_i,       incnmaster,        {.i = +1 } },
 	{ MODKEY,               XK_p,       incnmaster,        {.i = -1 } },         /* izmena - bilo d */
-	{ MODKEY,               XK_h,       setmfact,          {.f = -0.05} },
-	{ MODKEY,               XK_l,       setmfact,          {.f = +0.05} },
+	{ MODKEY,               XK_h,       setmfact,          {.f = -0.005} },
+	{ MODKEY,               XK_l,       setmfact,          {.f = +0.005} },
+	{ MODKEY|ShiftMask,     XK_h,       setmfact,          {.f = -0.05} },
+	{ MODKEY|ShiftMask,     XK_l,       setmfact,          {.f = +0.05} },
 	{ MODKEY|ShiftMask,     XK_Return,  zoom,              {0} },                /* izmena */
 	{ MODKEY,               XK_Tab,     view,              {0} },
 	{ MODKEY|ShiftMask,     XK_c,       killclient,        {0} },
@@ -114,21 +120,22 @@ static Key keys[] = {
 	{ MODKEY,               XK_minus,   setgaps,           {.i = -1 } },
 	{ MODKEY,               XK_equal,   setgaps,           {.i = +1 } },
 	{ MODKEY|ShiftMask,     XK_equal,   setgaps,           {.i = 0  } },
-	
+
 	/* ----- Moji bind-ovi -------------------------------------------------- */
-    
-	{ MODKEY, XK_F1,      spawn, SHCMD("amixer set Master toggle ; pkill -RTMIN+16 dwmblocks")            },
-	{ MODKEY, XK_F2,      spawn, SHCMD("amixer -q set Master 1%- ; pkill -RTMIN+16 dwmblocks")            },
-	{ MODKEY, XK_F3,      spawn, SHCMD("amixer -q set Master 1%+ ; pkill -RTMIN+16 dwmblocks")            },
-	{ MODKEY, XK_F9,      spawn, SHCMD("setxkbmap -layout us                ; pkill -RTMIN+17 dwmblocks") },
-	{ MODKEY, XK_F10,     spawn, SHCMD("setxkbmap -layout rs -variant latin ; pkill -RTMIN+17 dwmblocks") },
-	{ MODKEY, XK_F11,     spawn, SHCMD("setxkbmap -layout rs                ; pkill -RTMIN+17 dwmblocks") },
-	{ MODKEY, XK_F12,     spawn, SHCMD("/home/korisnik/.dwm/skripte/screenshot_f12")                      },  
-	{ MODKEY, XK_grave,   spawn, SHCMD("promena_tastature")                                               },
-	{ MODKEY, XK_q,       spawn, SHCMD("dunstctl close-all")                                              },
-	{ MODKEY, XK_z,       spawn, SHCMD("slock")                                                           },
-	{ MODKEY, XK_e,       spawn, SHCMD("st lfrun")                                                        },
-	
+
+	{ MODKEY,            XK_F1,      spawn, SHCMD("amixer set Master toggle ; pkill -RTMIN+17 dwmblocks")            },
+	{ MODKEY,            XK_F2,      spawn, SHCMD("amixer -q set Master 1%- ; pkill -RTMIN+17 dwmblocks")            },
+	{ MODKEY,            XK_F3,      spawn, SHCMD("amixer -q set Master 1%+ ; pkill -RTMIN+17 dwmblocks")            },
+	{ MODKEY,            XK_F9,      spawn, SHCMD("setxkbmap -layout us                ; pkill -RTMIN+18 dwmblocks") },
+	{ MODKEY,            XK_F10,     spawn, SHCMD("setxkbmap -layout rs -variant latin ; pkill -RTMIN+18 dwmblocks") },
+	{ MODKEY,            XK_F11,     spawn, SHCMD("setxkbmap -layout rs                ; pkill -RTMIN+18 dwmblocks") },
+	{ MODKEY,            XK_F12,     spawn, SHCMD("/home/korisnik/.dwm/skripte/screenshot_f12")                      },
+	{ MODKEY,            XK_grave,   spawn, SHCMD("promena_tastature")                                               },
+	{ MODKEY,            XK_q,       spawn, SHCMD("dunstctl close-all")                                              },
+	{ MODKEY,            XK_z,       spawn, SHCMD("slock")                                                           },
+	{ MODKEY,            XK_e,       spawn, SHCMD("st lfrun")                                                        },
+	{ MODKEY|ShiftMask,  XK_r,       spawn, SHCMD("/home/korisnik/.dwm/skripte/shutdown_menu.sh")                    },
+
 	/* ----- nastavak (default keybinds) ------------------------------------ */
 
 	TAGKEYS(                XK_1,                      0)
@@ -140,7 +147,7 @@ static Key keys[] = {
 	TAGKEYS(                XK_7,                      6)
 	TAGKEYS(                XK_8,                      7)
 	TAGKEYS(                XK_9,                      8)
-	
+
 	// { MODKEY|ShiftMask,     XK_q,      quit,           {0} },
 	{ MODKEY|ControlMask|ShiftMask,     XK_q,      quit,           {0} },
 };

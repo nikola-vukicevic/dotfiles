@@ -42,11 +42,11 @@
 #include <X11/Xft/Xft.h>
 #include <X11/Xlib-xcb.h>
 #include <xcb/res.h>
+#include <Imlib2.h>
 #ifdef __OpenBSD__
 #include <sys/sysctl.h>
 #include <kvm.h>
 #endif /* __OpenBSD */
-#include <Imlib2.h>
 
 #include "drw.h"
 #include "util.h"
@@ -57,7 +57,7 @@
 #define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
                                * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
 #define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
-#define LENGTH(X)               (sizeof X / sizeof X[0])
+// #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
@@ -119,6 +119,28 @@ typedef struct {
 	const char *symbol;
 	void (*arrange)(Monitor *);
 } Layout;
+
+// struct Monitor {
+// 	char ltsymbol[16];
+// 	float mfact;
+// 	int nmaster;
+// 	int num;
+// 	int by;               /* bar geometry */
+// 	int mx, my, mw, mh;   /* screen size */
+// 	int wx, wy, ww, wh;   /* window area  */
+// 	int gappx;            /* gaps between windows */
+// 	unsigned int seltags;
+// 	unsigned int sellt;
+// 	unsigned int tagset[2];
+// 	int showbar;
+// 	int topbar;
+// 	Client *clients;
+// 	Client *sel;
+// 	Client *stack;
+// 	Monitor *next;
+// 	Window barwin;
+// 	const Layout *lt[2];
+// };
 
 typedef struct {
 	const char *class;
@@ -199,7 +221,6 @@ static void setup(void);
 static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
 static void showtagpreview(int tag);
-static void sigchld(int unused);
 static void sigstatusbar(const Arg *arg);
 static void spawn(const Arg *arg);
 static void switchtag(void);
@@ -239,7 +260,6 @@ static Client *swallowingclient(Window w);
 static Client *termforwin(const Client *c);
 static pid_t winpid(Window w);
 
-
 /* variables */
 static const char broken[] = "broken";
 // static char stext[256];
@@ -254,19 +274,19 @@ static int lrpad;            /* sum of left and right padding for text */
 static int (*xerrorxlib)(Display *, XErrorEvent *);
 static unsigned int numlockmask = 0;
 static void (*handler[LASTEvent]) (XEvent *) = {
-	[ButtonPress] = buttonpress,
-	[ClientMessage] = clientmessage,
+	[ButtonPress]      = buttonpress,
+	[ClientMessage]    = clientmessage,
 	[ConfigureRequest] = configurerequest,
-	[ConfigureNotify] = configurenotify,
-	[DestroyNotify] = destroynotify,
-	[Expose] = expose,
-	[FocusIn] = focusin,
-	[KeyPress] = keypress,
-	[MappingNotify] = mappingnotify,
-	[MapRequest] = maprequest,
-	[MotionNotify] = motionnotify,
-	[PropertyNotify] = propertynotify,
-	[UnmapNotify] = unmapnotify
+	[ConfigureNotify]  = configurenotify,
+	[DestroyNotify]    = destroynotify,
+	[Expose]           = expose,
+	[FocusIn]          = focusin,
+	[KeyPress]         = keypress,
+	[MappingNotify]    = mappingnotify,
+	[MapRequest]       = maprequest,
+	[MotionNotify]     = motionnotify,
+	[PropertyNotify]   = propertynotify,
+	[UnmapNotify]      = unmapnotify
 };
 static Atom wmatom[WMLast], netatom[NetLast];
 static int running = 1;
@@ -618,9 +638,9 @@ cleanup(void)
 		cleanupmon(mons);
 	for (i = 0; i < CurLast; i++)
 		drw_cur_free(drw, cursor[i]);
-	// for (i = 0; i < LENGTH(colors); i++)
 	for (i = 0; i < LENGTH(colors) + 1; i++)
-		free(scheme[i]);
+	// for (i = 0; i < LENGTH(colors); i++)
+		drw_scm_free(drw, scheme[i], 3);
 	free(scheme);
 	XDestroyWindow(dpy, wmcheckwin);
 	drw_free(drw);
@@ -1100,13 +1120,14 @@ Atom
 getatomprop(Client *c, Atom prop)
 {
 	int di;
-	unsigned long dl;
+	unsigned long nitems, dl;
 	unsigned char *p = NULL;
 	Atom da, atom = None;
 
 	if (XGetWindowProperty(dpy, c->win, prop, 0L, sizeof atom, False, XA_ATOM,
-		&da, &di, &dl, &dl, &p) == Success && p) {
-		atom = *(Atom *)p;
+		&da, &di, &nitems, &dl, &p) == Success && p) {
+		if (nitems > 0)
+			atom = *(Atom *)p;
 		XFree(p);
 	}
 	return atom;
@@ -1213,16 +1234,26 @@ grabkeys(void)
 {
 	updatenumlockmask();
 	{
-		unsigned int i, j;
+		unsigned int i, j, k;
 		unsigned int modifiers[] = { 0, LockMask, numlockmask, numlockmask|LockMask };
-		KeyCode code;
+		int start, end, skip;
+		KeySym *syms;
 
 		XUngrabKey(dpy, AnyKey, AnyModifier, root);
-		for (i = 0; i < LENGTH(keys); i++)
-			if ((code = XKeysymToKeycode(dpy, keys[i].keysym)))
-				for (j = 0; j < LENGTH(modifiers); j++)
-					XGrabKey(dpy, code, keys[i].mod | modifiers[j], root,
-						True, GrabModeAsync, GrabModeAsync);
+		XDisplayKeycodes(dpy, &start, &end);
+		syms = XGetKeyboardMapping(dpy, start, end - start + 1, &skip);
+		if (!syms)
+			return;
+		for (k = start; k <= end; k++)
+			for (i = 0; i < LENGTH(keys); i++)
+				/* skip modifier codes, we do that ourselves */
+				if (keys[i].keysym == syms[(k - start) * skip])
+					for (j = 0; j < LENGTH(modifiers); j++)
+						XGrabKey(dpy, k,
+							 keys[i].mod | modifiers[j],
+							 root, True,
+							 GrabModeAsync, GrabModeAsync);
+		XFree(syms);
 	}
 }
 
@@ -1386,6 +1417,7 @@ motionnotify(XEvent *e)
 	static Monitor *mon = NULL;
 	Monitor *m;
 	XMotionEvent *ev = &e->xmotion;
+
 	unsigned int i, x;
 
 	if (ev->window == selmon->barwin) {
@@ -1450,7 +1482,7 @@ movemouse(const Arg *arg)
 			handler[ev.type](&ev);
 			break;
 		case MotionNotify:
-			if ((ev.xmotion.time - lasttime) <= (1000 / 60))
+			if ((ev.xmotion.time - lasttime) <= (1000 / refreshrate))
 				continue;
 			lasttime = ev.xmotion.time;
 
@@ -1604,7 +1636,7 @@ resizemouse(const Arg *arg)
 			handler[ev.type](&ev);
 			break;
 		case MotionNotify:
-			if ((ev.xmotion.time - lasttime) <= (1000 / 60))
+			if ((ev.xmotion.time - lasttime) <= (1000 / refreshrate))
 				continue;
 			lasttime = ev.xmotion.time;
 
@@ -1830,9 +1862,16 @@ setup(void)
 	int i;
 	XSetWindowAttributes wa;
 	Atom utf8string;
+	struct sigaction sa;
 
-	/* clean up any zombies immediately */
-	sigchld(0);
+	/* do not transform children into zombies when they terminate */
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_NOCLDSTOP | SA_NOCLDWAIT | SA_RESTART;
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGCHLD, &sa, NULL);
+
+	/* clean up any zombies (inherited from .xinitrc etc) immediately */
+	while (waitpid(-1, NULL, WNOHANG) > 0);
 
 	/* init screen */
 	screen = DefaultScreen(dpy);
@@ -1936,21 +1975,14 @@ showtagpreview(int tag)
 		return;
 	}
 
-        if (selmon->tagmap[tag]) {
+	if (selmon->tagmap[tag]) {
 		XSetWindowBackgroundPixmap(dpy, selmon->tagwin, selmon->tagmap[tag]);
-		XCopyArea(dpy, selmon->tagmap[tag], selmon->tagwin, drw->gc, 0, 0, selmon->mw / scalepreview, selmon->mh / scalepreview, 0, 0);
+		XCopyArea(dpy, selmon->tagmap[tag], selmon->tagwin, drw->gc, 0, 0, selmon->mw / scalepreview,
+		          selmon->mh / scalepreview, 0, 0);
 		XSync(dpy, False);
 		XMapWindow(dpy, selmon->tagwin);
 	} else
 		XUnmapWindow(dpy, selmon->tagwin);
-}
-
-void
-sigchld(int unused)
-{
-	if (signal(SIGCHLD, sigchld) == SIG_ERR)
-		die("can't install SIGCHLD handler:");
-	while (0 < waitpid(-1, NULL, WNOHANG));
 }
 
 void
@@ -1970,10 +2002,20 @@ sigstatusbar(const Arg *arg)
 void
 spawn(const Arg *arg)
 {
+	struct sigaction sa;
+
+	if (arg->v == dmenucmd)
+		dmenumon[0] = '0' + selmon->num;
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));
 		setsid();
+
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = 0;
+		sa.sa_handler = SIG_DFL;
+		sigaction(SIGCHLD, &sa, NULL);
+
 		execvp(((char **)arg->v)[0], (char **)arg->v);
 		die("dwm: execvp '%s' failed:", ((char **)arg->v)[0]);
 	}
@@ -2216,7 +2258,7 @@ updatebarpos(Monitor *m)
 }
 
 void
-updateclientlist()
+updateclientlist(void)
 {
 	Client *c;
 	Monitor *m;
